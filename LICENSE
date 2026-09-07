@@ -1,0 +1,108 @@
+GUIA_GIT — LICENSING
+
+Copyright (c) 2026 Diego-Ch4m4X
+
+This repository uses different licenses for different categories of original
+material. The licenses below apply only to material for which the repository
+maintainer holds the necessary rights.
+
+=======================================================================
+1. DOCUMENTATION AND EDITORIAL CONTENT — CC BY 4.0
+=======================================================================
+
+Unless a file or section states otherwise, original documentation and
+editorial material in this repository — including prose, explanations,
+tables, original diagrams, learning material, and other non-code content —
+is licensed under:
+
+Creative Commons Attribution 4.0 International (CC BY 4.0)
+
+License:
+https://creativecommons.org/licenses/by/4.0/
+
+Legal code:
+https://creativecommons.org/licenses/by/4.0/legalcode
+
+Suggested attribution:
+
+  "Git + GitHub — Guia Prático e Manual Operacional",
+  by Diego-Ch4m4X, licensed under CC BY 4.0.
+
+When sharing adapted material, identify that changes were made and do not
+imply endorsement by the original author.
+
+=======================================================================
+2. SOURCE CODE — MIT LICENSE
+=======================================================================
+
+Unless a file or section states otherwise, original source code authored for
+this repository — including HTML, CSS, JavaScript, automation code, and
+reusable executable examples — is licensed under the MIT License.
+
+MIT License
+
+Copyright (c) 2026 Diego-Ch4m4X
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+=======================================================================
+3. FILES THAT MIX CODE AND EDITORIAL CONTENT
+=======================================================================
+
+Where a file contains both implementation code and editorial/documentation
+content (for example, an HTML document containing both interface code and
+educational text):
+
+- the original implementation code is licensed under MIT;
+- the original editorial/documentation content is licensed under CC BY 4.0.
+
+=======================================================================
+4. THIRD-PARTY MATERIAL, TRADEMARKS, AND EXCLUSIONS
+=======================================================================
+
+Third-party material is not relicensed by this file.
+
+In particular:
+
+- The Git logo was created by Jason Long and is made available by the Git
+  Project under the Creative Commons Attribution 3.0 Unported license.
+  See: https://git-scm.com/community/logos
+
+- The word "Git" and Git logos/graphic marks are subject to the Git Project
+  trademark policy. See: https://git-scm.com/about/trademark
+
+- Git is a member project of Software Freedom Conservancy.
+
+- GitHub names, logos, and trademarks belong to their respective rights
+  holders.
+
+- Third-party libraries or resources loaded from external CDNs remain under
+  their own licenses and are not relicensed by this repository.
+
+This is an independent educational project. It is not affiliated with,
+sponsored by, or endorsed by the Git Project, Software Freedom Conservancy,
+or GitHub.
+
+=======================================================================
+5. NO CHANGE TO THIRD-PARTY RIGHTS
+=======================================================================
+
+Nothing in this LICENSE grants rights that the repository maintainer does not
+own or control. Patent, trademark, privacy, publicity, and other rights may
+apply independently of the copyright licenses above.
