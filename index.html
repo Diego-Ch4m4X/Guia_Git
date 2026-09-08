@@ -4,11 +4,23 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width,initial-scale=1" name="viewport"/>
-<meta content="Git + GitHub — guia prático e manual operacional interativo para situações reais, com 79 cenários e 5 laboratórios." name="description"/>
+<meta content="Guia prático de Git e GitHub com comandos explicados, 79 cenários e 5 laboratórios sobre erros, branches, conflitos, sincronização e recuperação." name="description"/>
 <meta content="light dark" name="color-scheme"/>
-<title>Git + GitHub — Guia Prático e Manual Operacional para Situações Reais · index v1.0.20</title>
+<title>Git e GitHub: Guia Prático, Comandos e Situações Reais</title>
+<link href="https://diego-ch4m4x.github.io/Guia_Git/" rel="canonical"/>
+<meta content="Git e GitHub: Guia Prático, Comandos e Situações Reais" property="og:title"/>
+<meta content="Guia prático de Git e GitHub com comandos explicados, 79 cenários e 5 laboratórios sobre erros, branches, conflitos, sincronização e recuperação." property="og:description"/>
+<meta content="website" property="og:type"/>
+<meta content="https://diego-ch4m4x.github.io/Guia_Git/" property="og:url"/>
+<meta content="pt_BR" property="og:locale"/>
+<meta content="Guia Git e GitHub" property="og:site_name"/>
+<meta content="summary" name="twitter:card"/>
+<meta content="Git e GitHub: Guia Prático, Comandos e Situações Reais" name="twitter:title"/>
+<meta content="Guia prático de Git e GitHub com comandos explicados, 79 cenários e 5 laboratórios sobre erros, branches, conflitos, sincronização e recuperação." name="twitter:description"/>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://cdn.jsdelivr.net" rel="preconnect"/>
+<link href="https://git-scm.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
 <link href="https://git-scm.com/images/logos/downloads/Git-Icon-1788C.svg" rel="icon" type="image/svg+xml"/>
 <style>
@@ -1510,7 +1522,7 @@ pre code.hljs{display:block;overflow:visible;padding:0!important;background:tran
 <div id="indice"></div>
 <header class="site-header" id="siteHeader">
 <div class="header-inner">
-<a aria-label="Git + GitHub — início do guia" class="brand" href="#indice"><span class="brand-mark"><img alt="" aria-hidden="true" referrerpolicy="no-referrer" src="https://git-scm.com/images/logos/downloads/Git-Icon-1788C.svg"/></span><span class="brand-copy"><span class="brand-word">GUIA GIT &amp; GITHUB</span><span class="brand-sub">independente</span></span></a>
+<a aria-label="Git + GitHub — início do guia" class="brand" href="#indice"><span class="brand-mark"><img alt="" aria-hidden="true" decoding="async" height="64" referrerpolicy="no-referrer" src="https://git-scm.com/images/logos/downloads/Git-Icon-1788C.svg" width="64"/></span><span class="brand-copy"><span class="brand-word">GUIA GIT &amp; GITHUB</span><span class="brand-sub">independente</span></span></a>
 <nav aria-label="Navegação principal" class="global-nav">
 <a href="#capitulo-0">Começar</a><a href="#capitulo-5">Fundamentos</a><a href="#capitulo-11">Cenários</a><a href="#capitulo-17">Consulta</a>
 <a href="#capitulo-19-7">Comandos</a></nav>
@@ -1522,7 +1534,7 @@ pre code.hljs{display:block;overflow:visible;padding:0!important;background:tran
 </div>
 </div>
 </header>
-<div class="breadcrumb-wrap"><nav aria-label="Breadcrumb"><ol class="breadcrumb"><li><a href="#indice">Home</a></li><li aria-hidden="true" class="crumb-sep">›</li><li><a href="#capitulo-0">Git &amp; GitHub</a></li><li aria-hidden="true" class="crumb-sep">›</li><li aria-current="page">Guia prático</li></ol></nav></div>
+<div class="breadcrumb-wrap"><nav aria-label="Breadcrumb"><ol class="breadcrumb"><li><a href="#indice">Home</a></li><li aria-hidden="true" class="crumb-sep">›</li><li><a href="#capitulo-0">Git e GitHub</a></li><li aria-hidden="true" class="crumb-sep">›</li><li aria-current="page">Guia prático</li></ol></nav></div>
 <button aria-label="Expandir navegação do guia" class="reopen-btn" id="reopenGuide" title="Expandir navegação do guia" type="button"><svg viewbox="0 0 24 24"><path d="m9 5 7 7-7 7"></path></svg></button>
 <button aria-label="Expandir índice desta página" class="reopen-btn" id="reopenToc" title="Expandir índice desta página" type="button"><svg viewbox="0 0 24 24"><path d="m15 5-7 7 7 7"></path></svg></button>
 <div class="page-shell">
@@ -1558,11 +1570,11 @@ pre code.hljs{display:block;overflow:visible;padding:0!important;background:tran
 <li><a class="guide-link" href="#changelog"><span class="chapter-num">AP</span><span>Changelog</span></a></li></ul></nav></div></aside>
 <main class="article" id="main">
 <header class="article-head">
-<div class="hero-logo-row"><span class="hero-git-logo"><img alt="Logomarca Git" referrerpolicy="no-referrer" src="https://git-scm.com/images/logos/downloads/Git-Icon-1788C.svg"/></span><span class="independent-note">Material educacional independente · uso nominativo da marca Git</span></div>
+<div class="hero-logo-row"><span class="hero-git-logo"><img alt="Logomarca do Git" decoding="async" height="64" referrerpolicy="no-referrer" src="https://git-scm.com/images/logos/downloads/Git-Icon-1788C.svg" width="64"/></span><span class="independent-note">Material educacional independente · uso nominativo da marca Git</span></div>
 <div class="eyebrow"><span class="badge brand">GUIA + MANUAL</span><span class="badge">v2.1.11</span></div>
-<h1>Git + GitHub — Guia Prático e Manual Operacional</h1>
-<p class="lead">Da primeira instalação ao troubleshooting: entender o estado, executar com segurança e validar o resultado — sem tratar Git como uma sequência cega de comandos.</p>
-<div class="meta-row"><span class="meta-item">79 cenários operacionais</span><span class="meta-item">5 laboratórios</span><span class="meta-item">CLI canônica · PowerShell/Bash · VS Code/GitHub Web</span></div>
+<h1>Git e GitHub — Guia Prático, Comandos e Situações Reais</h1>
+<p class="lead">Aprenda Git e GitHub na prática: entenda o que cada comando faz, publique alterações com segurança, sincronize PC e GitHub, resolva conflitos e recupere erros com procedimentos auditáveis.</p>
+<div class="meta-row"><span class="meta-item">79 cenários operacionais</span><span class="meta-item">5 laboratórios</span><span class="meta-item">Revisado em 7 set. 2026</span><span class="meta-item">CLI canônica · PowerShell/Bash · VS Code/GitHub Web</span></div>
 <div class="mobile-context-bar"><button class="mobile-context-btn" id="openGuideDrawer" type="button">Manual Git</button><button class="mobile-context-btn" id="openTocDrawer" type="button">Nesta página</button></div>
 </header>
 <section class="quick-answer git-start" id="visao-geral"><div class="quick-kicker"><span aria-hidden="true" class="quick-symbol"></span>Comece por aqui</div><p><strong>Nunca usou Git?</strong> Faça apenas o <a href="#capitulo-0">Capítulo 0</a> primeiro. O restante existe para quando você precisar entender, colaborar, diagnosticar ou recuperar uma situação real.</p></section>
@@ -8348,7 +8360,7 @@ aprofundar sem depender de “receita”
 <div><dt>Documento</dt><dd>Git + GitHub — Guia Prático e Manual Operacional para Situações Reais</dd></div>
 <div><dt>Fonte canônica</dt><dd><code>README.md</code></dd></div>
 <div><dt>Conteúdo</dt><dd><strong>v2.1.11</strong> · CONTENT FREEZE — APROVADO</dd></div>
-<div><dt>Interface</dt><dd><strong>index v1.0.20</strong></dd></div>
+<div><dt>Interface</dt><dd><strong>index v1.0.21</strong></dd></div>
 <div><dt>Escopo</dt><dd>Git local + GitHub · CLI canônica · PowerShell/Bash · VS Code/GitHub Web</dd></div>
 <div><dt>Inventário</dt><dd>79 cenários operacionais · 5 laboratórios guiados</dd></div>
 <div><dt>Idioma</dt><dd>pt-BR</dd></div>
@@ -8367,12 +8379,12 @@ aprofundar sem depender de “receita”
 <div class="git-footer-inner">
 <div class="git-footer-source">
 <a aria-label="Site oficial do Git" class="git-footer-logo" href="https://git-scm.com/" rel="noopener noreferrer" target="_blank">
-<img alt="Git" referrerpolicy="no-referrer" src="https://git-scm.com/images/logos/downloads/Git-Icon-1788C.svg"/>
+<img alt="Git" decoding="async" height="64" loading="lazy" referrerpolicy="no-referrer" src="https://git-scm.com/images/logos/downloads/Git-Icon-1788C.svg" width="64"/>
 </a>
 <div class="git-footer-copy">
 <a href="#indice">Sobre este guia</a><br/>
 <span>Correções, sugestões e erratas são bem-vindas.</span>
-<span class="git-footer-source-note">Fonte canônica: <strong>README.md</strong> · interface <strong>index v1.0.20</strong>.</span>
+<span class="git-footer-source-note">Fonte canônica: <strong>README.md</strong> · interface <strong>index v1.0.21</strong>.</span>
 </div>
 </div>
 <div class="git-footer-right">

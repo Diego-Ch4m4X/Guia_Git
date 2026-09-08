@@ -8459,12 +8459,12 @@ aprofundar sem depender de “receita”
 | Idioma | `pt-BR` |
 | Repositório | [https://github.com/Diego-Ch4m4X/Guia_Git](https://github.com/Diego-Ch4m4X/Guia_Git) |
 | Index interativo | [https://diego-ch4m4x.github.io/Guia_Git/](https://diego-ch4m4x.github.io/Guia_Git/) |
-| Interface compatível nesta revisão | **index v1.0.20** |
+| Interface compatível nesta revisão | **index v1.0.21** |
 | Licença do conteúdo autoral | **CC BY 4.0** — consulte [`LICENSE`](./LICENSE) |
 | Licença do código autoral | **MIT** — consulte [`LICENSE`](./LICENSE) |
 | Materiais de terceiros | permanecem sujeitos às próprias licenças e políticas de marca |
 | Logomarca Git | Jason Long · CC BY 3.0; uso nominativo em projeto educacional independente |
-| Revisão editorial | **2026-09-07** — conteúdo v2.1.11 harmoniza exemplos operacionais, torna GIT-001 autocontido e reforça auditoria/validação pré e pós-push; index v1.0.20; 79 cenários preservados |
+| Revisão editorial | **2026-09-07** — conteúdo v2.1.11 preservado; index v1.0.21 recebe revisão SEO técnica/copywriting alinhada ao Google Search Central, sem alterar os 79 cenários |
 | Snapshot | **2026-09-07** |
 
 </details>
