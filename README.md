@@ -12,7 +12,7 @@
 
 <p align="center">
   <a href="#idioma-e-convencoes"><img alt="Idioma: pt-BR" src="https://img.shields.io/badge/idioma-pt--BR-4e443c"></a>
-  <a href="#metadados-do-documento"><img alt="Conteúdo: v2.1.7" src="https://img.shields.io/badge/conte%C3%BAdo-v2.1.7-f14e32"></a>
+  <a href="#metadados-do-documento"><img alt="Conteúdo: v2.1.10" src="https://img.shields.io/badge/conte%C3%BAdo-v2.1.10-f14e32"></a>
   <a href="#metadados-do-documento"><img alt="Estado: content freeze" src="https://img.shields.io/badge/estado-content_freeze-d7834f"></a>
   <a href="#capitulo-11"><img alt="Cenários: 79" src="https://img.shields.io/badge/cen%C3%A1rios-79-4e443c"></a>
   <a href="#capitulo-5-14"><img alt="Laboratórios: 5" src="https://img.shields.io/badge/LABs-5-f14e32"></a>
@@ -38,7 +38,7 @@
 **Atalhos:** [🌐 Index interativo](https://diego-ch4m4x.github.io/Guia_Git/) · [📁 Repositório](https://github.com/Diego-Ch4m4X/Guia_Git) · [🚀 Começar pelo Capítulo 0](#capitulo-0) · [🧭 Diagnóstico](#capitulo-10) · [📋 Consulta rápida](#capitulo-17) · [⚙️ Metadados](#metadados-do-documento)
 
 **Navegação rápida:**  
-[🟠 Comece aqui](#capitulo-0) · [🧠 Como funciona](#capitulo-1) · [🔁 Dia a dia](#capitulo-7) · [🧭 Situações reais](#capitulo-11) · [📋 Consulta](#capitulo-17) · [🔤 Glossário](#capitulo-21) · [🔗 Referências](#capitulo-22)
+[🟠 Comece aqui](#capitulo-0) · [🧠 Como funciona](#capitulo-1) · [🔁 Dia a dia](#capitulo-7) · [🧭 Situações reais](#capitulo-11) · [📋 Consulta](#capitulo-17) · [📖 Entenda os comandos](#capitulo-19-7) · [🔤 Glossário](#capitulo-21) · [🔗 Referências](#capitulo-22)
 
 **Legenda rápida:** 🟠 início/prioridade · 🧠 modelo mental · 🧪 laboratório · 🧭 troubleshooting · 🛡️ condição de parada/segurança · 📋 consulta · 🔗 referência
 
@@ -61,7 +61,7 @@
 > Situações operacionais organizadas por sintoma e contexto, com perfil multidimensional, condições de parada e o estudo de caso completo de `behind 15` + rebase + arquivo que reapareceu.
 >
 > **PARTE IV — CONSULTA RÁPIDA E REFERÊNCIA (capítulos 17–22 + apêndice)**  
-> Tabela de erros, combos, matriz por efeito/risco, checklists, cheat sheets, glossário, fontes oficiais e changelog.
+> Tabela de erros, combos, matriz por efeito/risco, dicionário de comandos, checklists, cheat sheets, glossário, fontes oficiais e changelog.
 
 ---
 
@@ -84,6 +84,10 @@
 | contribuir via fork | [7.11 — fork/upstream](#capitulo-7-11) |
 | resolver autenticação | [`GIT-058`](#git-058), [`GIT-076`](#git-076), [`GIT-077`](#git-077) |
 | consultar comandos rapidamente | [Capítulos 17–20](#capitulo-17) |
+| entender o que cada parte de um comando significa | [19.7 — Dicionário de comandos, argumentos e referências](#capitulo-19-7) |
+| corrigi um clone criado em uma subpasta indesejada | [4.9 — Mover/realocar um repositório com segurança](#capitulo-4-9) |
+| quero apagar apenas a cópia local e manter o repositório no GitHub | [4.10 — Remover a cópia local sem apagar o GitHub](#capitulo-4-10) |
+| quero excluir o projeto do PC e também o repositório no GitHub | [4.11 — Excluir local + remoto conscientemente](#capitulo-4-11) |
 
 ## Índice resumido
 
@@ -169,6 +173,9 @@
    - [4.6 Remover `origin`](#capitulo-4-6)
    - [4.7 Descobrir a raiz real do repositório](#capitulo-4-7)
    - [4.8 Inspecionar a pasta `.git`](#capitulo-4-8)
+   - [4.9 Mover/realocar um repositório com segurança](#capitulo-4-9)
+   - [4.10 Remover a cópia local sem apagar o GitHub](#capitulo-4-10)
+   - [4.11 Excluir local + remoto conscientemente](#capitulo-4-11)
 - [5. Como Git funciona: working tree, stage, commits e remoto](#capitulo-5)
    - [5.1 As quatro camadas](#capitulo-5-1)
    - [5.2 Working tree](#capitulo-5-2)
@@ -372,6 +379,11 @@
    - [19.4 Histórico local](#capitulo-19-4)
    - [19.5 Remoto](#capitulo-19-5)
    - [19.6 Princípio para comandos destrutivos](#capitulo-19-6)
+   - [19.7 Dicionário de comandos, argumentos e referências](#capitulo-19-7)
+      - [19.7.1 Como ler a sintaxe](#capitulo-19-7-1)
+      - [19.7.2 Git — comandos usados no guia](#capitulo-19-7-2)
+      - [19.7.3 GitHub CLI (`gh`)](#capitulo-19-7-3)
+      - [19.7.4 PowerShell e auxiliares de shell](#capitulo-19-7-4)
 - [20. Checklists, cheat sheets e validação final](#capitulo-20)
    - [20.1 Checklist essencial — projeto pessoal simples](#capitulo-20-1)
    - [20.2 Checklist completo — colaboração/operação relevante](#capitulo-20-2)
@@ -411,11 +423,15 @@
 | Se você está nesta situação | Comece por |
 |---|---|
 | Nunca usei Git | conclua o capítulo 0 e pare ali por enquanto |
-| Já tenho os arquivos no PC e criei o repositório no GitHub | [4.2.1](#capitulo-4-2-1) |
 | Já tenho os arquivos no PC e o repositório ainda não existe no GitHub | [4.2.2](#capitulo-4-2-2) |
+| Já tenho os arquivos no PC e criei o repositório no GitHub | [4.2.1](#capitulo-4-2-1) |
+| Perdi/apaguei a pasta local e quero restaurar o repositório do GitHub no PC | [4.3 — Clonar um repositório existente](#capitulo-4-3) |
+| Editei/substituí um arquivo no PC e quero publicar essa alteração no GitHub | [11.1 — GIT-001](#git-001) |
+| Alterei/substituí um arquivo no GitHub e quero trazer essa alteração para o PC | [11.6 — GIT-006](#git-006) |
+| Quero mover/trocar a pasta local do repositório com segurança | [4.9 — Mover/realocar um repositório com segurança](#capitulo-4-9) |
 | Já faço `add → commit → push`, mas não entendo o porquê | capítulos 5–10 |
-| Estou com um erro agora | capítulo 10 + tabela do capítulo 17 + cenário `GIT-xxx` correspondente |
 | Quero trabalhar em equipe | capítulos 7.10 e 7.11 |
+| Estou com um erro agora | capítulo 10 + tabela do capítulo 17 + cenário `GIT-xxx` correspondente |
 | Quero apenas lembrar comandos | capítulos 17–20 |
 
 <a id="capitulo-0-2"></a>
@@ -461,17 +477,23 @@ PowerShell:
 Get-Location
 ```
 
+**Entenda os comandos:** [`Get-Location`](#cmd-powershell-get-location)
+
 Bash/Linux/macOS/Git Bash:
 
 ```bash
 pwd
 ```
 
+**Entenda os comandos:** [`pwd`](#cmd-shell-pwd)
+
 Para entrar em uma pasta:
 
 ```bash
 cd caminho-da-pasta
 ```
+
+**Entenda os comandos:** [`cd`](#cmd-shell-cd)
 
 > **Segurança ao copiar comandos:** não cole no terminal um bloco que você não entende. Neste manual, valores como `<arquivo>` e `<branch>` são placeholders e devem ser substituídos; não digite os sinais `<` e `>` literalmente.
 
@@ -495,11 +517,15 @@ git clone https://github.com/SEU-USUARIO/laboratorio-git.git
 cd laboratorio-git
 ```
 
+**Entenda os comandos:** [`git clone`](#cmd-git-clone) · [`cd`](#cmd-shell-cd)
+
 Confirme:
 
 ```bash
 git status
 ```
+
+**Entenda os comandos:** [`git status`](#cmd-git-status)
 
 Você deve estar em um repositório válido. Se aparecer `fatal: not a git repository`, não continue; confirme a pasta atual. Consulte também `GIT-071`.
 
@@ -514,12 +540,16 @@ git config --global user.name "Seu Nome"
 git config --global user.email "seu-email@example.com"
 ```
 
+**Entenda os comandos:** [`git --version`](#cmd-git-version) · [`git config`](#cmd-git-config)
+
 Confira:
 
 ```bash
 git config user.name
 git config user.email
 ```
+
+**Entenda os comandos:** [`git config`](#cmd-git-config)
 
 Esses valores identificam a **autoria do commit**. Eles não são, por si só, o login usado para autenticar no GitHub.
 
@@ -544,6 +574,8 @@ Você pode fazê-lo de três formas.
 'Meu primeiro arquivo versionado com Git.' | Set-Content ola-git.txt
 ```
 
+**Entenda os comandos:** [`Set-Content`](#cmd-powershell-set-content) · [`|`](#cmd-shell-pipe)
+
 **Bash/Linux/macOS/Git Bash:**
 
 ```bash
@@ -555,6 +587,8 @@ Agora observe:
 ```bash
 git status -sb
 ```
+
+**Entenda os comandos:** [`git status`](#cmd-git-status)
 
 Saída aproximada:
 
@@ -574,11 +608,15 @@ Saída aproximada:
 git add ola-git.txt
 ```
 
+**Entenda os comandos:** [`git add`](#cmd-git-add)
+
 Revise o que entrou no stage:
 
 ```bash
 git diff --staged
 ```
+
+**Entenda os comandos:** [`git diff`](#cmd-git-diff)
 
 Aqui está a ideia central:
 
@@ -591,12 +629,16 @@ Aqui está a ideia central:
 git commit -m "Adiciona primeiro arquivo do laboratório"
 ```
 
+**Entenda os comandos:** [`git commit`](#cmd-git-commit)
+
 Confira:
 
 ```bash
 git status -sb
 git log --oneline -3
 ```
+
+**Entenda os comandos:** [`git status`](#cmd-git-status) · [`git log`](#cmd-git-log)
 
 Agora a mudança está registrada no histórico local, mas ainda pode não estar no GitHub.
 
@@ -617,11 +659,15 @@ Publique:
 git push
 ```
 
+**Entenda os comandos:** [`git push`](#cmd-git-push)
+
 Depois:
 
 ```bash
 git status -sb
 ```
+
+**Entenda os comandos:** [`git status`](#cmd-git-status)
 
 Estado típico após um push bem-sucedido para o upstream correto:
 
@@ -647,6 +693,8 @@ git fetch origin
 git status -sb
 ```
 
+**Entenda os comandos:** [`git fetch`](#cmd-git-fetch) · [`git status`](#cmd-git-status)
+
 Você deve observar algo parecido com:
 
 ```text
@@ -660,6 +708,8 @@ Se sua working tree estiver limpa e a relação for linear:
 ```bash
 git pull --ff-only
 ```
+
+**Entenda os comandos:** [`git pull`](#cmd-git-pull)
 
 **fast-forward (avanço linear)** significa que sua branch pode apenas avançar até o commit remoto, sem precisar conciliar duas linhas de histórico. `--ff-only` manda o Git **parar** se isso não for possível.
 
@@ -826,12 +876,16 @@ git branch -vv
 git remote -v
 ```
 
+**Entenda os comandos:** [`git status`](#cmd-git-status) · [`git branch`](#cmd-git-branch) · [`git remote`](#cmd-git-remote)
+
 Depois, **se existir o remoto adequado e houver acesso de rede/autenticação**, atualize sua visão dele:
 
 ```bash
 git fetch origin
 git status -sb
 ```
+
+**Entenda os comandos:** [`git fetch`](#cmd-git-fetch) · [`git status`](#cmd-git-status)
 
 Se seu remoto não se chama `origin`, não copie o segundo bloco literalmente; descubra o nome correto com `git remote -v`.
 
@@ -847,11 +901,15 @@ Comandos portáveis são mostrados como:
 git status
 ```
 
+**Entenda os comandos:** [`git status`](#cmd-git-status)
+
 Comandos específicos do PowerShell são indicados explicitamente:
 
 ```powershell
 Test-Path .\arquivo.txt
 ```
+
+**Entenda os comandos:** [`Test-Path`](#cmd-powershell-test-path)
 
 Valores entre `< >` são **placeholders didáticos** e devem ser substituídos. Não digite os sinais `<` e `>` literalmente:
 
@@ -872,7 +930,15 @@ git add <arquivo>
 git add README.md
 ```
 
+**Entenda os comandos:** [`git add`](#cmd-git-add)
+
 Os sinais `<` e `>` também podem ter significado especial no shell; por isso use sempre o valor real.
+
+### Regra “Entenda este comando”
+
+Este manual evita transformar Git em copiar/colar. Blocos executáveis de Git, GitHub CLI e PowerShell trazem, quando aplicável, uma linha **Entenda os comandos** que aponta para o [dicionário técnico do capítulo 19.7](#capitulo-19-7).
+
+A explicação longa fica centralizada no dicionário para não repetir dezenas de vezes a mesma definição. Quando uma consequência é decisiva **antes de executar** — por exemplo, o argumento `DESTINO` de `git clone` criar/usar uma pasta local — o próprio procedimento também explica essa consequência inline.
 
 ### Como ler exemplos de saída
 
@@ -990,6 +1056,8 @@ Depois abra PowerShell, Terminal ou terminal integrado do VS Code e confirme:
 git --version
 ```
 
+**Entenda os comandos:** [`git --version`](#cmd-git-version)
+
 <a id="capitulo-3-3"></a>
 ## 3.3 Instalar no Linux
 
@@ -1020,6 +1088,8 @@ Depois:
 git --version
 ```
 
+**Entenda os comandos:** [`git --version`](#cmd-git-version)
+
 <a id="capitulo-3-4"></a>
 ## 3.4 Instalar no macOS
 
@@ -1041,6 +1111,8 @@ Confirme:
 git --version
 ```
 
+**Entenda os comandos:** [`git --version`](#cmd-git-version)
+
 <a id="capitulo-3-5"></a>
 ## 3.5 Configurar nome e e-mail dos commits
 
@@ -1051,6 +1123,8 @@ git config --global user.name "Seu Nome"
 git config --global user.email "seu-email@example.com"
 ```
 
+**Entenda os comandos:** [`git config`](#cmd-git-config)
+
 Consultar:
 
 ```bash
@@ -1058,12 +1132,16 @@ git config --global user.name
 git config --global user.email
 ```
 
+**Entenda os comandos:** [`git config`](#cmd-git-config)
+
 Configuração efetiva no repositório atual:
 
 ```bash
 git config user.name
 git config user.email
 ```
+
+**Entenda os comandos:** [`git config`](#cmd-git-config)
 
 <a id="capitulo-3-6"></a>
 ## 3.6 Identidade do commit não é login do GitHub
@@ -1074,6 +1152,8 @@ Isto:
 git config user.name
 git config user.email
 ```
+
+**Entenda os comandos:** [`git config`](#cmd-git-config)
 
 responde **quem será registrado como autor do commit**.
 
@@ -1088,6 +1168,8 @@ Opcionalmente:
 git config --global init.defaultBranch main
 ```
 
+**Entenda os comandos:** [`git config`](#cmd-git-config)
+
 Isso não renomeia automaticamente branches já existentes.
 
 <a id="capitulo-3-8"></a>
@@ -1099,6 +1181,8 @@ git config --local --list
 git config --show-origin --get user.name
 git config --show-origin --get user.email
 ```
+
+**Entenda os comandos:** [`git config`](#cmd-git-config)
 
 Uma configuração local pode sobrescrever a global naquele repositório.
 
@@ -1113,11 +1197,15 @@ Ver o helper configurado:
 git config --show-origin --get credential.helper
 ```
 
+**Entenda os comandos:** [`git config`](#cmd-git-config)
+
 No Windows com GCM, listar contas GitHub conhecidas:
 
 ```bash
 git credential-manager github list
 ```
+
+**Entenda os comandos:** [`git credential-manager`](#cmd-git-credential-manager)
 
 > Se esse comando não existir, confirme se o Git Credential Manager está instalado e consulte a documentação correspondente à versão da sua instalação.
 
@@ -1129,6 +1217,8 @@ Para quem já usa terminal com frequência:
 gh auth status
 gh auth login
 ```
+
+**Entenda os comandos:** [`gh auth status`](#cmd-gh-auth-status) · [`gh auth login`](#cmd-gh-auth-login)
 
 ### Quando aparece uma janela do navegador
 
@@ -1166,6 +1256,8 @@ Independentemente do método de autenticação:
 git remote -v
 ```
 
+**Entenda os comandos:** [`git remote`](#cmd-git-remote)
+
 Isso mostra para onde `fetch` e `push` estão apontando.
 
 <a id="capitulo-3-12"></a>
@@ -1178,12 +1270,16 @@ git config user.email
 git config --show-origin --get credential.helper
 ```
 
+**Entenda os comandos:** [`git --version`](#cmd-git-version) · [`git config`](#cmd-git-config)
+
 Quando estiver dentro de um repositório:
 
 ```bash
 git remote -v
 git branch -vv
 ```
+
+**Entenda os comandos:** [`git remote`](#cmd-git-remote) · [`git branch`](#cmd-git-branch)
 
 [↑ Voltar ao índice](#indice)
 
@@ -1202,11 +1298,15 @@ Dentro da pasta do projeto:
 git init
 ```
 
+**Entenda os comandos:** [`git init`](#cmd-git-init)
+
 Depois:
 
 ```bash
 git status
 ```
+
+**Entenda os comandos:** [`git status`](#cmd-git-status)
 
 ### Atenção
 
@@ -1229,60 +1329,61 @@ Se o repositório já existe no GitHub e você ainda não possui uma cópia loca
 git clone https://github.com/USUARIO/REPOSITORIO.git
 ```
 
+**Entenda os comandos:** [`git clone`](#cmd-git-clone)
+
 Isso já cria a configuração de `origin` e traz o histórico existente.
 
 
 <a id="capitulo-4-2-1"></a>
 ## 4.2.1 Já tenho os arquivos no PC e acabei de criar o repositório no GitHub
 
-Esse é um cenário comum: a pasta do projeto já existe no computador, contém os arquivos que você quer publicar, mas **ainda não possui `.git`**; depois disso, você cria o repositório pela página do GitHub.
+Esse é um cenário comum: os arquivos do projeto já existem no computador, mas você acabou de criar o repositório pela página do GitHub. Antes de executar `git init`, responda duas perguntas diferentes:
 
-Antes de executar `git init`, descubra qual dos dois estados existe no GitHub.
+1. **o GitHub já possui algum commit?**
+2. **onde está a pasta que você quer que seja a raiz final do repositório local — ela não existe, está vazia ou já contém seus arquivos?**
+
+A segunda pergunta é importante porque o destino de `git clone` altera diretamente a árvore de pastas do seu computador.
 
 ```text
-arquivos no PC, sem .git
-          +
-repositório já criado no GitHub
-          │
-          ▼
-o remoto já possui commit?
-     ┌────┴────┐
-     │         │
-    NÃO       SIM
-     │         │
-     ▼         ▼
- Caso A     Caso B
- init       clone
- local      remoto
-     │         │
- commit     copiar arquivos locais
-     │         │
- origin     revisar
-     │         │
- push       commit + push
+arquivos no PC
+      +
+GitHub já criado
+      │
+      ▼
+o remoto possui commit?
+   ┌───────┴────────┐
+  NÃO              SIM
+   │                 │
+ Caso A            Caso B
+ git init        preservar histórico remoto
+                    │
+                    ▼
+             escolher o DESTINO do clone
 ```
 
 ### Primeiro: confirme o estado local
 
-Dentro da pasta que já contém seus arquivos:
+Na pasta que você acredita ser a pasta do projeto:
 
 ```bash
 git rev-parse --show-toplevel
 ```
 
-Se aparecer algo como:
+**Entenda os comandos:** [`git rev-parse`](#cmd-git-rev-parse)
+
+Se aparecer:
 
 ```text
 fatal: not a git repository (or any of the parent directories): .git
 ```
 
-isso apenas confirma que **essa pasta ainda não é um repositório Git**. Nesse cenário, a mensagem é esperada.
+isso confirma apenas que **essa pasta ainda não é um repositório Git**.
 
-> **Não execute `git init` automaticamente ainda.** Primeiro confirme se o repositório criado no GitHub está vazio ou se ele já possui um commit.
+> **Não execute `git init` automaticamente ainda.** Primeiro confirme se o GitHub está realmente vazio ou se já existe histórico remoto.
 
 ### Caso A — o repositório no GitHub está realmente vazio
 
-É o caso em que a página do GitHub ainda mostra o **Quick setup** e não existe branch, arquivo ou commit remoto.
+É o caso em que o GitHub ainda mostra o **Quick setup** e não existe branch, arquivo ou commit remoto.
 
 Aqui o histórico pode nascer na pasta local:
 
@@ -1292,13 +1393,17 @@ git branch -M main
 git status
 ```
 
-Selecione conscientemente os arquivos que formarão o primeiro commit. Exemplo:
+**Entenda os comandos:** [`git init`](#cmd-git-init) · [`git branch`](#cmd-git-branch) · [`git status`](#cmd-git-status)
+
+Selecione conscientemente os arquivos que formarão o primeiro commit:
 
 ```bash
 git add README.md index.html LICENSE
-git diff --staged
+git diff --staged --name-status
 git commit -m "Publica versão inicial do projeto"
 ```
+
+**Entenda os comandos:** [`git add`](#cmd-git-add) · [`git diff`](#cmd-git-diff) · [`git commit`](#cmd-git-commit)
 
 Conecte o remoto, confira o destino e publique:
 
@@ -1309,15 +1414,108 @@ git push -u origin main
 git status -sb
 ```
 
+**Entenda os comandos:** [`git remote`](#cmd-git-remote) · [`git push`](#cmd-git-push) · [`git status`](#cmd-git-status)
+
 > Se sua branch principal não se chama `main`, use o nome real. Confirme com `git branch --show-current`.
 
 ### Caso B — o GitHub já possui `README.md`, `.gitignore`, `LICENSE` ou qualquer commit
 
-Mesmo **um único `README.md` criado pela interface do GitHub** já significa que o remoto possui um histórico.
+Mesmo **um único `README.md` criado pela interface do GitHub** já significa que o remoto possui histórico. Para quem está começando, preserve esse histórico: **clone primeiro e integre os arquivos locais conscientemente**.
 
-Para quem está começando, o caminho mais seguro é **preservar esse histórico remoto**, clonar o repositório em uma nova pasta e então copiar seus arquivos locais para dentro do clone.
+#### Antes do clone: entenda exatamente o argumento final
 
-Não transforme a pasta original em repositório ainda. Saia dela e clone:
+A forma geral é:
+
+```text
+git clone <URL> [DESTINO]
+│   │      │        │
+│   │      │        └─ pasta LOCAL de destino; é opcional
+│   │      └────────── endereço do repositório de origem
+│   └──────────────── operação de clone
+└──────────────────── programa Git
+```
+
+Este comando:
+
+```bash
+git clone https://github.com/Diego-Ch4m4X/Guia_Git.git Guia_Git-git
+```
+
+**Entenda os comandos:** [`git clone`](#cmd-git-clone)
+
+**significa literalmente:** clonar o repositório informado pela URL e criar/usar localmente uma pasta chamada `Guia_Git-git` como destino.
+
+> **ALERTA IMPORTANTE — `Guia_Git-git` não faz parte da URL nem renomeia o repositório no GitHub.** É o argumento `DESTINO` local. Se essa pasta não existir, o Git a cria. Se ela já existir, o clone só pode prosseguir nesse modo quando a pasta de destino estiver vazia.
+
+Se você estiver dentro de:
+
+```text
+H:\...\_Guia_Git
+```
+
+e executar:
+
+```bash
+git clone https://github.com/Diego-Ch4m4X/Guia_Git.git Guia_Git-git
+```
+
+**Entenda os comandos:** [`git clone`](#cmd-git-clone)
+
+o resultado esperado no disco é:
+
+```text
+_Guia_Git/
+└─ Guia_Git-git/
+   ├─ .git/
+   └─ README.md
+```
+
+Já o ponto final (`.`) significa **pasta atual**:
+
+```bash
+git clone https://github.com/Diego-Ch4m4X/Guia_Git.git .
+```
+
+**Entenda os comandos:** [`git clone`](#cmd-git-clone)
+
+Resultado, quando a pasta atual está vazia e é o destino final desejado:
+
+```text
+_Guia_Git/
+├─ .git/
+└─ README.md
+```
+
+> **Não use `git clone URL .` dentro de uma pasta que já contém os arquivos locais do projeto.** O clone para uma pasta existente exige que o diretório de destino esteja vazio. Nesse caso, use uma pasta de integração separada e leve os arquivos locais para dentro do clone.
+
+#### Escolha o destino antes de executar
+
+| Situação da pasta que deve ser a raiz final | Caminho recomendado |
+|---|---|
+| a pasta final **ainda não existe** | a partir da pasta pai, use `git clone URL NOME-DA-PASTA` |
+| a pasta final **já existe e está vazia** | entre nela e use `git clone URL .` |
+| a pasta final **já contém seus arquivos locais** | clone em uma pasta temporária/de integração e copie os arquivos locais para dentro do clone |
+
+**Exemplo — pasta final ainda não existe:**
+
+```bash
+cd ..
+git clone https://github.com/USUARIO/REPOSITORIO.git REPOSITORIO
+cd REPOSITORIO
+```
+
+**Entenda os comandos:** [`cd`](#cmd-shell-cd) · [`git clone`](#cmd-git-clone)
+
+**Exemplo — pasta final já existe e está vazia:**
+
+```bash
+cd REPOSITORIO
+git clone https://github.com/USUARIO/REPOSITORIO.git .
+```
+
+**Entenda os comandos:** [`cd`](#cmd-shell-cd) · [`git clone`](#cmd-git-clone)
+
+**Exemplo — pasta final já contém arquivos locais:**
 
 ```bash
 cd ..
@@ -1325,31 +1523,84 @@ git clone https://github.com/USUARIO/REPOSITORIO.git REPOSITORIO-git
 cd REPOSITORIO-git
 ```
 
-Agora copie, pelo Explorador de Arquivos ou pelo VS Code, os arquivos da pasta local original para `REPOSITORIO-git`.
+**Entenda os comandos:** [`cd`](#cmd-shell-cd) · [`git clone`](#cmd-git-clone)
 
-> **Não apague nem substitua a pasta `.git` criada pelo clone.** Se existir um arquivo com o mesmo nome nos dois lados, decida conscientemente qual conteúdo deve prevalecer. Por exemplo: se o `README.md` remoto é apenas um placeholder e seu `README.md` local é o documento correto, substitua o arquivo do clone pelo local.
+Nesse terceiro caso, `REPOSITORIO-git` é **deliberadamente uma pasta temporária/de integração**. Copie para dentro dela, pelo Explorador de Arquivos ou VS Code, os arquivos da pasta local original.
 
-Depois revise o que mudou:
+> **Não apague nem substitua `.git`.** Se houver nomes iguais nos dois lados, decida conscientemente qual conteúdo deve prevalecer. Se o `README.md` remoto é apenas um placeholder e o local é o documento correto, substituir apenas o arquivo `README.md` é uma decisão de conteúdo; substituir `.git` destruiria justamente o histórico que o clone preservou.
+
+Se você criou por engano uma subpasta extra com `git clone URL DESTINO`, consulte [4.9 — Mover/realocar um repositório com segurança](#capitulo-4-9) antes de apagar ou mover qualquer coisa.
+
+#### Depois de integrar os arquivos: use o fluxo auditável antes do push
+
+Primeiro confira o que o Git detectou:
 
 ```bash
-git status
-git diff
-```
-
-Prepare somente os arquivos relacionados, revise o stage e crie **um único commit** com a versão que realmente deseja publicar:
-
-```bash
-git add README.md index.html LICENSE
-git diff --staged
-git commit -m "Adiciona arquivos locais do projeto"
-git push
 git status -sb
 ```
 
-Esse fluxo preserva o commit que já existe no GitHub e evita criar dois históricos independentes.
+**Entenda os comandos:** [`git status`](#cmd-git-status)
 
-> [!CAUTION]
-> Não use `git push --force` nem `git pull --allow-unrelated-histories` como solução automática para este onboarding. Se você **já executou `git init` localmente e criou commits** antes de perceber que o GitHub também possuía histórico, pare e consulte [`GIT-017`](#git-017).
+Prepare explicitamente apenas os arquivos relacionados e audite o stage:
+
+```bash
+git add README.md index.html LICENSE
+git diff --staged --name-status
+```
+
+**Entenda os comandos:** [`git add`](#cmd-git-add) · [`git diff`](#cmd-git-diff)
+
+> **Windows / LF → CRLF:** se `git add` exibir um aviso como `LF will be replaced by CRLF`, isso não significa por si só que o stage falhou. Primeiro confirme o resultado com `git diff --staged --name-status`; não altere configuração de line endings por reflexo. Veja [8.14 — LF e CRLF](#capitulo-8-14).
+
+Crie o commit e confirme a relação com o remoto:
+
+```bash
+git commit -m "Adiciona arquivos locais do projeto"
+git status -sb
+```
+
+**Entenda os comandos:** [`git commit`](#cmd-git-commit) · [`git status`](#cmd-git-status)
+
+Se aparecer algo como:
+
+```text
+## main...origin/main [ahead 1]
+```
+
+há um commit local ainda não publicado. Antes de enviar, audite a diferença final:
+
+```bash
+git diff --name-status origin/main..HEAD
+```
+
+**Entenda os comandos:** [`git diff`](#cmd-git-diff)
+
+Simule o push:
+
+```bash
+git push --dry-run origin main
+```
+
+**Entenda os comandos:** [`git push`](#cmd-git-push)
+
+Somente se o dry-run for aceito e a auditoria estiver correta:
+
+```bash
+git push origin main
+git status -sb
+```
+
+**Entenda os comandos:** [`git push`](#cmd-git-push) · [`git status`](#cmd-git-status)
+
+Estado final esperado:
+
+```text
+## main...origin/main
+```
+
+Esse fluxo preserva o histórico remoto, mostra exatamente o que será publicado e evita usar o `push` como teste às cegas.
+
+> **PARE** se `git status -sb` mostrar `[behind N]`, `[ahead N, behind M]`, conflito ou se o dry-run for recusado. Não use `git push --force` nem `git pull --allow-unrelated-histories` como solução automática para este onboarding. Se você já executou `git init` localmente e criou commits antes de perceber que o GitHub também possuía histórico, consulte [`GIT-017`](#git-017).
 
 ### Regra de decisão
 
@@ -1358,7 +1609,12 @@ GitHub sem commit
 → a pasta local pode iniciar o histórico com git init.
 
 GitHub com pelo menos um commit
-→ para iniciantes, clone primeiro e leve os arquivos locais para dentro do clone.
+→ preserve o histórico remoto com clone.
+→ antes do clone, escolha conscientemente o destino local:
+   • pasta inexistente → git clone URL NOME
+   • pasta existente e vazia → git clone URL .
+   • pasta existente com arquivos → clone temporário + integração consciente
+→ antes do push: status → stage auditado → commit → diff contra origin/main → dry-run → push → status final.
 ```
 
 
@@ -1401,6 +1657,8 @@ Confirme visualmente os arquivos da pasta e execute:
 git rev-parse --show-toplevel
 ```
 
+**Entenda os comandos:** [`git rev-parse`](#cmd-git-rev-parse)
+
 Se a resposta for semelhante a:
 
 ```text
@@ -1419,17 +1677,23 @@ Confira se o GitHub CLI (`gh`) está instalado:
 gh --version
 ```
 
+**Entenda os comandos:** [`gh --version`](#cmd-gh-version)
+
 Depois verifique a conta ativa:
 
 ```bash
 gh auth status
 ```
 
+**Entenda os comandos:** [`gh auth status`](#cmd-gh-auth-status)
+
 Se ainda não estiver autenticado:
 
 ```bash
 gh auth login
 ```
+
+**Entenda os comandos:** [`gh auth login`](#cmd-gh-auth-login)
 
 O fluxo padrão do GitHub CLI pode abrir o navegador para autenticação.
 
@@ -1443,6 +1707,8 @@ Antes de criar o repositório, você pode consultar:
 gh repo view USUARIO/REPOSITORIO
 ```
 
+**Entenda os comandos:** [`gh repo view`](#cmd-gh-repo-view)
+
 Se o comando exibir um repositório existente, **pare** e use [4.2.1](#capitulo-4-2-1).  
 Se o GitHub CLI informar que o repositório não foi encontrado, continue somente depois de confirmar que `USUARIO/REPOSITORIO` é realmente o destino desejado.
 
@@ -1453,6 +1719,8 @@ git init
 git branch -M main
 git status
 ```
+
+**Entenda os comandos:** [`git init`](#cmd-git-init) · [`git branch`](#cmd-git-branch) · [`git status`](#cmd-git-status)
 
 Agora a pasta possui `.git`, mas **ainda não existe nenhum repositório remoto no GitHub**.
 
@@ -1465,11 +1733,15 @@ git add README.md index.html LICENSE
 git diff --staged
 ```
 
+**Entenda os comandos:** [`git add`](#cmd-git-add) · [`git diff`](#cmd-git-diff)
+
 Se o stage estiver correto:
 
 ```bash
 git commit -m "Publica versão inicial do projeto"
 ```
+
+**Entenda os comandos:** [`git commit`](#cmd-git-commit)
 
 Confirme:
 
@@ -1477,6 +1749,8 @@ Confirme:
 git status
 git log -1 --oneline
 ```
+
+**Entenda os comandos:** [`git status`](#cmd-git-status) · [`git log`](#cmd-git-log)
 
 ### Etapa 3 — crie o GitHub e publique em uma única operação
 
@@ -1486,11 +1760,15 @@ Para criar um repositório **público** a partir do repositório local atual:
 gh repo create REPOSITORIO --public --source=. --remote=origin --push
 ```
 
+**Entenda os comandos:** [`gh repo create`](#cmd-gh-repo-create)
+
 Para um repositório **privado**, troque somente a visibilidade:
 
 ```bash
 gh repo create REPOSITORIO --private --source=. --remote=origin --push
 ```
+
+**Entenda os comandos:** [`gh repo create`](#cmd-gh-repo-create)
 
 Nesse comando:
 
@@ -1513,6 +1791,8 @@ git branch -vv
 git status -sb
 ```
 
+**Entenda os comandos:** [`git remote`](#cmd-git-remote) · [`git branch`](#cmd-git-branch) · [`git status`](#cmd-git-status)
+
 O estado esperado é:
 
 ```text
@@ -1534,6 +1814,8 @@ Você também pode confirmar no GitHub:
 gh repo view --web
 ```
 
+**Entenda os comandos:** [`gh repo view`](#cmd-gh-repo-view)
+
 ### Regra de decisão
 
 ```text
@@ -1551,19 +1833,54 @@ Arquivos no PC + GitHub já existente
 <a id="capitulo-4-3"></a>
 ## 4.3 Clonar um repositório existente
 
+Clonar cria uma cópia local do repositório e configura normalmente `origin` para a origem usada no clone.
+
+### Sem destino explícito
+
 ```bash
 git clone https://github.com/USUARIO/REPOSITORIO.git
 ```
 
-Depois:
+**Entenda os comandos:** [`git clone`](#cmd-git-clone)
+
+Quando você **não informa o argumento final**, o Git escolhe por padrão um nome de diretório derivado do repositório. No exemplo acima, o resultado normal é uma nova pasta local `REPOSITORIO/` dentro da pasta atual.
+
+### Com destino explícito
 
 ```bash
-cd REPOSITORIO
-git status
+git clone https://github.com/USUARIO/REPOSITORIO.git PASTA-LOCAL
+```
+
+**Entenda os comandos:** [`git clone`](#cmd-git-clone)
+
+Aqui `PASTA-LOCAL` é o **destino local**. Se não existir, será criado. Se já existir, precisa estar vazio para esse clone normal.
+
+### Clonar diretamente na pasta atual
+
+```bash
+git clone https://github.com/USUARIO/REPOSITORIO.git .
+```
+
+**Entenda os comandos:** [`git clone`](#cmd-git-clone)
+
+O `.` representa a pasta atual. Use essa forma somente quando a pasta atual for realmente o destino desejado e estiver vazia.
+
+Depois valide:
+
+```bash
+pwd
+git rev-parse --show-toplevel
+git status -sb
 git remote -v
 ```
 
-> **Clonar não concede permissão de escrita.** Se o repositório pertence a terceiros e sua conta não possui acesso de push, você consegue cloná-lo e ler o histórico, mas o push será recusado. Para colaborar, use uma branch + Pull Request quando tiver permissão adequada, ou o fluxo **fork → upstream → Pull Request** quando não tiver write; veja 7.10 e 7.11.
+**Entenda os comandos:** [`pwd`](#cmd-shell-pwd) · [`git rev-parse`](#cmd-git-rev-parse) · [`git status`](#cmd-git-status) · [`git remote`](#cmd-git-remote)
+
+No PowerShell, `Get-Location` pode ser usado no lugar de `pwd`.
+
+> **Clonar não concede permissão de escrita.** Se o repositório pertence a terceiros e sua conta não possui acesso de push, você consegue cloná-lo e ler o histórico, mas o push será recusado. Para colaborar, use branch + Pull Request quando tiver permissão adequada, ou **fork → upstream → Pull Request** quando não tiver write; veja 7.10 e 7.11.
+
+> Se você criou uma pasta extra sem perceber por causa do argumento `DESTINO`, não apague `.git` por tentativa e erro. Consulte [4.9](#capitulo-4-9).
 
 <a id="capitulo-4-4"></a>
 ## 4.4 Conectar repositório local a um remoto
@@ -1574,17 +1891,23 @@ Quando o repositório local foi criado conscientemente com `git init`:
 git remote add origin https://github.com/USUARIO/REPOSITORIO.git
 ```
 
+**Entenda os comandos:** [`git remote`](#cmd-git-remote)
+
 Confira:
 
 ```bash
 git remote -v
 ```
 
+**Entenda os comandos:** [`git remote`](#cmd-git-remote)
+
 Primeiro push da `main`:
 
 ```bash
 git push -u origin main
 ```
+
+**Entenda os comandos:** [`git push`](#cmd-git-push)
 
 <a id="capitulo-4-5"></a>
 ## 4.5 Alterar a URL de `origin`
@@ -1593,6 +1916,8 @@ git push -u origin main
 git remote set-url origin https://github.com/USUARIO/OUTRO-REPOSITORIO.git
 ```
 
+**Entenda os comandos:** [`git remote`](#cmd-git-remote)
+
 <a id="capitulo-4-6"></a>
 ## 4.6 Remover `origin`
 
@@ -1600,12 +1925,16 @@ git remote set-url origin https://github.com/USUARIO/OUTRO-REPOSITORIO.git
 git remote remove origin
 ```
 
+**Entenda os comandos:** [`git remote`](#cmd-git-remote)
+
 <a id="capitulo-4-7"></a>
 ## 4.7 Descobrir a raiz real do repositório
 
 ```bash
 git rev-parse --show-toplevel
 ```
+
+**Entenda os comandos:** [`git rev-parse`](#cmd-git-rev-parse)
 
 Esse comando é particularmente útil quando:
 
@@ -1623,6 +1952,8 @@ No PowerShell:
 Get-ChildItem -Force
 ```
 
+**Entenda os comandos:** [`Get-ChildItem`](#cmd-powershell-get-childitem)
+
 Em Bash:
 
 ```bash
@@ -1633,6 +1964,284 @@ O diretório `.git` contém os metadados e o histórico local do repositório. N
 
 [↑ Voltar ao índice](#indice)
 
+
+---
+
+
+<a id="capitulo-4-9"></a>
+## 4.9 Mover/realocar um repositório com segurança
+
+A identidade do repositório local está principalmente no diretório oculto `.git`. **Mover a pasta inteira do repositório junto com `.git` não exige `git init` novamente.** O risco está em mover apenas os arquivos visíveis e deixar `.git` para trás, ou misturar conteúdos em um destino que já possui arquivos conflitantes.
+
+### Caso simples — mover a pasta inteira
+
+Antes de mover, confirme a raiz:
+
+```bash
+git rev-parse --show-toplevel
+git status -sb
+```
+
+**Entenda os comandos:** [`git rev-parse`](#cmd-git-rev-parse) · [`git status`](#cmd-git-status)
+
+Mova a **pasta inteira** pelo Explorador de Arquivos, VS Code ou pelo sistema operacional. Depois entre na nova localização e valide novamente:
+
+```bash
+git rev-parse --show-toplevel
+git status -sb
+git remote -v
+```
+
+**Entenda os comandos:** [`git rev-parse`](#cmd-git-rev-parse) · [`git status`](#cmd-git-status) · [`git remote`](#cmd-git-remote)
+
+Se a nova raiz exibida for a pasta esperada e o status continuar coerente, o repositório foi preservado.
+
+### Caso específico — clone criado numa subpasta indesejada dentro de uma pasta final vazia
+
+Exemplo de estado acidental:
+
+```text
+_Guia_Git/
+└─ Guia_Git-git/
+   ├─ .git/
+   └─ README.md
+```
+
+Objetivo:
+
+```text
+_Guia_Git/
+├─ .git/
+└─ README.md
+```
+
+> **Pré-condição obrigatória:** a pasta pai que receberá o conteúdo deve estar vazia, exceto pela subpasta clonada que será promovida. Se houver outros arquivos no pai, pare e trate como integração de conteúdo — não execute o movimento em massa abaixo.
+
+No PowerShell, primeiro inspecione **incluindo itens ocultos**:
+
+```powershell
+Get-ChildItem -Force .\Guia_Git-git
+Get-ChildItem -Force .
+```
+
+**Entenda os comandos:** [`Get-ChildItem`](#cmd-powershell-get-childitem)
+
+Confirme que a subpasta contém `.git` e que o pai não possui arquivos que colidirão. Só então mova o conteúdo, inclusive `.git`:
+
+```powershell
+Get-ChildItem -Force .\Guia_Git-git | Move-Item -Destination .
+```
+
+**Entenda os comandos:** [`Get-ChildItem`](#cmd-powershell-get-childitem) · [`Move-Item`](#cmd-powershell-move-item) · [`|`](#cmd-shell-pipe)
+
+Por que `-Force` é importante aqui? Porque `.git` é oculto no Windows; sem incluí-lo na enumeração, você poderia mover apenas os arquivos visíveis e separar a working tree dos metadados do repositório.
+
+**Não presuma que funcionou.** Valide a nova raiz e o estado:
+
+```bash
+git rev-parse --show-toplevel
+git status -sb
+```
+
+**Entenda os comandos:** [`git rev-parse`](#cmd-git-rev-parse) · [`git status`](#cmd-git-status)
+
+Depois confirme que a pasta intermediária realmente ficou vazia:
+
+```powershell
+Get-ChildItem -Force .\Guia_Git-git
+```
+
+**Entenda os comandos:** [`Get-ChildItem`](#cmd-powershell-get-childitem)
+
+Somente se não houver conteúdo, remova a pasta vazia:
+
+```powershell
+Remove-Item .\Guia_Git-git
+Get-ChildItem -Force .
+```
+
+**Entenda os comandos:** [`Remove-Item`](#cmd-powershell-remove-item) · [`Get-ChildItem`](#cmd-powershell-get-childitem)
+
+### Condições de parada
+
+- se o pai já contém arquivos, **não** faça o movimento em massa;
+- se `.git` não aparece dentro da origem, pare e investigue antes de mover;
+- se `git rev-parse --show-toplevel` depois do movimento aponta para uma raiz inesperada, pare;
+- se `git status -sb` mostra alterações inesperadas, não apague a pasta de origem até entender o estado;
+- nunca execute `git init` apenas para “consertar” uma pasta movida sem primeiro localizar `.git`.
+
+Esse runbook cobre a correção de layout de pastas. Ele **não substitui** o fluxo de integração quando dois diretórios diferentes já contêm arquivos do projeto.
+
+[↑ Voltar ao índice](#indice)
+
+---
+
+<a id="capitulo-4-10"></a>
+## 4.10 Remover a cópia local sem apagar o GitHub
+
+Esse cenário apaga **somente a pasta local do clone**. O repositório no GitHub continua existindo porque remover uma pasta do Windows não executa nenhuma operação remota do Git ou do GitHub.
+
+> [!WARNING]
+> Antes de apagar a pasta local, confirme que não há commits ainda não publicados, arquivos modificados importantes ou arquivos não rastreados que existam somente no PC. Apagar a pasta remove também o diretório oculto `.git` e qualquer conteúdo local não preservado em outro lugar.
+
+### Etapa 1 — audite antes de apagar
+
+Dentro do repositório:
+
+```bash
+git fetch origin
+git status -sb
+git log --oneline origin/main..HEAD
+git diff --name-status origin/main..HEAD
+git remote -v
+```
+
+**Entenda os comandos:** [`git fetch`](#cmd-git-fetch) · [`git status`](#cmd-git-status) · [`git log`](#cmd-git-log) · [`git diff`](#cmd-git-diff) · [`git remote`](#cmd-git-remote)
+
+Interprete antes de continuar:
+
+- se `git status -sb` mostrar arquivos modificados ou `??`, existem dados locais que precisam ser decididos;
+- se aparecer `[ahead N]` ou `git log origin/main..HEAD` listar commits, existem commits locais ainda não publicados;
+- confirme em `git remote -v` que `origin` aponta para o repositório que você pretende manter no GitHub.
+
+### Etapa 2 — saia da pasta do repositório
+
+No PowerShell:
+
+```powershell
+cd ..
+Get-ChildItem -Force .\REPOSITORIO
+```
+
+**Entenda os comandos:** [`cd`](#cmd-shell-cd) · [`Get-ChildItem`](#cmd-powershell-get-childitem)
+
+> Não tente remover a pasta enquanto o terminal ainda estiver posicionado dentro dela.
+
+### Etapa 3 — remova apenas a cópia local
+
+Depois de confirmar cuidadosamente o caminho:
+
+```powershell
+Remove-Item -LiteralPath .\REPOSITORIO -Recurse -Force
+Test-Path -LiteralPath .\REPOSITORIO
+```
+
+**Entenda os comandos:** [`Remove-Item`](#cmd-powershell-remove-item) · [`Test-Path`](#cmd-powershell-test-path)
+
+Resultado esperado do `Test-Path`:
+
+```text
+False
+```
+
+Isso significa que a pasta local foi removida. **O GitHub não foi apagado.** Se quiser confirmar pela CLI:
+
+```bash
+gh repo view OWNER/REPOSITORIO
+```
+
+**Entenda os comandos:** [`gh repo view`](#cmd-gh-repo-view)
+
+Se quiser trabalhar novamente no projeto no futuro, basta cloná-lo de novo.
+
+---
+
+<a id="capitulo-4-11"></a>
+## 4.11 Excluir local + remoto conscientemente
+
+Aqui a intenção é diferente: **apagar o repositório do GitHub e também remover a cópia local do PC**. São duas operações independentes. Apagar no GitHub não apaga automaticamente a pasta local; apagar a pasta local não apaga automaticamente o GitHub.
+
+> [!CAUTION]
+> Esta é uma operação destrutiva. Confirme nome, proprietário e caminho antes de agir. A documentação do GitHub alerta que a exclusão remove o repositório e suas permissões; alguns repositórios excluídos podem ser restaurados dentro de um período limitado, mas isso não deve ser tratado como estratégia de backup.
+
+### Etapa 1 — confirme exatamente qual repositório será excluído
+
+Dentro do clone local:
+
+```bash
+git rev-parse --show-toplevel
+git remote -v
+gh repo view OWNER/REPOSITORIO
+```
+
+**Entenda os comandos:** [`git rev-parse`](#cmd-git-rev-parse) · [`git remote`](#cmd-git-remote) · [`gh repo view`](#cmd-gh-repo-view)
+
+Pare se o caminho local, o `origin` ou `OWNER/REPOSITORIO` não forem exatamente os esperados.
+
+### Etapa 2 — exclua o repositório remoto
+
+**Rota recomendada para iniciantes — interface do GitHub:**
+
+`Repository → Settings → General → Danger Zone → Delete this repository`
+
+Leia as confirmações e digite o nome do repositório quando solicitado.
+
+**Rota opcional — GitHub CLI:**
+
+```bash
+gh auth status
+gh repo delete OWNER/REPOSITORIO
+```
+
+**Entenda os comandos:** [`gh auth status`](#cmd-gh-auth-status) · [`gh repo delete`](#cmd-gh-repo-delete)
+
+Se o GitHub CLI informar falta do escopo necessário, autorize conscientemente:
+
+```bash
+gh auth refresh -s delete_repo
+```
+
+**Entenda os comandos:** [`gh auth refresh`](#cmd-gh-auth-refresh)
+
+> O manual **não usa `--yes` neste fluxo** porque essa opção pula a confirmação interativa. Para uma exclusão de repositório, manter a etapa de confirmação é uma proteção útil.
+
+### Etapa 3 — só depois remova a cópia local
+
+Saia da pasta e confira o caminho:
+
+```powershell
+cd ..
+Get-ChildItem -Force .\REPOSITORIO
+```
+
+**Entenda os comandos:** [`cd`](#cmd-shell-cd) · [`Get-ChildItem`](#cmd-powershell-get-childitem)
+
+Se estiver correto:
+
+```powershell
+Remove-Item -LiteralPath .\REPOSITORIO -Recurse -Force
+Test-Path -LiteralPath .\REPOSITORIO
+```
+
+**Entenda os comandos:** [`Remove-Item`](#cmd-powershell-remove-item) · [`Test-Path`](#cmd-powershell-test-path)
+
+Resultado esperado:
+
+```text
+False
+```
+
+### Regra mental
+
+```text
+apagar pasta local
+→ afeta o PC
+→ não envia comando ao GitHub
+
+apagar repositório no GitHub
+→ afeta o remoto
+→ não remove automaticamente a pasta do PC
+
+quero apagar os dois
+→ confirmar remoto
+→ excluir remoto
+→ sair da pasta local
+→ confirmar caminho
+→ excluir pasta local
+→ validar
+```
+
+[↑ Voltar ao índice](#indice)
 
 ---
 
@@ -1681,6 +2290,8 @@ O **stage**, ou **área de preparação**, é o **conjunto das versões de arqui
 git add README.md
 ```
 
+**Entenda os comandos:** [`git add`](#cmd-git-add)
+
 não significa “upload”. Significa: **prepare esta versão de `README.md` para o próximo commit**.
 
 O stage pode conter apenas alguns arquivos ou até apenas partes de uma alteração; por isso “seleção” é uma ideia mais útil do que imaginar um botão “salvar tudo”.
@@ -1716,6 +2327,8 @@ Confirme a branch atual:
 git branch --show-current
 ```
 
+**Entenda os comandos:** [`git branch`](#cmd-git-branch)
+
 Nos exemplos iniciais deste manual, `main` é usada por consistência. Em cenários genéricos, substitua pelo nome real da sua branch.
 
 <a id="capitulo-5-7"></a>
@@ -1727,6 +2340,8 @@ Nos exemplos iniciais deste manual, `main` é usada por consistência. Em cenár
 git remote -v
 ```
 
+**Entenda os comandos:** [`git remote`](#cmd-git-remote)
+
 <a id="capitulo-5-8"></a>
 ## 5.8 `origin/main`
 
@@ -1737,6 +2352,8 @@ Ela **não é uma conexão ao vivo** com o GitHub. Operações como `git fetch` 
 ```bash
 git fetch origin
 ```
+
+**Entenda os comandos:** [`git fetch`](#cmd-git-fetch)
 
 Portanto, `origin/main` responde “qual foi o último estado remoto que meu Git conhece após uma atualização de referências?”, não “o que está acontecendo no GitHub neste exato milissegundo?”.
 
@@ -1759,6 +2376,8 @@ Ao executar:
 git push -u origin main
 ```
 
+**Entenda os comandos:** [`git push`](#cmd-git-push)
+
 o `-u` registra essa associação. Depois, comandos como `git push` e `git pull` podem usar o upstream configurado.
 
 Confira:
@@ -1766,6 +2385,8 @@ Confira:
 ```bash
 git branch -vv
 ```
+
+**Entenda os comandos:** [`git branch`](#cmd-git-branch)
 
 > “upstream” também é frequentemente usado como **nome de remoto** em fluxos com fork (`origin` = seu fork; `upstream` = repositório original). O contexto deixa claro qual dos dois sentidos está sendo usado.
 
@@ -1807,6 +2428,8 @@ Nesse momento, o stage ainda contém **B** e a working tree contém **C**. Se vo
 git add <arquivo>
 ```
 
+**Entenda os comandos:** [`git add`](#cmd-git-add)
+
 <a id="capitulo-5-12"></a>
 ## 5.12 `git add .` versus `git add -A`
 
@@ -1814,11 +2437,15 @@ git add <arquivo>
 git add .
 ```
 
+**Entenda os comandos:** [`git add`](#cmd-git-add)
+
 atua sobre o diretório atual e seus descendentes.
 
 ```bash
 git add -A
 ```
+
+**Entenda os comandos:** [`git add`](#cmd-git-add)
 
 considera o repositório inteiro.
 
@@ -1829,6 +2456,8 @@ Para aprender e para commits pequenos, prefira seleção explícita:
 ```bash
 git add README.md
 ```
+
+**Entenda os comandos:** [`git add`](#cmd-git-add)
 
 Use `git add -A` quando você revisou `git status` e **todas** as mudanças fazem parte da mesma intenção lógica.
 
@@ -1871,11 +2500,15 @@ git add estado.txt
 git commit -m "Adiciona estado A"
 ```
 
+**Entenda os comandos:** [`git add`](#cmd-git-add) · [`git commit`](#cmd-git-commit)
+
 3. Edite o arquivo para `B` e prepare:
 
 ```bash
 git add estado.txt
 ```
+
+**Entenda os comandos:** [`git add`](#cmd-git-add)
 
 4. Edite novamente para `C`, **sem novo `git add`**.
 
@@ -1885,6 +2518,8 @@ git add estado.txt
 git diff --staged
 git diff
 ```
+
+**Entenda os comandos:** [`git diff`](#cmd-git-diff)
 
 Interpretação:
 
@@ -1925,6 +2560,8 @@ Para limpar o laboratório sem perder C, prepare C e faça um commit de teste ou
 git status
 ```
 
+**Entenda os comandos:** [`git status`](#cmd-git-status)
+
 Mostra branch, alterações, stage, untracked, conflitos e operações em andamento.
 
 <a id="capitulo-6-2"></a>
@@ -1933,6 +2570,8 @@ Mostra branch, alterações, stage, untracked, conflitos e operações em andame
 ```bash
 git status -sb
 ```
+
+**Entenda os comandos:** [`git status`](#cmd-git-status)
 
 Exemplo sincronizado:
 
@@ -1981,6 +2620,8 @@ Alterações da working tree ainda não preparadas:
 git diff
 ```
 
+**Entenda os comandos:** [`git diff`](#cmd-git-diff)
+
 <a id="capitulo-6-5"></a>
 ## 6.5 `git diff --staged`
 
@@ -1990,11 +2631,15 @@ Conteúdo preparado para o próximo commit:
 git diff --staged
 ```
 
+**Entenda os comandos:** [`git diff`](#cmd-git-diff)
+
 ou:
 
 ```bash
 git diff --cached
 ```
+
+**Entenda os comandos:** [`git diff`](#cmd-git-diff)
 
 <a id="capitulo-6-6"></a>
 ## 6.6 Auditoria resumida do stage
@@ -2003,6 +2648,8 @@ git diff --cached
 git diff --cached --name-status
 git diff --cached --stat
 ```
+
+**Entenda os comandos:** [`git diff`](#cmd-git-diff)
 
 <a id="capitulo-6-7"></a>
 ## 6.7 `git log`
@@ -2013,6 +2660,8 @@ git log --oneline
 git log --oneline --graph --decorate --all
 ```
 
+**Entenda os comandos:** [`git log`](#cmd-git-log)
+
 <a id="capitulo-6-8"></a>
 ## 6.8 Comparar commits locais e remotos
 
@@ -2022,11 +2671,15 @@ Commits que estão no remoto e não no seu HEAD:
 git log --oneline HEAD..origin/main
 ```
 
+**Entenda os comandos:** [`git log`](#cmd-git-log)
+
 Commits locais ainda não existentes no remoto:
 
 ```bash
 git log --oneline origin/main..HEAD
 ```
+
+**Entenda os comandos:** [`git log`](#cmd-git-log)
 
 <a id="capitulo-6-9"></a>
 ## 6.9 Comparar estado final local e remoto
@@ -2036,6 +2689,8 @@ git diff --name-status HEAD..origin/main
 git diff --name-status origin/main..HEAD
 ```
 
+**Entenda os comandos:** [`git diff`](#cmd-git-diff)
+
 A segunda forma é útil para comparar **os estados finais (snapshots)** de `origin/main` e `HEAD`.
 
 Não confunda duas perguntas diferentes:
@@ -2044,11 +2699,15 @@ Não confunda duas perguntas diferentes:
 git log --oneline origin/main..HEAD
 ```
 
+**Entenda os comandos:** [`git log`](#cmd-git-log)
+
 mostra commits alcançáveis a partir de `HEAD` que não estão na referência remota conhecida; já:
 
 ```bash
 git diff --name-status origin/main..HEAD
 ```
+
+**Entenda os comandos:** [`git diff`](#cmd-git-diff)
 
 compara o conteúdo final dos dois estados. Em histórico divergente, **diferença de conteúdo não é a mesma coisa que diferença de commits nem uma descrição completa do que um push transferiria**.
 
@@ -2061,6 +2720,8 @@ compara o conteúdo final dos dois estados. Em histórico divergente, **diferen�
 git fetch origin
 ```
 
+**Entenda os comandos:** [`git fetch`](#cmd-git-fetch)
+
 Atualiza referências remotas e baixa objetos necessários sem integrar automaticamente as mudanças à sua working tree.
 
 <a id="capitulo-6-11"></a>
@@ -2069,6 +2730,8 @@ Atualiza referências remotas e baixa objetos necessários sem integrar automati
 ```bash
 git reflog
 ```
+
+**Entenda os comandos:** [`git reflog`](#cmd-git-reflog)
 
 Registra movimentos locais importantes de referências e é uma ferramenta valiosa de recuperação.
 
@@ -2081,17 +2744,23 @@ Arquivos rastreados pelo índice:
 git ls-files
 ```
 
+**Entenda os comandos:** [`git ls-files`](#cmd-git-ls-files)
+
 Arquivos presentes no commit atual:
 
 ```bash
 git ls-tree -r --name-only HEAD
 ```
 
+**Entenda os comandos:** [`git ls-tree`](#cmd-git-ls-tree)
+
 Arquivos presentes no estado remoto conhecido:
 
 ```bash
 git ls-tree -r --name-only origin/main
 ```
+
+**Entenda os comandos:** [`git ls-tree`](#cmd-git-ls-tree)
 
 [↑ Voltar ao índice](#indice)
 
@@ -2127,6 +2796,8 @@ git commit -m "Atualiza instruções do projeto"
 git push
 git status
 ```
+
+**Entenda os comandos:** [`git status`](#cmd-git-status) · [`git add`](#cmd-git-add) · [`git diff`](#cmd-git-diff) · [`git commit`](#cmd-git-commit) · [`git push`](#cmd-git-push)
 
 A ideia é simples: **ver → selecionar → revisar → registrar → publicar → validar**.
 
@@ -2164,6 +2835,8 @@ git push origin main
 git status -sb
 ```
 
+**Entenda os comandos:** [`git fetch`](#cmd-git-fetch) · [`git status`](#cmd-git-status) · [`git add`](#cmd-git-add) · [`git diff`](#cmd-git-diff) · [`git commit`](#cmd-git-commit) · [`git push`](#cmd-git-push)
+
 `git add -A` pode substituir a seleção explícita **somente quando todas as mudanças listadas realmente pertencem ao mesmo commit**.
 
 <a id="capitulo-7-3"></a>
@@ -2194,6 +2867,8 @@ git status -sb
 git branch -vv
 ```
 
+**Entenda os comandos:** [`git fetch`](#cmd-git-fetch) · [`git status`](#cmd-git-status) · [`git branch`](#cmd-git-branch)
+
 Isso ajuda a detectar push para outro remoto/branch ou upstream configurado incorretamente.
 
 <a id="capitulo-7-5"></a>
@@ -2211,11 +2886,15 @@ git diff --name-status origin/main..HEAD
 git push --dry-run origin main
 ```
 
+**Entenda os comandos:** [`git log`](#cmd-git-log) · [`git diff`](#cmd-git-diff) · [`git push`](#cmd-git-push)
+
 Se estiver correto:
 
 ```bash
 git push origin main
 ```
+
+**Entenda os comandos:** [`git push`](#cmd-git-push)
 
 <a id="capitulo-7-6"></a>
 ## 7.6 O que fazer quando aparece `behind`
@@ -2230,11 +2909,15 @@ Não faça push automaticamente. Inspecione:
 git log --oneline HEAD..origin/main
 ```
 
+**Entenda os comandos:** [`git log`](#cmd-git-log)
+
 Se sua working tree estiver limpa, não houver commit local divergente e for apenas avanço linear:
 
 ```bash
 git pull --ff-only
 ```
+
+**Entenda os comandos:** [`git pull`](#cmd-git-pull)
 
 <a id="capitulo-7-7"></a>
 ## 7.7 O que fazer quando aparece `ahead + behind`
@@ -2251,6 +2934,8 @@ git log --oneline HEAD..origin/main
 git log --oneline origin/main..HEAD
 ```
 
+**Entenda os comandos:** [`git branch`](#cmd-git-branch) · [`git log`](#cmd-git-log)
+
 Depois escolha conscientemente merge ou rebase conforme o contexto.
 
 <a id="capitulo-7-8"></a>
@@ -2261,6 +2946,8 @@ Use quando a mudança é relevante, há colaboração, você acabou de resolver 
 ```bash
 git push --dry-run origin main
 ```
+
+**Entenda os comandos:** [`git push`](#cmd-git-push)
 
 Ele pode contactar o servidor e detectar rejeições como `non-fast-forward`, mas não atualiza a branch remota como um push real.
 
@@ -2277,6 +2964,8 @@ Em um projeto pessoal simples, não precisa virar cerimônia obrigatória para c
 git fetch origin
 git status -sb
 ```
+
+**Entenda os comandos:** [`git fetch`](#cmd-git-fetch) · [`git status`](#cmd-git-status)
 
 Depois você decide se o caso é fast-forward, merge, rebase ou se deve parar.
 
@@ -2325,6 +3014,8 @@ git commit -m "Adiciona minha alteração"
 git push -u origin feature/minha-alteracao
 ```
 
+**Entenda os comandos:** [`git status`](#cmd-git-status) · [`git switch`](#cmd-git-switch) · [`git fetch`](#cmd-git-fetch) · [`git pull`](#cmd-git-pull) · [`git add`](#cmd-git-add) · [`git diff`](#cmd-git-diff) · [`git commit`](#cmd-git-commit) · [`git push`](#cmd-git-push)
+
 Depois, abra um Pull Request no GitHub, aguarde review/checks conforme o projeto e faça o merge pelo fluxo adotado pela equipe.
 
 Convenções de nome variam. Exemplos comuns:
@@ -2359,11 +3050,15 @@ git remote add upstream https://github.com/PROJETO-ORIGINAL/REPOSITORIO.git
 git remote -v
 ```
 
+**Entenda os comandos:** [`git remote`](#cmd-git-remote)
+
 Atualizar a visão do original:
 
 ```bash
 git fetch upstream
 ```
+
+**Entenda os comandos:** [`git fetch`](#cmd-git-fetch)
 
 Sincronizar sua `main` quando for um avanço linear simples:
 
@@ -2372,6 +3067,8 @@ git switch main
 git merge --ff-only upstream/main
 git push origin main
 ```
+
+**Entenda os comandos:** [`git switch`](#cmd-git-switch) · [`git merge`](#cmd-git-merge) · [`git push`](#cmd-git-push)
 
 Depois crie sua branch, faça commit, push para o fork (`origin`) e abra o Pull Request para o repositório original.
 
@@ -2410,6 +3107,8 @@ git fetch origin
 git status -sb
 ```
 
+**Entenda os comandos:** [`git fetch`](#cmd-git-fetch) · [`git status`](#cmd-git-status)
+
 Estado esperado:
 
 ```text
@@ -2422,17 +3121,23 @@ Estado esperado:
 git log --oneline HEAD..origin/main
 ```
 
+**Entenda os comandos:** [`git log`](#cmd-git-log)
+
 4. Se não houver mudanças locais concorrentes:
 
 ```bash
 git pull --ff-only
 ```
 
+**Entenda os comandos:** [`git pull`](#cmd-git-pull)
+
 5. Valide:
 
 ```bash
 git status -sb
 ```
+
+**Entenda os comandos:** [`git status`](#cmd-git-status)
 
 **Pergunta de verificação:** `behind 1` quer dizer “erro”? **Não.** Quer dizer que existe um commit remoto conhecido ainda não incorporado localmente.
 
@@ -2459,11 +3164,15 @@ Prefira começar pela intenção explícita:
 git add README.md
 ```
 
+**Entenda os comandos:** [`git add`](#cmd-git-add)
+
 Vários arquivos relacionados:
 
 ```bash
 git add README.md index.html sitemap.xml
 ```
+
+**Entenda os comandos:** [`git add`](#cmd-git-add)
 
 <a id="capitulo-8-2"></a>
 ## 8.2 Auditar o que está preparado
@@ -2472,6 +3181,8 @@ git add README.md index.html sitemap.xml
 git diff --staged
 git diff --cached --name-status
 ```
+
+**Entenda os comandos:** [`git diff`](#cmd-git-diff)
 
 Antes de commitar, pergunte: **tudo isso pertence à mesma mudança lógica?**
 
@@ -2482,6 +3193,8 @@ Antes de commitar, pergunte: **tudo isso pertence à mesma mudança lógica?**
 git add -A
 ```
 
+**Entenda os comandos:** [`git add`](#cmd-git-add)
+
 Use quando você revisou `git status` e quer deliberadamente preparar todas as alterações do repositório.
 
 <a id="capitulo-8-4"></a>
@@ -2490,6 +3203,8 @@ Use quando você revisou `git status` e quer deliberadamente preparar todas as a
 ```bash
 git add -p <arquivo>
 ```
+
+**Entenda os comandos:** [`git add`](#cmd-git-add)
 
 É opcional para iniciantes, mas ensina uma ideia importante: o stage é uma **seleção**, não um botão “salvar tudo”.
 
@@ -2500,6 +3215,8 @@ git add -p <arquivo>
 git restore --staged index.html
 ```
 
+**Entenda os comandos:** [`git restore`](#cmd-git-restore)
+
 Mantém a alteração física na working tree.
 
 <a id="capitulo-8-6"></a>
@@ -2509,12 +3226,16 @@ Mantém a alteração física na working tree.
 git restore --staged .
 ```
 
+**Entenda os comandos:** [`git restore`](#cmd-git-restore)
+
 <a id="capitulo-8-7"></a>
 ## 8.7 Desfazer alteração local não commitada
 
 ```bash
 git restore index.html
 ```
+
+**Entenda os comandos:** [`git restore`](#cmd-git-restore)
 
 ### Cuidado
 
@@ -2527,6 +3248,8 @@ Isso pode descartar trabalho local que ainda não foi commitado.
 git rm arquivo.txt
 ```
 
+**Entenda os comandos:** [`git rm`](#cmd-git-rm)
+
 Remove fisicamente o arquivo e prepara a exclusão no stage.
 
 <a id="capitulo-8-9"></a>
@@ -2536,6 +3259,8 @@ Remove fisicamente o arquivo e prepara a exclusão no stage.
 git rm --cached arquivo.txt
 ```
 
+**Entenda os comandos:** [`git rm`](#cmd-git-rm)
+
 Normalmente combinado com `.gitignore`.
 
 <a id="capitulo-8-10"></a>
@@ -2544,6 +3269,8 @@ Normalmente combinado com `.gitignore`.
 ```bash
 git mv antigo.html novo.html
 ```
+
+**Entenda os comandos:** [`git mv`](#cmd-git-mv)
 
 O Git também consegue detectar muitos renomes por similaridade quando feitos pelo Explorer/VS Code, mas `git mv` torna a intenção explícita.
 
@@ -2593,6 +3320,8 @@ Para saber por que um caminho está sendo ignorado:
 git check-ignore -v caminho/arquivo
 ```
 
+**Entenda os comandos:** [`git check-ignore`](#cmd-git-check-ignore)
+
 > Se o arquivo já é rastreado, `.gitignore` sozinho não o “desversiona”. Use `git rm --cached` quando a intenção for manter o arquivo no disco e removê-lo do índice/histórico futuro.
 
 <a id="capitulo-8-12"></a>
@@ -2641,6 +3370,8 @@ git add --renormalize .
 git diff --cached --stat
 ```
 
+**Entenda os comandos:** [`git add`](#cmd-git-add) · [`git diff`](#cmd-git-diff)
+
 <a id="capitulo-8-15"></a>
 ## 8.15 LAB-03 — Pare de rastrear um arquivo sem apagá-lo do PC
 
@@ -2657,11 +3388,15 @@ git add config-local.txt
 git commit -m "Adiciona configuração de laboratório"
 ```
 
+**Entenda os comandos:** [`git add`](#cmd-git-add) · [`git commit`](#cmd-git-commit)
+
 2. Pare de rastrear sem apagar do disco:
 
 ```bash
 git rm --cached config-local.txt
 ```
+
+**Entenda os comandos:** [`git rm`](#cmd-git-rm)
 
 3. Adicione ao `.gitignore`:
 
@@ -2675,6 +3410,8 @@ config-local.txt
 git status
 git diff --staged --name-status
 ```
+
+**Entenda os comandos:** [`git status`](#cmd-git-status) · [`git diff`](#cmd-git-diff)
 
 5. Confirme que o arquivo físico ainda existe antes de commitar.
 
@@ -2734,6 +3471,8 @@ git branch -vv
 git branch --show-current
 ```
 
+**Entenda os comandos:** [`git branch`](#cmd-git-branch)
+
 <a id="capitulo-9-3"></a>
 ## 9.3 Criar e trocar de branch
 
@@ -2742,11 +3481,15 @@ git branch nova-branch
 git switch nova-branch
 ```
 
+**Entenda os comandos:** [`git branch`](#cmd-git-branch) · [`git switch`](#cmd-git-switch)
+
 Ou:
 
 ```bash
 git switch -c nova-branch
 ```
+
+**Entenda os comandos:** [`git switch`](#cmd-git-switch)
 
 <a id="capitulo-9-4"></a>
 ## 9.4 Referência de segurança para o commit atual
@@ -2756,6 +3499,8 @@ Antes de rebase, merge complexo ou outra operação delicada, você pode criar u
 ```bash
 git branch backup-antes-da-operacao
 ```
+
+**Entenda os comandos:** [`git branch`](#cmd-git-branch)
 
 Isso cria uma **referência de segurança para um commit existente**. Não é um backup completo da working tree e não torna recuperável conteúdo que nunca foi commitado.
 
@@ -2767,6 +3512,8 @@ Isso cria uma **referência de segurança para um commit existente**. Não é um
 ```bash
 git merge nome-da-branch
 ```
+
+**Entenda os comandos:** [`git merge`](#cmd-git-merge)
 
 ### Caso 1 — fast-forward (avanço linear)
 
@@ -2813,6 +3560,8 @@ Cancelar um merge em andamento antes de concluí-lo:
 git merge --abort
 ```
 
+**Entenda os comandos:** [`git merge`](#cmd-git-merge)
+
 > Merge não é sinônimo de “criar sempre um commit extra”: o resultado depende da relação entre os históricos.
 
 <a id="capitulo-9-6"></a>
@@ -2832,6 +3581,8 @@ BASE -------
 git rebase origin/main
 ```
 
+**Entenda os comandos:** [`git rebase`](#cmd-git-rebase)
+
 resultado conceitual:
 
 ```text
@@ -2847,6 +3598,8 @@ BASE---A---B---C---D'
 git restore --source=backup-antes-do-rebase -- README.md
 ```
 
+**Entenda os comandos:** [`git restore`](#cmd-git-restore)
+
 Útil em conflitos quando você quer dizer explicitamente qual fonte deve prevalecer para aquele arquivo.
 
 <a id="capitulo-9-8"></a>
@@ -2859,6 +3612,8 @@ git stash apply
 git stash pop
 ```
 
+**Entenda os comandos:** [`git stash`](#cmd-git-stash)
+
 > **Não trate stash como “guardar absolutamente tudo”.** Revise `git status` antes. O stash padrão não deve ser presumido como proteção de arquivos não rastreados (`??`) ou ignorados. Se precisar incluir untracked conscientemente, `git stash push -u ...` é uma opção; veja também `GIT-040`.
 
 <a id="capitulo-9-9"></a>
@@ -2869,6 +3624,8 @@ git tag -a v1.0.0 -m "Versão 1.0.0"
 git push origin v1.0.0
 ```
 
+**Entenda os comandos:** [`git tag`](#cmd-git-tag) · [`git push`](#cmd-git-push)
+
 <a id="capitulo-9-10"></a>
 ## 9.10 Corrigir o último commit sem mudar a mensagem
 
@@ -2878,6 +3635,8 @@ Se ainda não publicou:
 git add <arquivos>
 git commit --amend --no-edit
 ```
+
+**Entenda os comandos:** [`git add`](#cmd-git-add) · [`git commit`](#cmd-git-commit)
 
 `amend` recria o commit e muda seu hash.
 
@@ -2890,6 +3649,8 @@ Se ainda não publicou:
 git commit --amend -m "Mensagem correta"
 ```
 
+**Entenda os comandos:** [`git commit`](#cmd-git-commit)
+
 <a id="capitulo-9-12"></a>
 ## 9.12 Desfazer commit já publicado sem reescrever histórico
 
@@ -2898,6 +3659,8 @@ Prefira criar um novo commit reversor:
 ```bash
 git revert <hash>
 ```
+
+**Entenda os comandos:** [`git revert`](#cmd-git-revert)
 
 Isso é normalmente mais apropriado para histórico já compartilhado.
 
@@ -2941,12 +3704,16 @@ A---B---C  ← HEAD
 git switch -c lab-merge
 ```
 
+**Entenda os comandos:** [`git switch`](#cmd-git-switch)
+
 3. Faça uma pequena alteração, depois:
 
 ```bash
 git add <arquivo>
 git commit -m "Altera arquivo no laboratório de merge"
 ```
+
+**Entenda os comandos:** [`git add`](#cmd-git-add) · [`git commit`](#cmd-git-commit)
 
 4. Volte para `main` sem criar novos commits nela:
 
@@ -2955,11 +3722,15 @@ git switch main
 git merge lab-merge
 ```
 
+**Entenda os comandos:** [`git switch`](#cmd-git-switch) · [`git merge`](#cmd-git-merge)
+
 5. Observe:
 
 ```bash
 git log --oneline --graph --decorate -5
 ```
+
+**Entenda os comandos:** [`git log`](#cmd-git-log)
 
 **Pergunta de verificação:** por que não foi necessário criar um commit de merge? Porque `main` podia avançar linearmente até o commit da outra branch.
 
@@ -2988,6 +3759,8 @@ git log --oneline --graph --decorate -5
 git merge lab-conflito
 ```
 
+**Entenda os comandos:** [`git merge`](#cmd-git-merge)
+
 5. O arquivo deve conter marcadores semelhantes a:
 
 ```text
@@ -3006,12 +3779,16 @@ git status
 git diff
 ```
 
+**Entenda os comandos:** [`git status`](#cmd-git-status) · [`git diff`](#cmd-git-diff)
+
 8. Marque como resolvido e conclua:
 
 ```bash
 git add porta.txt
 git commit
 ```
+
+**Entenda os comandos:** [`git add`](#cmd-git-add) · [`git commit`](#cmd-git-commit)
 
 > Se `git commit` abrir um editor de mensagem, isso é esperado; consulte `GIT-079` se não souber como prosseguir.
 
@@ -3068,6 +3845,8 @@ git branch -vv
 git remote -v
 ```
 
+**Entenda os comandos:** [`git rev-parse`](#cmd-git-rev-parse) · [`git status`](#cmd-git-status) · [`git branch`](#cmd-git-branch) · [`git remote`](#cmd-git-remote)
+
 Esses comandos respondem onde você está, qual branch está usando, se existem alterações locais e quais remotos estão configurados.
 
 ### Fase B — atualizar a visão do remoto, **se aplicável**
@@ -3078,6 +3857,8 @@ Se existir um remoto apropriado, houver rede e a autenticação estiver funciona
 git fetch origin
 git status -sb
 ```
+
+**Entenda os comandos:** [`git fetch`](#cmd-git-fetch) · [`git status`](#cmd-git-status)
 
 Se o remoto não se chama `origin`, substitua pelo nome real identificado em `git remote -v`.
 
@@ -3158,11 +3939,15 @@ Antes de reset, rebase complexo ou resolução arriscada:
 git branch backup-antes-da-operacao
 ```
 
+**Entenda os comandos:** [`git branch`](#cmd-git-branch)
+
 Se um commit parece ter “sumido”:
 
 ```bash
 git reflog
 ```
+
+**Entenda os comandos:** [`git reflog`](#cmd-git-reflog)
 
 <a id="capitulo-10-7"></a>
 ## 10.7 Por que este manual é orientado a cenários
@@ -3186,6 +3971,8 @@ git branch -vv
 git remote -v
 git log --oneline --decorate -10
 ```
+
+**Entenda os comandos:** [`git status`](#cmd-git-status) · [`git branch`](#cmd-git-branch) · [`git remote`](#cmd-git-remote) · [`git log`](#cmd-git-log)
 
 Antes de colar a saída publicamente:
 
@@ -3271,17 +4058,23 @@ Primeiro confirme o estado:
 git status
 ```
 
+**Entenda os comandos:** [`git status`](#cmd-git-status)
+
 Selecione **apenas os arquivos que pertencem a essa mudança**:
 
 ```bash
 git add README.md index.html
 ```
 
+**Entenda os comandos:** [`git add`](#cmd-git-add)
+
 Revise:
 
 ```bash
 git diff --staged
 ```
+
+**Entenda os comandos:** [`git diff`](#cmd-git-diff)
 
 Registre e publique:
 
@@ -3290,6 +4083,8 @@ git commit -m "Atualiza interface e documentação"
 git push
 git status
 ```
+
+**Entenda os comandos:** [`git commit`](#cmd-git-commit) · [`git push`](#cmd-git-push) · [`git status`](#cmd-git-status)
 
 ### Quer auditoria adicional?
 
@@ -3312,6 +4107,8 @@ Após atualizar a visão do remoto aparecer `behind`, `ahead + behind`, conflito
 git status
 ```
 
+**Entenda os comandos:** [`git status`](#cmd-git-status)
+
 Exemplo:
 
 ```text
@@ -3326,6 +4123,8 @@ git diff --staged
 git commit -m "Adiciona novo guia"
 git push
 ```
+
+**Entenda os comandos:** [`git add`](#cmd-git-add) · [`git diff`](#cmd-git-diff) · [`git commit`](#cmd-git-commit) · [`git push`](#cmd-git-push)
 
 `??` vira conteúdo rastreado quando você o seleciona para o stage e registra o commit.
 
@@ -3344,6 +4143,8 @@ Se o arquivo já era rastreado:
 git status
 ```
 
+**Entenda os comandos:** [`git status`](#cmd-git-status)
+
 deve indicar exclusão.
 
 Prepare **essa exclusão**:
@@ -3352,6 +4153,8 @@ Prepare **essa exclusão**:
 git add caminho/arquivo.txt
 git diff --staged --name-status
 ```
+
+**Entenda os comandos:** [`git add`](#cmd-git-add) · [`git diff`](#cmd-git-diff)
 
 Esperado:
 
@@ -3366,6 +4169,8 @@ git commit -m "Remove arquivo obsoleto"
 git push
 ```
 
+**Entenda os comandos:** [`git commit`](#cmd-git-commit) · [`git push`](#cmd-git-push)
+
 ### Alternativa explícita
 
 Se o arquivo ainda existe e você quer removê-lo do PC **e** registrar a remoção no Git:
@@ -3373,6 +4178,8 @@ Se o arquivo ainda existe e você quer removê-lo do PC **e** registrar a remoç
 ```bash
 git rm caminho/arquivo.txt
 ```
+
+**Entenda os comandos:** [`git rm`](#cmd-git-rm)
 
 > Se a intenção é remover do versionamento **mas manter no PC**, use `GIT-033`, não `git rm` simples.
 
@@ -3389,6 +4196,8 @@ Se ainda não renomeou:
 git mv antigo.html novo.html
 ```
 
+**Entenda os comandos:** [`git mv`](#cmd-git-mv)
+
 Se renomeou pelo Explorer/VS Code, **inspecione primeiro** e prepare apenas os caminhos envolvidos:
 
 ```bash
@@ -3396,6 +4205,8 @@ git status
 git add -A -- antigo.html novo.html
 git diff --staged --name-status
 ```
+
+**Entenda os comandos:** [`git status`](#cmd-git-status) · [`git add`](#cmd-git-add) · [`git diff`](#cmd-git-diff)
 
 O `-A` aqui está limitado pelo `-- antigo.html novo.html`: ele atualiza o stage para esses caminhos sem preparar alterações não relacionadas em outros arquivos.
 
@@ -3424,6 +4235,8 @@ git diff --cached --name-status
 git diff --cached --stat
 ```
 
+**Entenda os comandos:** [`git fetch`](#cmd-git-fetch) · [`git status`](#cmd-git-status) · [`git add`](#cmd-git-add) · [`git diff`](#cmd-git-diff)
+
 Se o volume fizer sentido:
 
 ```bash
@@ -3432,6 +4245,8 @@ git diff --name-status origin/main..HEAD
 git push --dry-run origin main
 git push origin main
 ```
+
+**Entenda os comandos:** [`git commit`](#cmd-git-commit) · [`git diff`](#cmd-git-diff) · [`git push`](#cmd-git-push)
 
 ### Pare se...
 
@@ -3458,12 +4273,16 @@ Primeiro:
 git status -sb
 ```
 
+**Entenda os comandos:** [`git status`](#cmd-git-status)
+
 Se a working tree estiver limpa:
 
 ```bash
 git fetch origin
 git status -sb
 ```
+
+**Entenda os comandos:** [`git fetch`](#cmd-git-fetch) · [`git status`](#cmd-git-status)
 
 Se aparecer somente:
 
@@ -3477,6 +4296,8 @@ use:
 git pull --ff-only
 ```
 
+**Entenda os comandos:** [`git pull`](#cmd-git-pull)
+
 ### Por que `--ff-only`?
 
 Ele aceita somente uma atualização linear simples. Se houver divergência, falha em vez de criar uma integração inesperada.
@@ -3486,6 +4307,8 @@ Ele aceita somente uma atualização linear simples. Se houver divergência, fal
 ```bash
 git status -sb
 ```
+
+**Entenda os comandos:** [`git status`](#cmd-git-status)
 
 Esperado:
 
@@ -3507,6 +4330,8 @@ git fetch origin
 git status -sb
 git pull --ff-only
 ```
+
+**Entenda os comandos:** [`git fetch`](#cmd-git-fetch) · [`git status`](#cmd-git-status) · [`git pull`](#cmd-git-pull)
 
 O arquivo será removido localmente quando a atualização for aplicada.
 
@@ -3530,6 +4355,8 @@ git diff --staged
 git commit -m "Preserva alteração local antes da integração"
 ```
 
+**Entenda os comandos:** [`git status`](#cmd-git-status) · [`git add`](#cmd-git-add) · [`git diff`](#cmd-git-diff) · [`git commit`](#cmd-git-commit)
+
 > Use `git add -A` apenas se, depois de revisar `git status`, **todas** as mudanças listadas realmente fizerem parte do trabalho que você quer preservar.
 
 Depois:
@@ -3539,17 +4366,23 @@ git fetch origin
 git status -sb
 ```
 
+**Entenda os comandos:** [`git fetch`](#cmd-git-fetch) · [`git status`](#cmd-git-status)
+
 Se houver divergência, crie segurança:
 
 ```bash
 git branch backup-antes-da-integracao
 ```
 
+**Entenda os comandos:** [`git branch`](#cmd-git-branch)
+
 Para commits locais ainda não publicados, uma opção é:
 
 ```bash
 git rebase origin/main
 ```
+
+**Entenda os comandos:** [`git rebase`](#cmd-git-rebase)
 
 Se arquivos independentes mudaram, o rebase tende a concluir sem conflito.
 
@@ -3559,6 +4392,8 @@ Depois:
 git push --dry-run origin main
 git push origin main
 ```
+
+**Entenda os comandos:** [`git push`](#cmd-git-push)
 
 ---
 
@@ -3586,6 +4421,8 @@ git branch backup-antes-da-integracao
 git rebase origin/main
 ```
 
+**Entenda os comandos:** [`git status`](#cmd-git-status) · [`git add`](#cmd-git-add) · [`git diff`](#cmd-git-diff) · [`git commit`](#cmd-git-commit) · [`git fetch`](#cmd-git-fetch) · [`git branch`](#cmd-git-branch) · [`git rebase`](#cmd-git-rebase)
+
 > Use `git add -A` somente quando tiver confirmado que não há mudanças independentes entrando nesse commit.
 
 Se houver conflito:
@@ -3594,6 +4431,8 @@ Se houver conflito:
 git status
 ```
 
+**Entenda os comandos:** [`git status`](#cmd-git-status)
+
 Resolva o arquivo conscientemente, depois:
 
 ```bash
@@ -3601,11 +4440,15 @@ git add <arquivo>
 git rebase --continue
 ```
 
+**Entenda os comandos:** [`git add`](#cmd-git-add) · [`git rebase`](#cmd-git-rebase)
+
 Ou desista da operação:
 
 ```bash
 git rebase --abort
 ```
+
+**Entenda os comandos:** [`git rebase`](#cmd-git-rebase)
 
 ---
 
@@ -3622,6 +4465,8 @@ Teste:
 git rev-parse --show-toplevel
 ```
 
+**Entenda os comandos:** [`git rev-parse`](#cmd-git-rev-parse)
+
 Depois:
 
 ```bash
@@ -3629,6 +4474,8 @@ git remote -v
 git branch -vv
 git status -sb
 ```
+
+**Entenda os comandos:** [`git remote`](#cmd-git-remote) · [`git branch`](#cmd-git-branch) · [`git status`](#cmd-git-status)
 
 Se tudo responder corretamente, não faça `git init`.
 
@@ -3664,12 +4511,16 @@ git log --oneline origin/main..HEAD
 git diff --name-status origin/main..HEAD
 ```
 
+**Entenda os comandos:** [`git log`](#cmd-git-log) · [`git diff`](#cmd-git-diff)
+
 Depois:
 
 ```bash
 git push --dry-run origin main
 git push origin main
 ```
+
+**Entenda os comandos:** [`git push`](#cmd-git-push)
 
 ---
 
@@ -3691,6 +4542,8 @@ Se a working tree estiver limpa e você não possuir commits locais divergentes:
 ```bash
 git pull --ff-only
 ```
+
+**Entenda os comandos:** [`git pull`](#cmd-git-pull)
 
 ### Pare se...
 
@@ -3722,11 +4575,15 @@ git log --oneline HEAD..origin/main
 git log --oneline origin/main..HEAD
 ```
 
+**Entenda os comandos:** [`git log`](#cmd-git-log)
+
 ### Segurança
 
 ```bash
 git branch backup-antes-da-sincronizacao
 ```
+
+**Entenda os comandos:** [`git branch`](#cmd-git-branch)
 
 ### Opção A — rebase
 
@@ -3736,6 +4593,8 @@ Adequado quando seus commits locais ainda não foram publicados e você quer rea
 git rebase origin/main
 ```
 
+**Entenda os comandos:** [`git rebase`](#cmd-git-rebase)
+
 ### Opção B — merge
 
 Adequado quando preservar explicitamente as duas linhas de histórico é desejável:
@@ -3744,11 +4603,15 @@ Adequado quando preservar explicitamente as duas linhas de histórico é desejá
 git merge origin/main
 ```
 
+**Entenda os comandos:** [`git merge`](#cmd-git-merge)
+
 ### Não faça
 
 ```bash
 git push --force
 ```
+
+**Entenda os comandos:** [`git push`](#cmd-git-push)
 
 como primeira reação.
 
@@ -3780,6 +4643,8 @@ git log --oneline HEAD..origin/main
 git log --oneline origin/main..HEAD
 ```
 
+**Entenda os comandos:** [`git fetch`](#cmd-git-fetch) · [`git status`](#cmd-git-status) · [`git log`](#cmd-git-log)
+
 Depois escolha conscientemente merge ou rebase.
 
 ### Não faça automaticamente
@@ -3787,6 +4652,8 @@ Depois escolha conscientemente merge ou rebase.
 ```bash
 git push --force
 ```
+
+**Entenda os comandos:** [`git push`](#cmd-git-push)
 
 ---
 
@@ -3805,6 +4672,8 @@ Diagnostique exatamente como um `non-fast-forward`:
 git fetch origin
 git status -sb
 ```
+
+**Entenda os comandos:** [`git fetch`](#cmd-git-fetch) · [`git status`](#cmd-git-status)
 
 ---
 
@@ -3825,6 +4694,8 @@ Primeiro:
 git status
 ```
 
+**Entenda os comandos:** [`git status`](#cmd-git-status)
+
 Escolha:
 
 ### Salvar em commit
@@ -3836,6 +4707,8 @@ git diff --staged
 git commit -m "Preserva trabalho local antes da sincronização"
 ```
 
+**Entenda os comandos:** [`git status`](#cmd-git-status) · [`git add`](#cmd-git-add) · [`git diff`](#cmd-git-diff) · [`git commit`](#cmd-git-commit)
+
 > Use `git add -A` somente se, depois de revisar `git status`, **todas** as mudanças listadas realmente pertencerem ao trabalho que será preservado.
 
 ### Ou guardar temporariamente
@@ -3844,17 +4717,23 @@ git commit -m "Preserva trabalho local antes da sincronização"
 git stash push -m "antes da sincronização"
 ```
 
+**Entenda os comandos:** [`git stash`](#cmd-git-stash)
+
 Depois:
 
 ```bash
 git pull --ff-only
 ```
 
+**Entenda os comandos:** [`git pull`](#cmd-git-pull)
+
 Se usou stash:
 
 ```bash
 git stash pop
 ```
+
+**Entenda os comandos:** [`git stash`](#cmd-git-stash)
 
 Conflitos ainda podem ocorrer ao reaplicar o stash. Se havia arquivos não rastreados importantes, não presuma que o stash padrão os preservou; revise `git status` e consulte `GIT-040`.
 
@@ -3872,6 +4751,8 @@ Isso normalmente ocorre quando repositórios local e remoto começaram com hist�
 ```bash
 git pull --allow-unrelated-histories
 ```
+
+**Entenda os comandos:** [`git pull`](#cmd-git-pull)
 
 ### Caminho mais seguro para iniciantes
 
@@ -3899,6 +4780,8 @@ git remote -v
 git log --oneline -5
 ```
 
+**Entenda os comandos:** [`git status`](#cmd-git-status) · [`git branch`](#cmd-git-branch) · [`git remote`](#cmd-git-remote) · [`git log`](#cmd-git-log)
+
 Causas comuns:
 
 - alteração não foi commitada;
@@ -3912,6 +4795,8 @@ Confira o diff contra o remoto:
 ```bash
 git diff --name-status origin/main..HEAD
 ```
+
+**Entenda os comandos:** [`git diff`](#cmd-git-diff)
 
 ---
 
@@ -3934,11 +4819,15 @@ Veja:
 git diff --cached --name-status
 ```
 
+**Entenda os comandos:** [`git diff`](#cmd-git-diff)
+
 Retire um arquivo do stage:
 
 ```bash
 git restore --staged caminho/arquivo
 ```
+
+**Entenda os comandos:** [`git restore`](#cmd-git-restore)
 
 Isso mantém o arquivo físico.
 
@@ -3953,11 +4842,15 @@ Isso mantém o arquivo físico.
 git restore --staged .
 ```
 
+**Entenda os comandos:** [`git restore`](#cmd-git-restore)
+
 Depois:
 
 ```bash
 git status
 ```
+
+**Entenda os comandos:** [`git status`](#cmd-git-status)
 
 Suas alterações locais permanecem.
 
@@ -3976,6 +4869,8 @@ Depois de nova edição:
 git status
 ```
 
+**Entenda os comandos:** [`git status`](#cmd-git-status)
+
 O mesmo arquivo pode ter parte staged e parte unstaged.
 
 Para atualizar o stage:
@@ -3984,11 +4879,15 @@ Para atualizar o stage:
 git add <arquivo>
 ```
 
+**Entenda os comandos:** [`git add`](#cmd-git-add)
+
 Revise:
 
 ```bash
 git diff --cached -- <arquivo>
 ```
+
+**Entenda os comandos:** [`git diff`](#cmd-git-diff)
 
 ---
 
@@ -4005,6 +4904,8 @@ git restore --staged caminho/arquivo
 git status
 ```
 
+**Entenda os comandos:** [`git status`](#cmd-git-status) · [`git restore`](#cmd-git-restore)
+
 Se o arquivo nunca existia no `HEAD` e já não existe fisicamente, ele deixa de fazer parte do próximo commit sem preparar alterações de outros caminhos.
 
 Confirme também que não restou conteúdo staged inesperado:
@@ -4012,6 +4913,8 @@ Confirme também que não restou conteúdo staged inesperado:
 ```bash
 git diff --staged --name-status
 ```
+
+**Entenda os comandos:** [`git diff`](#cmd-git-diff)
 
 ---
 
@@ -4026,11 +4929,15 @@ Use modo patch:
 git add -p <arquivo>
 ```
 
+**Entenda os comandos:** [`git add`](#cmd-git-add)
+
 Depois:
 
 ```bash
 git diff --cached
 ```
+
+**Entenda os comandos:** [`git diff`](#cmd-git-diff)
 
 Esse recurso é útil para separar mudanças logicamente independentes.
 
@@ -4048,6 +4955,8 @@ git add <arquivo>
 git commit --amend --no-edit
 ```
 
+**Entenda os comandos:** [`git add`](#cmd-git-add) · [`git commit`](#cmd-git-commit)
+
 Isso recria o último commit com o arquivo incluído.
 
 ---
@@ -4063,6 +4972,8 @@ Se ainda não publicou:
 git commit --amend -m "Mensagem correta"
 ```
 
+**Entenda os comandos:** [`git commit`](#cmd-git-commit)
+
 ---
 
 <a id="git-026"></a>
@@ -4077,11 +4988,15 @@ git config user.name "Nome correto"
 git config user.email "email-correto@example.com"
 ```
 
+**Entenda os comandos:** [`git config`](#cmd-git-config)
+
 Depois, se o commit ainda não foi publicado:
 
 ```bash
 git commit --amend --reset-author --no-edit
 ```
+
+**Entenda os comandos:** [`git commit`](#cmd-git-commit)
 
 ### Importante
 
@@ -4102,11 +5017,15 @@ Manter alterações no stage:
 git reset --soft HEAD~1
 ```
 
+**Entenda os comandos:** [`git reset`](#cmd-git-reset)
+
 Manter alterações na working tree, retirando-as do stage:
 
 ```bash
 git reset HEAD~1
 ```
+
+**Entenda os comandos:** [`git reset`](#cmd-git-reset)
 
 Use isso preferencialmente em commits ainda não publicados.
 
@@ -4122,6 +5041,8 @@ Prefira:
 ```bash
 git revert <hash-do-commit>
 ```
+
+**Entenda os comandos:** [`git revert`](#cmd-git-revert)
 
 Isso cria um novo commit que aplica a inversão da mudança.
 
@@ -4144,6 +5065,8 @@ Primeiro preserve o commit numa branch correta:
 git switch -c branch-correta
 ```
 
+**Entenda os comandos:** [`git switch`](#cmd-git-switch)
+
 Agora o commit está referenciado pela nova branch.
 
 Volte à branch original:
@@ -4152,11 +5075,15 @@ Volte à branch original:
 git switch main
 ```
 
+**Entenda os comandos:** [`git switch`](#cmd-git-switch)
+
 Se o commit incorreto era o último e não foi publicado, reposicione a branch:
 
 ```bash
 git reset --hard HEAD~1
 ```
+
+**Entenda os comandos:** [`git reset`](#cmd-git-reset)
 
 ### Por que isso é aceitável aqui?
 
@@ -4167,6 +5094,8 @@ Mesmo assim, confirme antes:
 ```bash
 git log --oneline --decorate --all -5
 ```
+
+**Entenda os comandos:** [`git log`](#cmd-git-log)
 
 ---
 
@@ -4211,6 +5140,8 @@ Isso normalmente **não é erro**. Ao executar:
 git commit
 ```
 
+**Entenda os comandos:** [`git commit`](#cmd-git-commit)
+
 sem `-m`, o Git abre o editor configurado para você escrever a mensagem do commit.
 
 ### Se você quer concluir o commit
@@ -4223,6 +5154,8 @@ Descubra o editor configurado:
 git config --show-origin --get core.editor
 ```
 
+**Entenda os comandos:** [`git config`](#cmd-git-config)
+
 ### Se você quer evitar o editor neste commit
 
 Cancele o editor **sem salvar uma mensagem válida** ou aborte conforme o editor. Depois use:
@@ -4231,6 +5164,8 @@ Cancele o editor **sem salvar uma mensagem válida** ou aborte conforme o editor
 git commit -m "Mensagem objetiva"
 ```
 
+**Entenda os comandos:** [`git commit`](#cmd-git-commit)
+
 ### Configurar um editor conhecido
 
 Exemplo com VS Code:
@@ -4238,6 +5173,8 @@ Exemplo com VS Code:
 ```bash
 git config --global core.editor "code --wait"
 ```
+
+**Entenda os comandos:** [`git config`](#cmd-git-config)
 
 O `--wait` faz o Git aguardar o fechamento do arquivo de mensagem no VS Code.
 
@@ -4259,6 +5196,8 @@ Depois de voltar ao terminal, confirme o estado em vez de presumir o resultado:
 git status
 git log -1 --oneline
 ```
+
+**Entenda os comandos:** [`git status`](#cmd-git-status) · [`git log`](#cmd-git-log)
 
 Assim você verifica se o commit aconteceu ou se a operação foi cancelada.
 
@@ -4285,6 +5224,8 @@ Para parar de rastrear e manter o arquivo no PC:
 git rm --cached caminho/arquivo
 ```
 
+**Entenda os comandos:** [`git rm`](#cmd-git-rm)
+
 Depois adicione a regra ao `.gitignore` e faça commit.
 
 Para diretório:
@@ -4292,6 +5233,8 @@ Para diretório:
 ```bash
 git rm -r --cached caminho/pasta/
 ```
+
+**Entenda os comandos:** [`git rm`](#cmd-git-rm)
 
 ---
 
@@ -4303,6 +5246,8 @@ git rm -r --cached caminho/pasta/
 ```bash
 git rm --cached caminho/arquivo
 ```
+
+**Entenda os comandos:** [`git rm`](#cmd-git-rm)
 
 Adicione ao `.gitignore`:
 
@@ -4317,6 +5262,8 @@ git add .gitignore
 git commit -m "Remove arquivo do versionamento"
 git push
 ```
+
+**Entenda os comandos:** [`git add`](#cmd-git-add) · [`git commit`](#cmd-git-commit) · [`git push`](#cmd-git-push)
 
 ---
 
@@ -4335,6 +5282,8 @@ git commit -m "Remove arquivo"
 git push --dry-run origin main
 git push origin main
 ```
+
+**Entenda os comandos:** [`git status`](#cmd-git-status) · [`git add`](#cmd-git-add) · [`git diff`](#cmd-git-diff) · [`git commit`](#cmd-git-commit) · [`git push`](#cmd-git-push)
 
 > Se você apagou vários arquivos e quer registrar todos conscientemente no mesmo commit, revise `git status` antes de considerar `git add -A`.
 
@@ -4356,6 +5305,8 @@ git ls-tree -r --name-only HEAD
 git ls-tree -r --name-only origin/main
 ```
 
+**Entenda os comandos:** [`git ls-tree`](#cmd-git-ls-tree)
+
 PowerShell:
 
 ```powershell
@@ -4363,12 +5314,16 @@ git ls-tree -r --name-only HEAD | Select-String "arquivo.zip"
 git ls-tree -r --name-only origin/main | Select-String "arquivo.zip"
 ```
 
+**Entenda os comandos:** [`git ls-tree`](#cmd-git-ls-tree) · [`Select-String`](#cmd-powershell-select-string) · [`|`](#cmd-shell-pipe)
+
 Se precisa removê-lo do estado final:
 
 ```bash
 git rm caminho/arquivo.zip
 git commit --amend --no-edit
 ```
+
+**Entenda os comandos:** [`git rm`](#cmd-git-rm) · [`git commit`](#cmd-git-commit)
 
 ou crie um novo commit de remoção, conforme o contexto.
 
@@ -4392,11 +5347,15 @@ git mv arquivo.md temporario.md
 git mv temporario.md Arquivo.md
 ```
 
+**Entenda os comandos:** [`git mv`](#cmd-git-mv)
+
 Depois:
 
 ```bash
 git status
 ```
+
+**Entenda os comandos:** [`git status`](#cmd-git-status)
 
 ---
 
@@ -4419,6 +5378,8 @@ Consulte:
 git config --get core.autocrlf
 ```
 
+**Entenda os comandos:** [`git config`](#cmd-git-config)
+
 Considere padronizar com `.gitattributes`, por exemplo:
 
 ```gitattributes
@@ -4438,6 +5399,8 @@ git add --renormalize .
 git diff --cached --stat
 ```
 
+**Entenda os comandos:** [`git add`](#cmd-git-add) · [`git diff`](#cmd-git-diff)
+
 ---
 
 <a id="git-038"></a>
@@ -4450,6 +5413,8 @@ Em ambientes em que isso é ruído:
 ```bash
 git config core.fileMode false
 ```
+
+**Entenda os comandos:** [`git config`](#cmd-git-config)
 
 Prefira configuração local do repositório antes de aplicar globalmente.
 
@@ -4495,6 +5460,8 @@ git commit -m "Salva trabalho antes de trocar de branch"
 git switch outra-branch
 ```
 
+**Entenda os comandos:** [`git status`](#cmd-git-status) · [`git add`](#cmd-git-add) · [`git diff`](#cmd-git-diff) · [`git commit`](#cmd-git-commit) · [`git switch`](#cmd-git-switch)
+
 ### Stash
 
 ```bash
@@ -4502,11 +5469,15 @@ git stash push -m "troca temporária de branch"
 git switch outra-branch
 ```
 
+**Entenda os comandos:** [`git stash`](#cmd-git-stash) · [`git switch`](#cmd-git-switch)
+
 Depois:
 
 ```bash
 git stash pop
 ```
+
+**Entenda os comandos:** [`git stash`](#cmd-git-stash)
 
 > **Arquivos não rastreados (`??`) exigem atenção:** o `git stash push` padrão não deve ser tratado como “guardar tudo”. Revise `git status`. Se você conscientemente precisa incluir também arquivos untracked no stash, a opção `-u` faz isso:
 >
@@ -4535,6 +5506,8 @@ Configure:
 git push -u origin <branch>
 ```
 
+**Entenda os comandos:** [`git push`](#cmd-git-push)
+
 ---
 
 <a id="git-042"></a>
@@ -4548,12 +5521,16 @@ Atualize referências:
 git fetch --prune
 ```
 
+**Entenda os comandos:** [`git fetch`](#cmd-git-fetch)
+
 Depois:
 
 ```bash
 git branch -vv
 git branch -a
 ```
+
+**Entenda os comandos:** [`git branch`](#cmd-git-branch)
 
 Decida se a branch local ainda é necessária.
 
@@ -4570,11 +5547,15 @@ Se o commit ainda puder ser encontrado:
 git reflog
 ```
 
+**Entenda os comandos:** [`git reflog`](#cmd-git-reflog)
+
 Localize o hash e recrie:
 
 ```bash
 git branch branch-recuperada <hash>
 ```
+
+**Entenda os comandos:** [`git branch`](#cmd-git-branch)
 
 ---
 
@@ -4588,6 +5569,8 @@ Antes de trocar de lugar, preserve:
 ```bash
 git switch -c branch-recuperacao
 ```
+
+**Entenda os comandos:** [`git switch`](#cmd-git-switch)
 
 Agora seus commits possuem uma branch apontando para eles.
 
@@ -4611,6 +5594,8 @@ Primeiro:
 ```bash
 git status
 ```
+
+**Entenda os comandos:** [`git status`](#cmd-git-status)
 
 ### Exemplo real de marcador de conflito
 
@@ -4648,11 +5633,15 @@ Salve e confira se não restaram marcadores:
 git grep -n -F -e '<<<<<<<' -e '=======' -e '>>>>>>>'
 ```
 
+**Entenda os comandos:** [`git grep`](#cmd-git-grep)
+
 Se não houver marcadores indevidos, marque o arquivo como resolvido:
 
 ```bash
 git add <arquivo>
 ```
+
+**Entenda os comandos:** [`git add`](#cmd-git-add)
 
 Finalize o merge:
 
@@ -4660,11 +5649,15 @@ Finalize o merge:
 git commit
 ```
 
+**Entenda os comandos:** [`git commit`](#cmd-git-commit)
+
 ### Se você não quer continuar
 
 ```bash
 git merge --abort
 ```
+
+**Entenda os comandos:** [`git merge`](#cmd-git-merge)
 
 ---
 
@@ -4681,6 +5674,8 @@ Confirme que seus commits locais importantes estão preservados e saiba que `reb
 git status
 ```
 
+**Entenda os comandos:** [`git status`](#cmd-git-status)
+
 Resolva os arquivos e marque:
 
 ```bash
@@ -4688,17 +5683,23 @@ git add <arquivo>
 git rebase --continue
 ```
 
+**Entenda os comandos:** [`git add`](#cmd-git-add) · [`git rebase`](#cmd-git-rebase)
+
 Cancelar tudo:
 
 ```bash
 git rebase --abort
 ```
 
+**Entenda os comandos:** [`git rebase`](#cmd-git-rebase)
+
 ### Não use automaticamente
 
 ```bash
 git rebase --skip
 ```
+
+**Entenda os comandos:** [`git rebase`](#cmd-git-rebase)
 
 Isso pode descartar o patch do commit atual.
 
@@ -4715,12 +5716,16 @@ Em vez de confiar em atalhos ambíguos de “ours/theirs”, escolha explicitame
 git restore --source=backup-antes-da-sincronizacao -- README.md
 ```
 
+**Entenda os comandos:** [`git restore`](#cmd-git-restore)
+
 Depois:
 
 ```bash
 git add README.md
 git rebase --continue
 ```
+
+**Entenda os comandos:** [`git add`](#cmd-git-add) · [`git rebase`](#cmd-git-rebase)
 
 Essa abordagem deixa a intenção clara.
 
@@ -4740,6 +5745,8 @@ Para iniciantes, prefira:
 ```bash
 git restore --source=<branch-ou-commit-explícito> -- <arquivo>
 ```
+
+**Entenda os comandos:** [`git restore`](#cmd-git-restore)
 
 ou resolução manual.
 
@@ -4761,6 +5768,8 @@ git restore --source=<fonte-desejada> -- caminho/arquivo.bin
 git add caminho/arquivo.bin
 ```
 
+**Entenda os comandos:** [`git restore`](#cmd-git-restore) · [`git add`](#cmd-git-add)
+
 Depois continue merge/rebase conforme o caso.
 
 ---
@@ -4776,6 +5785,8 @@ Procure antes do commit:
 git grep -n -F -e '<<<<<<<' -e '=======' -e '>>>>>>>'
 ```
 
+**Entenda os comandos:** [`git grep`](#cmd-git-grep)
+
 Se houver saída, revise os arquivos. Esse comando é **um alerta**, não uma prova automática: sequências como `=======` podem existir legitimamente em Markdown ou outros arquivos.
 
 ---
@@ -4788,6 +5799,8 @@ Se houver saída, revise os arquivos. Esse comando é **um alerta**, não uma pr
 ```bash
 git status
 ```
+
+**Entenda os comandos:** [`git status`](#cmd-git-status)
 
 O próprio Git informa:
 
@@ -4813,11 +5826,15 @@ git add <arquivo>
 git cherry-pick --continue
 ```
 
+**Entenda os comandos:** [`git add`](#cmd-git-add) · [`git cherry-pick`](#cmd-git-cherry-pick)
+
 Cancelar:
 
 ```bash
 git cherry-pick --abort
 ```
+
+**Entenda os comandos:** [`git cherry-pick`](#cmd-git-cherry-pick)
 
 ---
 
@@ -4839,6 +5856,8 @@ git remote -v
 git remote show origin
 ```
 
+**Entenda os comandos:** [`git remote`](#cmd-git-remote)
+
 ---
 
 <a id="git-054"></a>
@@ -4852,11 +5871,15 @@ Corrija:
 git remote set-url origin https://github.com/USUARIO/REPOSITORIO.git
 ```
 
+**Entenda os comandos:** [`git remote`](#cmd-git-remote)
+
 Confira:
 
 ```bash
 git remote -v
 ```
+
+**Entenda os comandos:** [`git remote`](#cmd-git-remote)
 
 ---
 
@@ -4872,6 +5895,8 @@ git remote set-url origin <nova-url>
 git remote -v
 ```
 
+**Entenda os comandos:** [`git remote`](#cmd-git-remote)
+
 ---
 
 <a id="git-056"></a>
@@ -4883,6 +5908,8 @@ git remote -v
 git config user.name
 git config user.email
 ```
+
+**Entenda os comandos:** [`git config`](#cmd-git-config)
 
 Isso mostra o autor configurado.
 
@@ -4901,6 +5928,8 @@ Com Git Credential Manager:
 git credential-manager github list
 ```
 
+**Entenda os comandos:** [`git credential-manager`](#cmd-git-credential-manager)
+
 Se o comando não existir, confirme a instalação/versão do Git Credential Manager; não conclua que “não há conta” apenas porque a subcommand está indisponível.
 
 Se usar GitHub CLI:
@@ -4909,11 +5938,15 @@ Se usar GitHub CLI:
 gh auth status
 ```
 
+**Entenda os comandos:** [`gh auth status`](#cmd-gh-auth-status)
+
 Também confira:
 
 ```bash
 git remote -v
 ```
+
+**Entenda os comandos:** [`git remote`](#cmd-git-remote)
 
 ---
 
@@ -4930,17 +5963,23 @@ git config user.name
 git config user.email
 ```
 
+**Entenda os comandos:** [`git remote`](#cmd-git-remote) · [`git config`](#cmd-git-config)
+
 No Windows:
 
 ```bash
 git credential-manager github list
 ```
 
+**Entenda os comandos:** [`git credential-manager`](#cmd-git-credential-manager)
+
 Com GitHub CLI:
 
 ```bash
 gh auth status
 ```
+
+**Entenda os comandos:** [`gh auth status`](#cmd-gh-auth-status)
 
 Possíveis causas:
 
@@ -4973,6 +6012,8 @@ Confira o remoto:
 git remote -v
 ```
 
+**Entenda os comandos:** [`git remote`](#cmd-git-remote)
+
 Se você pretende usar HTTPS, ajuste a URL. Se pretende SSH, valide sua chave/configuração no GitHub.
 
 ---
@@ -4990,12 +6031,16 @@ Escolha um nome de branch local que **ainda não exista**. Se tiver dúvida:
 git branch --list minha-alteracao
 ```
 
+**Entenda os comandos:** [`git branch`](#cmd-git-branch)
+
 Se não houver saída, crie e publique a nova branch a partir do commit atual:
 
 ```bash
 git switch -c minha-alteracao
 git push -u origin minha-alteracao
 ```
+
+**Entenda os comandos:** [`git switch`](#cmd-git-switch) · [`git push`](#cmd-git-push)
 
 Se o nome já existir, escolha outro nome ou inspecione conscientemente a branch existente antes de reutilizá-la.
 
@@ -5019,17 +6064,23 @@ git remote -v
 git config --show-origin --get credential.helper
 ```
 
+**Entenda os comandos:** [`git remote`](#cmd-git-remote) · [`git config`](#cmd-git-config)
+
 No Windows:
 
 ```bash
 git credential-manager github list
 ```
 
+**Entenda os comandos:** [`git credential-manager`](#cmd-git-credential-manager)
+
 Com GitHub CLI:
 
 ```bash
 gh auth status
 ```
+
+**Entenda os comandos:** [`gh auth status`](#cmd-gh-auth-status)
 
 ### Ação
 
@@ -5050,6 +6101,8 @@ No Windows, o Git Credential Manager pode abrir uma autenticação no navegador.
 git config --show-origin --get credential.helper
 git credential-manager github list
 ```
+
+**Entenda os comandos:** [`git config`](#cmd-git-config) · [`git credential-manager`](#cmd-git-credential-manager)
 
 ### Procedimento
 
@@ -5073,6 +6126,8 @@ Verifique os remotos:
 git remote -v
 ```
 
+**Entenda os comandos:** [`git remote`](#cmd-git-remote)
+
 Um modelo comum:
 
 ```text
@@ -5086,11 +6141,15 @@ Se `upstream` ainda não existe:
 git remote add upstream https://github.com/PROJETO-ORIGINAL/REPOSITORIO.git
 ```
 
+**Entenda os comandos:** [`git remote`](#cmd-git-remote)
+
 Atualize a visão do original:
 
 ```bash
 git fetch upstream
 ```
+
+**Entenda os comandos:** [`git fetch`](#cmd-git-fetch)
 
 Se sua `main` puder avançar linearmente:
 
@@ -5099,6 +6158,8 @@ git switch main
 git merge --ff-only upstream/main
 git push origin main
 ```
+
+**Entenda os comandos:** [`git switch`](#cmd-git-switch) · [`git merge`](#cmd-git-merge) · [`git push`](#cmd-git-push)
 
 ### Pare se...
 
@@ -5132,11 +6193,15 @@ Evite novas operações de reescrita até localizar o commit perdido. Se o commi
 git reflog
 ```
 
+**Entenda os comandos:** [`git reflog`](#cmd-git-reflog)
+
 Encontre o hash e preserve:
 
 ```bash
 git branch recuperacao <hash>
 ```
+
+**Entenda os comandos:** [`git branch`](#cmd-git-branch)
 
 ### Limitação importante
 
@@ -5174,6 +6239,8 @@ Tente recursos externos:
 git reflog
 ```
 
+**Entenda os comandos:** [`git reflog`](#cmd-git-reflog)
+
 O commit antigo normalmente pode aparecer ali por algum tempo.
 
 Preserve:
@@ -5181,6 +6248,8 @@ Preserve:
 ```bash
 git branch recuperacao <hash>
 ```
+
+**Entenda os comandos:** [`git branch`](#cmd-git-branch)
 
 ---
 
@@ -5196,6 +6265,8 @@ git branch -a
 git log --oneline --all --decorate
 ```
 
+**Entenda os comandos:** [`git branch`](#cmd-git-branch) · [`git log`](#cmd-git-log)
+
 ### Caminho A — a branch local ainda existe
 
 Confirme a ponta antes de publicar:
@@ -5205,11 +6276,15 @@ git switch <branch>
 git log -1 --oneline
 ```
 
+**Entenda os comandos:** [`git switch`](#cmd-git-switch) · [`git log`](#cmd-git-log)
+
 Se for realmente o commit correto:
 
 ```bash
 git push -u origin <branch>
 ```
+
+**Entenda os comandos:** [`git push`](#cmd-git-push)
 
 ### Caminho B — a branch sumiu, mas você encontrou o hash correto
 
@@ -5221,11 +6296,15 @@ git switch <branch-recuperada>
 git log -1 --oneline
 ```
 
+**Entenda os comandos:** [`git branch`](#cmd-git-branch) · [`git switch`](#cmd-git-switch) · [`git log`](#cmd-git-log)
+
 Depois publique somente após validar a ponta:
 
 ```bash
 git push -u origin <branch-recuperada>
 ```
+
+**Entenda os comandos:** [`git push`](#cmd-git-push)
 
 ### Caminho C — o commit não aparece nas referências atuais
 
@@ -5235,11 +6314,15 @@ Procure nos **reflogs locais**:
 git reflog --all
 ```
 
+**Entenda os comandos:** [`git reflog`](#cmd-git-reflog)
+
 Se você souber o nome antigo da remote-tracking branch e esse reflog ainda existir:
 
 ```bash
 git reflog show refs/remotes/origin/<branch>
 ```
+
+**Entenda os comandos:** [`git reflog`](#cmd-git-reflog)
 
 > **Limitação importante:** reflog é informação **local**. Ele não consulta o reflog interno do GitHub. Se este clone nunca recebeu o commit, ou se nenhum objeto/referência local ainda permitir encontrá-lo, o Git local pode não conseguir recuperá-lo. Pare antes de recriar a branch a partir de um hash que você não validou.
 
@@ -5259,6 +6342,8 @@ git status
 git stash list
 ```
 
+**Entenda os comandos:** [`git status`](#cmd-git-status) · [`git stash`](#cmd-git-stash)
+
 Quando `git stash pop` não consegue aplicar o stash de forma limpa por causa de conflitos, a entrada **normalmente permanece na lista** em vez de ser removida automaticamente.
 
 Resolva os conflitos, adicione os arquivos necessários e valide o conteúdo. Depois confira novamente:
@@ -5268,17 +6353,23 @@ git status
 git stash list
 ```
 
+**Entenda os comandos:** [`git status`](#cmd-git-status) · [`git stash`](#cmd-git-stash)
+
 Se precisar analisar o conteúdo guardado:
 
 ```bash
 git stash show -p stash@{N}
 ```
 
+**Entenda os comandos:** [`git stash`](#cmd-git-stash)
+
 Somente depois de confirmar que o trabalho foi incorporado corretamente e identificar a entrada exata que não é mais necessária, remova-a conscientemente:
 
 ```bash
 git stash drop stash@{N}
 ```
+
+**Entenda os comandos:** [`git stash`](#cmd-git-stash)
 
 > Não presuma que a entrada é sempre `stash@{0}` se houver vários stashes. Leia `git stash list` e selecione o identificador correto. Aplicar o mesmo stash novamente após resolver o conflito pode duplicar ou reintroduzir alterações.
 
@@ -5304,6 +6395,8 @@ PowerShell:
 Remove-Item .git\index.lock
 ```
 
+**Entenda os comandos:** [`Remove-Item`](#cmd-powershell-remove-item)
+
 Nunca apague lock enquanto outra operação Git legítima estiver ativa.
 
 ---
@@ -5321,6 +6414,8 @@ Se o arquivo entrou apenas no último commit ainda não publicado:
 git rm --cached caminho/arquivo-grande
 ```
 
+**Entenda os comandos:** [`git rm`](#cmd-git-rm)
+
 Adicione ao `.gitignore` se necessário:
 
 ```gitignore
@@ -5333,6 +6428,8 @@ Depois:
 git add .gitignore
 git commit --amend --no-edit
 ```
+
+**Entenda os comandos:** [`git add`](#cmd-git-add) · [`git commit`](#cmd-git-commit)
 
 Se o arquivo precisa ser versionado, avalie Git LFS.
 
@@ -5398,6 +6495,8 @@ Diagnostique dentro da subpasta:
 git rev-parse --show-toplevel
 ```
 
+**Entenda os comandos:** [`git rev-parse`](#cmd-git-rev-parse)
+
 Compare com a raiz esperada.
 
 Se confirmou que o `.git` interno é acidental, **preserve-o antes de remover**:
@@ -5408,11 +6507,15 @@ PowerShell:
 Rename-Item .git .git.backup
 ```
 
+**Entenda os comandos:** [`Rename-Item`](#cmd-powershell-rename-item)
+
 Volte à raiz real e valide:
 
 ```bash
 git status
 ```
+
+**Entenda os comandos:** [`git status`](#cmd-git-status)
 
 Só apague o backup depois de confirmar que não contém histórico necessário.
 
@@ -5436,6 +6539,8 @@ Get-Location
 Get-ChildItem -Force
 ```
 
+**Entenda os comandos:** [`Get-Location`](#cmd-powershell-get-location) · [`Get-ChildItem`](#cmd-powershell-get-childitem)
+
 Bash/Linux/macOS/Git Bash:
 
 ```bash
@@ -5443,11 +6548,15 @@ pwd
 ls -la
 ```
 
+**Entenda os comandos:** [`pwd`](#cmd-shell-pwd)
+
 Entre na pasta correta do projeto e tente:
 
 ```bash
 git rev-parse --show-toplevel
 ```
+
+**Entenda os comandos:** [`git rev-parse`](#cmd-git-rev-parse)
 
 Se funcionar, o problema era apenas localização. **Não execute `git init`.**
 
@@ -5477,6 +6586,8 @@ Primeiro:
 git fsck --full
 ```
 
+**Entenda os comandos:** [`git fsck`](#cmd-git-fsck)
+
 Se o remoto íntegro é a fonte confiável e não há trabalho local exclusivo, um clone novo costuma ser mais seguro do que tentar reconstruir manualmente objetos.
 
 Se existem commits locais exclusivos, preserve a pasta inteira antes de qualquer reparo.
@@ -5498,6 +6609,8 @@ Primeiro:
 git status
 ```
 
+**Entenda os comandos:** [`git status`](#cmd-git-status)
+
 Opções:
 
 - mover os arquivos para backup;
@@ -5509,11 +6622,15 @@ Opções:
 git clean -nd
 ```
 
+**Entenda os comandos:** [`git clean`](#cmd-git-clean)
+
 Somente depois de revisar:
 
 ```bash
 git clean -fd
 ```
+
+**Entenda os comandos:** [`git clean`](#cmd-git-clean)
 
 ---
 
@@ -5532,11 +6649,15 @@ Veja primeiro o que seria apagado:
 git clean -nd
 ```
 
+**Entenda os comandos:** [`git clean`](#cmd-git-clean)
+
 Se estiver correto:
 
 ```bash
 git clean -fd
 ```
+
+**Entenda os comandos:** [`git clean`](#cmd-git-clean)
 
 ### Atenção
 
@@ -5555,6 +6676,8 @@ Antes de commitar:
 git diff --cached --stat
 git diff --cached --name-status
 ```
+
+**Entenda os comandos:** [`git diff`](#cmd-git-diff)
 
 Pergunte:
 
@@ -5601,6 +6724,8 @@ git config user.email
 git branch -vv
 ```
 
+**Entenda os comandos:** [`git rev-parse`](#cmd-git-rev-parse) · [`git remote`](#cmd-git-remote) · [`git config`](#cmd-git-config) · [`git branch`](#cmd-git-branch)
+
 Isso confirmou:
 
 ```text
@@ -5615,6 +6740,8 @@ No Windows, a conta conhecida pelo Git Credential Manager foi verificada com:
 git credential-manager github list
 ```
 
+**Entenda os comandos:** [`git credential-manager`](#cmd-git-credential-manager)
+
 ---
 
 <a id="capitulo-16-3"></a>
@@ -5624,6 +6751,8 @@ git credential-manager github list
 git fetch origin
 git status -sb
 ```
+
+**Entenda os comandos:** [`git fetch`](#cmd-git-fetch) · [`git status`](#cmd-git-status)
 
 Resultado:
 
@@ -5645,6 +6774,8 @@ git add -A
 git diff --cached --name-status
 ```
 
+**Entenda os comandos:** [`git add`](#cmd-git-add) · [`git diff`](#cmd-git-diff)
+
 Foi detectado:
 
 ```text
@@ -5663,6 +6794,8 @@ Após commit:
 ```bash
 git push --dry-run origin main
 ```
+
+**Entenda os comandos:** [`git push`](#cmd-git-push)
 
 Resultado:
 
@@ -5686,11 +6819,15 @@ git add -A
 git commit --amend --no-edit
 ```
 
+**Entenda os comandos:** [`git add`](#cmd-git-add) · [`git commit`](#cmd-git-commit)
+
 Antes de integrar:
 
 ```bash
 git branch backup-local-antes-da-sincronizacao
 ```
+
+**Entenda os comandos:** [`git branch`](#cmd-git-branch)
 
 ---
 
@@ -5700,6 +6837,8 @@ git branch backup-local-antes-da-sincronizacao
 ```bash
 git rebase origin/main
 ```
+
+**Entenda os comandos:** [`git rebase`](#cmd-git-rebase)
 
 Houve conflito em:
 
@@ -5715,6 +6854,8 @@ git restore --source=backup-local-antes-da-sincronizacao -- README.md
 git restore --source=backup-local-antes-da-sincronizacao -- index.html
 ```
 
+**Entenda os comandos:** [`git restore`](#cmd-git-restore)
+
 Depois, revise e marque **apenas as resoluções conhecidas**:
 
 ```bash
@@ -5723,6 +6864,8 @@ git add README.md index.html
 git diff --staged
 git rebase --continue
 ```
+
+**Entenda os comandos:** [`git status`](#cmd-git-status) · [`git add`](#cmd-git-add) · [`git diff`](#cmd-git-diff) · [`git rebase`](#cmd-git-rebase)
 
 > Se `git status` indicar outros arquivos ainda em conflito, resolva e adicione cada um explicitamente antes de `git rebase --continue`.
 
@@ -5748,12 +6891,16 @@ git ls-tree -r --name-only HEAD | Select-String "libs.zip"
 git ls-tree -r --name-only origin/main | Select-String "libs.zip"
 ```
 
+**Entenda os comandos:** [`git ls-tree`](#cmd-git-ls-tree) · [`Select-String`](#cmd-powershell-select-string) · [`|`](#cmd-shell-pipe)
+
 Bash/Linux/macOS/Git Bash:
 
 ```bash
 git ls-tree -r --name-only HEAD | grep -F "libs.zip"
 git ls-tree -r --name-only origin/main | grep -F "libs.zip"
 ```
+
+**Entenda os comandos:** [`git ls-tree`](#cmd-git-ls-tree) · [`|`](#cmd-shell-pipe)
 
 O arquivo existia em `origin/main`.
 
@@ -5771,6 +6918,8 @@ git rm libs/libs.zip
 git status -sb
 ```
 
+**Entenda os comandos:** [`git rm`](#cmd-git-rm) · [`git status`](#cmd-git-status)
+
 Resultado:
 
 ```text
@@ -5783,17 +6932,23 @@ A exclusão foi incorporada ao commit ainda não publicado:
 git commit --amend --no-edit
 ```
 
+**Entenda os comandos:** [`git commit`](#cmd-git-commit)
+
 Validação no PowerShell:
 
 ```powershell
 git ls-tree -r --name-only HEAD | Select-String "libs.zip"
 ```
 
+**Entenda os comandos:** [`git ls-tree`](#cmd-git-ls-tree) · [`Select-String`](#cmd-powershell-select-string) · [`|`](#cmd-shell-pipe)
+
 Validação no Bash/Linux/macOS/Git Bash:
 
 ```bash
 git ls-tree -r --name-only HEAD | grep -F "libs.zip"
 ```
+
+**Entenda os comandos:** [`git ls-tree`](#cmd-git-ls-tree) · [`|`](#cmd-shell-pipe)
 
 Sem saída significa que o caminho não aparece na árvore de `HEAD`.
 
@@ -5803,6 +6958,8 @@ Sem saída significa que o caminho não aparece na árvore de `HEAD`.
 ```bash
 git diff --name-status origin/main..HEAD
 ```
+
+**Entenda os comandos:** [`git diff`](#cmd-git-diff)
 
 Resultado esperado:
 
@@ -5824,6 +6981,8 @@ Agora o estado final era explícito.
 git push --dry-run origin main
 ```
 
+**Entenda os comandos:** [`git push`](#cmd-git-push)
+
 Aceito:
 
 ```text
@@ -5836,11 +6995,15 @@ Então:
 git push origin main
 ```
 
+**Entenda os comandos:** [`git push`](#cmd-git-push)
+
 Validação final:
 
 ```bash
 git status -sb
 ```
+
+**Entenda os comandos:** [`git status`](#cmd-git-status)
 
 Resultado:
 
@@ -5943,6 +7106,8 @@ git push
 git status
 ```
 
+**Entenda os comandos:** [`git status`](#cmd-git-status) · [`git add`](#cmd-git-add) · [`git diff`](#cmd-git-diff) · [`git commit`](#cmd-git-commit) · [`git push`](#cmd-git-push)
+
 ### Combo A+ — seguro/auditável
 
 Use em colaboração, alteração relevante, histórico recém-integrado ou quando você quer confirmar cuidadosamente estado e destino:
@@ -5960,6 +7125,8 @@ git push origin main
 git status -sb
 ```
 
+**Entenda os comandos:** [`git fetch`](#cmd-git-fetch) · [`git status`](#cmd-git-status) · [`git add`](#cmd-git-add) · [`git diff`](#cmd-git-diff) · [`git commit`](#cmd-git-commit) · [`git log`](#cmd-git-log) · [`git push`](#cmd-git-push)
+
 > No A+, `git log ...` responde **quais commits existem só localmente**; `git diff ...` responde **como os conteúdos finais diferem**. Não são a mesma pergunta.
 
 ---
@@ -5974,6 +7141,8 @@ git status -sb
 git pull --ff-only
 git status -sb
 ```
+
+**Entenda os comandos:** [`git status`](#cmd-git-status) · [`git fetch`](#cmd-git-fetch) · [`git pull`](#cmd-git-pull)
 
 Use quando a working tree estiver limpa e for um simples fast-forward.
 
@@ -5992,6 +7161,8 @@ git commit -m "Remove arquivo"
 git push
 ```
 
+**Entenda os comandos:** [`git status`](#cmd-git-status) · [`git add`](#cmd-git-add) · [`git diff`](#cmd-git-diff) · [`git commit`](#cmd-git-commit) · [`git push`](#cmd-git-push)
+
 > Use o fluxo A+ do Combo A quando quiser auditoria remota adicional antes do envio.
 
 Ou, se o arquivo ainda existe:
@@ -6003,6 +7174,8 @@ git diff --staged --name-status
 git commit -m "Remove arquivo"
 git push
 ```
+
+**Entenda os comandos:** [`git status`](#cmd-git-status) · [`git rm`](#cmd-git-rm) · [`git diff`](#cmd-git-diff) · [`git commit`](#cmd-git-commit) · [`git push`](#cmd-git-push)
 
 ---
 
@@ -6019,6 +7192,8 @@ git commit -m "Remove arquivo do versionamento"
 git push
 ```
 
+**Entenda os comandos:** [`git status`](#cmd-git-status) · [`git rm`](#cmd-git-rm) · [`git add`](#cmd-git-add) · [`git diff`](#cmd-git-diff) · [`git commit`](#cmd-git-commit) · [`git push`](#cmd-git-push)
+
 Confirme depois que o arquivo continua no disco e que a regra de `.gitignore` corresponde ao caminho desejado.
 
 ---
@@ -6032,11 +7207,15 @@ git status -sb
 git log --oneline HEAD..origin/main
 ```
 
+**Entenda os comandos:** [`git fetch`](#cmd-git-fetch) · [`git status`](#cmd-git-status) · [`git log`](#cmd-git-log)
+
 Se não há commits locais divergentes e working tree está limpa:
 
 ```bash
 git pull --ff-only
 ```
+
+**Entenda os comandos:** [`git pull`](#cmd-git-pull)
 
 ---
 
@@ -6051,17 +7230,23 @@ git log --oneline HEAD..origin/main
 git log --oneline origin/main..HEAD
 ```
 
+**Entenda os comandos:** [`git fetch`](#cmd-git-fetch) · [`git status`](#cmd-git-status) · [`git branch`](#cmd-git-branch) · [`git log`](#cmd-git-log)
+
 Depois escolha conscientemente:
 
 ```bash
 git rebase origin/main
 ```
 
+**Entenda os comandos:** [`git rebase`](#cmd-git-rebase)
+
 ou:
 
 ```bash
 git merge origin/main
 ```
+
+**Entenda os comandos:** [`git merge`](#cmd-git-merge)
 
 ---
 
@@ -6074,6 +7259,8 @@ git status -sb
 git log --oneline HEAD..origin/main
 git log --oneline origin/main..HEAD
 ```
+
+**Entenda os comandos:** [`git fetch`](#cmd-git-fetch) · [`git status`](#cmd-git-status) · [`git log`](#cmd-git-log)
 
 Não use force como resposta automática.
 
@@ -6089,6 +7276,8 @@ git branch -vv
 git status -sb
 ```
 
+**Entenda os comandos:** [`git rev-parse`](#cmd-git-rev-parse) · [`git remote`](#cmd-git-remote) · [`git branch`](#cmd-git-branch) · [`git status`](#cmd-git-status)
+
 ---
 
 <a id="capitulo-18-9"></a>
@@ -6098,6 +7287,8 @@ git status -sb
 git branch backup-antes-da-operacao
 ```
 
+**Entenda os comandos:** [`git branch`](#cmd-git-branch)
+
 Isso preserva uma referência para o commit atual; não faz backup de mudanças nunca commitadas.
 
 Confirme:
@@ -6105,6 +7296,8 @@ Confirme:
 ```bash
 git branch -vv
 ```
+
+**Entenda os comandos:** [`git branch`](#cmd-git-branch)
 
 ---
 
@@ -6119,6 +7312,8 @@ git config --global init.defaultBranch main
 git config --global --list
 ```
 
+**Entenda os comandos:** [`git --version`](#cmd-git-version) · [`git config`](#cmd-git-config)
+
 Depois configure/autentique GitHub por HTTPS/GCM, GitHub CLI ou SSH conforme seu ambiente.
 
 <a id="capitulo-18-11"></a>
@@ -6131,6 +7326,10 @@ git remote -v
 git branch -vv
 git status -sb
 ```
+
+**Entenda os comandos:** [`git clone`](#cmd-git-clone) · [`cd`](#cmd-shell-cd) · [`git remote`](#cmd-git-remote) · [`git branch`](#cmd-git-branch) · [`git status`](#cmd-git-status)
+
+> Como nenhum `DESTINO` foi informado após a URL, o Git normalmente cria localmente uma pasta derivada do nome do repositório (`REPOSITORIO/`). Para escolher outra pasta ou usar `.` conscientemente, consulte [4.3](#capitulo-4-3) e [`git clone`](#cmd-git-clone).
 
 > Clonar permite trabalhar e inspecionar o repositório localmente, mas **não concede automaticamente permissão de push**. Se o repositório pertence a terceiros, consulte 4.3 e os fluxos 7.10/7.11 para branch + Pull Request ou fork + Pull Request, conforme seu nível de acesso.
 
@@ -6151,6 +7350,8 @@ git commit -m "Adiciona minha alteração"
 git push -u origin feature/minha-alteracao
 ```
 
+**Entenda os comandos:** [`git status`](#cmd-git-status) · [`git switch`](#cmd-git-switch) · [`git fetch`](#cmd-git-fetch) · [`git pull`](#cmd-git-pull) · [`git add`](#cmd-git-add) · [`git diff`](#cmd-git-diff) · [`git commit`](#cmd-git-commit) · [`git push`](#cmd-git-push)
+
 Continue somente se a working tree estiver preservada e `git pull --ff-only` puder atualizar a branch principal sem exigir uma decisão de integração.
 
 Depois: abrir Pull Request → revisar/checks → merge → atualizar `main` local.
@@ -6166,6 +7367,8 @@ git switch main
 git merge --ff-only upstream/main
 git push origin main
 ```
+
+**Entenda os comandos:** [`git fetch`](#cmd-git-fetch) · [`git switch`](#cmd-git-switch) · [`git merge`](#cmd-git-merge) · [`git push`](#cmd-git-push)
 
 Se o fast-forward falhar, pare e trate como divergência.
 
@@ -6247,6 +7450,8 @@ git status
 git branch backup-antes-da-operacao
 ```
 
+**Entenda os comandos:** [`git status`](#cmd-git-status) · [`git branch`](#cmd-git-branch)
+
 Quando existir modo de simulação, use-o:
 
 ```bash
@@ -6254,7 +7459,280 @@ git clean -nd
 git push --dry-run origin main
 ```
 
+**Entenda os comandos:** [`git clean`](#cmd-git-clean) · [`git push`](#cmd-git-push)
+
 > Uma branch de backup protege commits/referências. Ela não transforma automaticamente arquivos nunca commitados em recuperáveis.
+
+<a id="capitulo-19-7"></a>
+## 19.7 Dicionário de comandos, argumentos e referências
+
+Este dicionário existe para que os exemplos do manual não virem uma coleção de receitas. Nos procedimentos, o link **Entenda os comandos** aponta para estas entradas. Aqui o objetivo é responder quatro perguntas: **quem executa**, **o que faz**, **o que cada parte significa** e **qual efeito/risco merece atenção**.
+
+<a id="capitulo-19-7-1"></a>
+### 19.7.1 Como ler a sintaxe
+
+```text
+programa subcomando [opções] <argumentos>
+   │        │          │          │
+   │        │          │          └─ valores sobre os quais o comando atua
+   │        │          └──────────── modificadores de comportamento
+   │        └─────────────────────── operação desejada
+   └──────────────────────────────── executável/ferramenta
+```
+
+Convenções usadas no manual:
+
+| Forma | Significado |
+|---|---|
+| `<arquivo>` / `<branch>` / `<URL>` | placeholder: substitua pelo valor real; não digite `<` e `>` literalmente |
+| `[DESTINO]` | argumento opcional na documentação; os colchetes indicam opcionalidade |
+| `.` | pasta atual |
+| `..` | pasta pai |
+| `|` | pipe: envia a saída do comando à esquerda para o comando à direita |
+| `HEAD` | commit atualmente selecionado |
+| `origin` | nome convencional de um remoto; não significa “GitHub” por si só |
+| `origin/main` | referência local de acompanhamento remoto do último estado conhecido daquela branch |
+| `A..B` | intervalo/comparação entre referências; o significado exato depende do comando |
+| `-x` / `-sb` | opção curta; algumas podem ser combinadas |
+| `--nome` | opção longa |
+
+<a id="capitulo-19-7-2"></a>
+### 19.7.2 Git — comandos usados no guia
+
+<a id="cmd-git-version"></a>
+**`git --version`** — mostra a versão do Git instalada. É leitura; não altera repositório.
+
+<a id="cmd-git-config"></a>
+**`git config`** — lê ou grava configuração. `--global` atua no escopo do usuário; `--local` no repositório atual; `--list` lista valores; `--show-origin` mostra de onde vieram.
+
+<a id="cmd-git-init"></a>
+**`git init`** — cria a estrutura `.git` em uma pasta e a transforma em repositório local. **Não cria repositório no GitHub.** Não use por reflexo quando uma pasta apenas foi movida; procure `.git` primeiro.
+
+<a id="cmd-git-clone"></a>
+**`git clone`** — cria uma cópia local de um repositório existente e normalmente configura `origin`.
+
+Forma geral:
+
+```text
+git clone <URL> [DESTINO]
+│   │      │        │
+│   │      │        └─ pasta LOCAL opcional
+│   │      └────────── repositório de origem
+│   └──────────────── operação clone
+└──────────────────── Git
+```
+
+Exemplo:
+
+```bash
+git clone https://github.com/Diego-Ch4m4X/Guia_Git.git Guia_Git-git
+```
+
+Significa: **clone essa URL para uma pasta local chamada `Guia_Git-git`**. Se `DESTINO` não existe, o Git o cria; se já existe, precisa estar vazio para o clone normal. `git clone URL .` usa a pasta atual, que também precisa estar vazia.
+
+<a id="cmd-git-status"></a>
+**`git status`** — descreve o estado da working tree e do stage. `-s` usa formato curto; `-b` acrescenta informação de branch; `-sb` combina ambos.
+
+<a id="cmd-git-add"></a>
+**`git add`** — copia a versão escolhida dos caminhos para o stage. `git add arquivo` seleciona explicitamente; `git add -A` atualiza o stage considerando adições, modificações e remoções em todo o escopo aplicável.
+
+<a id="cmd-git-diff"></a>
+**`git diff`** — compara conteúdos. Sem opção, normalmente compara working tree com stage; `--staged`/`--cached` compara stage com `HEAD`; `--name-status` resume por nome e tipo de alteração.
+
+Anatomia de uma auditoria pré-push:
+
+```text
+git diff --name-status origin/main..HEAD
+│   │          │             │
+│   │          │             └─ compare o remoto conhecido com o estado local atual
+│   │          └─────────────── mostre nome + status, não o patch completo
+│   └────────────────────────── comparação
+└────────────────────────────── Git
+```
+
+<a id="cmd-git-commit"></a>
+**`git commit`** — cria um commit a partir do conteúdo do stage. `-m "mensagem"` fornece a mensagem na linha de comando; `--amend` substitui o último commit por uma nova versão.
+
+<a id="cmd-git-log"></a>
+**`git log`** — lê histórico. `--oneline` compacta; `A..B` pode mostrar commits alcançáveis por `B` e não por `A`.
+
+<a id="cmd-git-fetch"></a>
+**`git fetch`** — busca objetos e atualiza referências de acompanhamento remoto **localmente**, sem integrar automaticamente essas mudanças na branch atual. `origin` escolhe o remoto; `--prune` remove remote-tracking refs locais obsoletas.
+
+<a id="cmd-git-pull"></a>
+**`git pull`** — executa busca + integração conforme configuração/opções. `--ff-only` aceita apenas avanço linear e falha quando seria necessária outra decisão de integração.
+
+<a id="cmd-git-push"></a>
+**`git push`** — envia atualizações de refs/commits para um remoto autorizado.
+
+```text
+git push --dry-run origin main
+│   │       │       │     │
+│   │       │       │     └─ branch a publicar
+│   │       │       └─────── remoto chamado origin
+│   │       └─────────────── simule a operação sem atualizar a branch remota
+│   └─────────────────────── envie refs/objetos
+└─────────────────────────── Git
+```
+
+`-u`/`--set-upstream` configura acompanhamento da branch após o push. `--force` reescreve histórico remoto e não deve ser usado para “resolver” rejeições sem compreender a consequência. `--force-with-lease` adiciona proteção, mas continua sendo reescrita de histórico.
+
+<a id="cmd-git-remote"></a>
+**`git remote`** — gerencia remotos. `-v` mostra nomes e URLs; `add origin URL` cria um remoto; `set-url origin URL` troca a URL; `remove origin` remove a configuração local do remoto.
+
+<a id="cmd-git-branch"></a>
+**`git branch`** — lista/cria/remove ou inspeciona branches. `-M main` renomeia/força o nome local para `main`; `-vv` mostra detalhes e upstream; `--show-current` mostra a branch atual.
+
+<a id="cmd-git-switch"></a>
+**`git switch`** — troca de branch. `-c nova-branch` cria e troca. Antes de trocar, preserve alterações locais que não devem ser sobrescritas.
+
+<a id="cmd-git-restore"></a>
+**`git restore`** — restaura conteúdo. `--staged arquivo` retira do stage sem descartar a working tree; sem `--staged`, pode sobrescrever trabalho local. `--source=<ref>` escolhe explicitamente a origem.
+
+<a id="cmd-git-rm"></a>
+**`git rm`** — remove caminho da working tree e prepara a remoção no stage. `--cached` deixa o arquivo no disco e remove apenas do rastreamento/stage.
+
+<a id="cmd-git-mv"></a>
+**`git mv`** — move/renomeia um caminho e prepara a mudança para o próximo commit. O histórico de rename é inferido pelo Git a partir do conteúdo, não armazenado como um “evento rename” independente.
+
+<a id="cmd-git-merge"></a>
+**`git merge`** — integra outra linha de histórico à branch atual. Pode resultar em fast-forward, commit de merge ou conflito.
+
+<a id="cmd-git-rebase"></a>
+**`git rebase`** — reaplica commits sobre outra base, reescrevendo hashes dos commits reaplicados. `--continue` prossegue após resolver conflito; `--abort` volta ao estado anterior ao rebase; `--skip` descarta o patch atual da sequência e exige compreensão explícita.
+
+<a id="cmd-git-stash"></a>
+**`git stash`** — guarda temporariamente alterações. `push` cria entrada; `list` lista; `apply` reaplica sem remover; `pop` reaplica e normalmente remove se bem-sucedido; `drop` remove uma entrada escolhida.
+
+<a id="cmd-git-tag"></a>
+**`git tag`** — cria/lista tags, referências normalmente usadas para marcar versões/releases.
+
+<a id="cmd-git-reset"></a>
+**`git reset`** — move referências e, conforme modo, altera stage/working tree. `--hard` pode descartar trabalho local e é de alto risco.
+
+<a id="cmd-git-revert"></a>
+**`git revert`** — cria novo commit que desfaz o efeito de outro commit; é normalmente preferível para desfazer algo já publicado sem reescrever histórico compartilhado.
+
+<a id="cmd-git-reflog"></a>
+**`git reflog`** — lê o registro **local** de movimentação de referências/`HEAD`; pode ajudar a localizar commits que deixaram de estar apontados por uma branch.
+
+<a id="cmd-git-rev-parse"></a>
+**`git rev-parse`** — resolve/consulta referências e propriedades. `--show-toplevel` imprime a raiz real do repositório atual; é excelente para confirmar em que repositório você está.
+
+<a id="cmd-git-ls-files"></a>
+**`git ls-files`** — lista caminhos conhecidos pelo index/rastreamento conforme opções.
+
+<a id="cmd-git-ls-tree"></a>
+**`git ls-tree`** — inspeciona a árvore de um commit/ref. `-r --name-only HEAD` percorre recursivamente e mostra apenas nomes presentes naquele estado versionado.
+
+<a id="cmd-git-clean"></a>
+**`git clean`** — remove arquivos não rastreados. `-n` simula; `-d` inclui diretórios; `-f` autoriza remoção. Prefira `git clean -nd` antes de qualquer remoção real.
+
+<a id="cmd-git-check-ignore"></a>
+**`git check-ignore`** — explica se/por que um caminho é ignorado. `-v` mostra a regra e o arquivo de origem.
+
+<a id="cmd-git-grep"></a>
+**`git grep`** — procura texto nos arquivos conhecidos pelo Git. `-F` trata o padrão como string literal, útil para marcadores de conflito.
+
+<a id="cmd-git-cherry-pick"></a>
+**`git cherry-pick`** — aplica a mudança introduzida por commit(s) selecionado(s) sobre a branch atual, criando novos commits.
+
+<a id="cmd-git-fsck"></a>
+**`git fsck`** — verifica conectividade/integridade dos objetos do banco Git; é diagnóstico avançado, não uma rotina diária.
+
+<a id="cmd-git-credential-manager"></a>
+**`git credential-manager`** — interface do Git Credential Manager quando instalado; subcomandos podem inspecionar/configurar autenticação. Disponibilidade varia conforme instalação/plataforma.
+
+<a id="capitulo-19-7-3"></a>
+### 19.7.3 GitHub CLI (`gh`)
+
+`git` e `gh` não são a mesma ferramenta: **Git gerencia o repositório Git; GitHub CLI conversa com a plataforma GitHub.**
+
+<a id="cmd-gh-version"></a>
+**`gh --version`** — mostra a versão do GitHub CLI instalada.
+
+<a id="cmd-gh-auth-status"></a>
+**`gh auth status`** — mostra o estado de autenticação do GitHub CLI e a conta/host relevantes.
+
+<a id="cmd-gh-auth-login"></a>
+**`gh auth login`** — inicia o fluxo de autenticação do GitHub CLI.
+
+<a id="cmd-gh-auth-refresh"></a>
+**`gh auth refresh -s ESCOPO`** — atualiza a autorização do GitHub CLI para incluir um escopo adicional. No fluxo destrutivo de 4.11, `-s delete_repo` solicita o escopo exigido para excluir um repositório via CLI.
+
+<a id="cmd-gh-repo-view"></a>
+**`gh repo view OWNER/REPO`** — consulta um repositório GitHub; `--web` abre a página correspondente no navegador.
+
+<a id="cmd-gh-repo-create"></a>
+**`gh repo create`** — cria um repositório no GitHub.
+
+```text
+gh repo create REPOSITORIO --public --source=. --remote=origin --push
+│     │        │              │          │               │
+│     │        │              │          │               └─ publique os commits locais
+│     │        │              │          └──────────────── crie o remoto local origin
+│     │        │              └─────────────────────────── use o repositório local atual como fonte
+│     │        └────────────────────────────────────────── visibilidade pública
+│     └─────────────────────────────────────────────────── nome do novo repositório
+└───────────────────────────────────────────────────────── GitHub CLI
+```
+
+`--private` troca a visibilidade. Quando README/licença/.gitignore já estão no commit local, não recrie esses arquivos remotamente apenas por conveniência.
+
+<a id="cmd-gh-repo-delete"></a>
+**`gh repo delete OWNER/REPO`** — exclui um repositório no GitHub. É uma ação remota e destrutiva, separada da exclusão da pasta local. O manual mantém a confirmação interativa e não usa `--yes` no runbook de 4.11. A operação pode exigir o escopo `delete_repo`.
+
+<a id="capitulo-19-7-4"></a>
+### 19.7.4 PowerShell e auxiliares de shell
+
+<a id="cmd-shell-cd"></a>
+**`cd CAMINHO`** — altera a pasta atual do terminal. `cd ..` sobe para a pasta pai. Em PowerShell, `cd` é um alias de `Set-Location`.
+
+<a id="cmd-shell-pwd"></a>
+**`pwd`** — imprime a pasta atual em shells Unix-like; no PowerShell, use `Get-Location` (ou o alias `pwd`).
+
+<a id="cmd-powershell-get-location"></a>
+**`Get-Location`** — mostra a pasta atual no PowerShell.
+
+<a id="cmd-powershell-get-childitem"></a>
+**`Get-ChildItem`** — lista itens. `-Force` inclui itens ocultos/sistema, crucial quando você precisa confirmar a presença de `.git`.
+
+<a id="cmd-powershell-set-content"></a>
+**`Set-Content`** — grava/substitui o conteúdo de um arquivo. Em um pipeline, recebe o texto enviado pela esquerda.
+
+<a id="cmd-powershell-test-path"></a>
+**`Test-Path`** — retorna se um caminho existe. `-LiteralPath` trata o caminho literalmente, sem interpretar curingas.
+
+<a id="cmd-powershell-select-string"></a>
+**`Select-String`** — filtra/procura texto, frequentemente recebendo a saída de outro comando pelo pipe `|`.
+
+<a id="cmd-powershell-remove-item"></a>
+**`Remove-Item`** — remove arquivo/pasta. É uma operação do sistema de arquivos, não um comando Git. `-LiteralPath` usa o caminho literalmente; `-Recurse` inclui o conteúdo de diretórios; `-Force` inclui itens ocultos/sistema, como `.git`. Em uma pasta de repositório, essa combinação pode apagar a cópia local inteira, portanto valide caminho e estado antes de executar.
+
+<a id="cmd-powershell-rename-item"></a>
+**`Rename-Item`** — renomeia item no sistema de arquivos. Renomear `.git` deliberadamente tira temporariamente a pasta da condição de repositório e só deve ocorrer em cenários específicos de diagnóstico.
+
+<a id="cmd-powershell-move-item"></a>
+**`Move-Item`** — move itens no sistema de arquivos.
+
+Anatomia do runbook usado em 4.9:
+
+```text
+Get-ChildItem -Force .\Guia_Git-git | Move-Item -Destination .
+│             │          │          │ │         │            │
+│             │          │          │ │         │            └─ pasta atual como destino
+│             │          │          │ │         └────────────── parâmetro de destino
+│             │          │          │ └──────────────────────── move cada item recebido
+│             │          │          └────────────────────────── pipe
+│             │          └──────────────────────────────────── origem enumerada
+│             └─────────────────────────────────────────────── inclua ocultos, como .git
+└───────────────────────────────────────────────────────────── liste os itens
+```
+
+O comando é seguro **somente sob as pré-condições descritas em 4.9**. Se o destino já contém arquivos, pare em vez de confiar em um movimento em massa.
+
+<a id="cmd-shell-pipe"></a>
+**`|` (pipe)** — conecta comandos: a saída do lado esquerdo vira entrada do lado direito. Não significa “ou”.
 
 [↑ Voltar ao índice](#indice)
 
@@ -6303,6 +7781,8 @@ git push
 git status
 ```
 
+**Entenda os comandos:** [`git status`](#cmd-git-status) · [`git add`](#cmd-git-add) · [`git diff`](#cmd-git-diff) · [`git commit`](#cmd-git-commit) · [`git push`](#cmd-git-push)
+
 <a id="capitulo-20-4"></a>
 ## 20.4 Cheat sheet — fluxo seguro/auditável
 
@@ -6318,6 +7798,8 @@ git push origin main
 git status -sb
 ```
 
+**Entenda os comandos:** [`git fetch`](#cmd-git-fetch) · [`git status`](#cmd-git-status) · [`git add`](#cmd-git-add) · [`git diff`](#cmd-git-diff) · [`git commit`](#cmd-git-commit) · [`git push`](#cmd-git-push)
+
 <a id="capitulo-20-5"></a>
 ## 20.5 Cheat sheet — identificar onde estou
 
@@ -6329,6 +7811,8 @@ git branch -vv
 git status -sb
 ```
 
+**Entenda os comandos:** [`git rev-parse`](#cmd-git-rev-parse) · [`git remote`](#cmd-git-remote) · [`git branch`](#cmd-git-branch) · [`git status`](#cmd-git-status)
+
 <a id="capitulo-20-6"></a>
 ## 20.6 Cheat sheet — histórico e divergência
 
@@ -6339,6 +7823,8 @@ git log --oneline origin/main..HEAD
 git diff --name-status HEAD..origin/main
 git diff --name-status origin/main..HEAD
 ```
+
+**Entenda os comandos:** [`git fetch`](#cmd-git-fetch) · [`git log`](#cmd-git-log) · [`git diff`](#cmd-git-diff)
 
 <a id="capitulo-20-7"></a>
 ## 20.7 Cheat sheet — rebase
@@ -6354,6 +7840,8 @@ git rebase --continue
 git rebase --abort
 ```
 
+**Entenda os comandos:** [`git branch`](#cmd-git-branch) · [`git rebase`](#cmd-git-rebase) · [`git status`](#cmd-git-status) · [`git add`](#cmd-git-add)
+
 <a id="capitulo-20-8"></a>
 ## 20.8 Cheat sheet — arquivos
 
@@ -6367,6 +7855,8 @@ git mv <antigo> <novo>
 git ls-files
 git ls-tree -r --name-only HEAD
 ```
+
+**Entenda os comandos:** [`git add`](#cmd-git-add) · [`git restore`](#cmd-git-restore) · [`git rm`](#cmd-git-rm) · [`git mv`](#cmd-git-mv) · [`git ls-files`](#cmd-git-ls-files) · [`git ls-tree`](#cmd-git-ls-tree)
 
 [↑ Voltar ao índice](#indice)
 
@@ -6475,6 +7965,8 @@ git ls-tree -r --name-only HEAD
 - Limites de repositório: https://docs.github.com/en/repositories/creating-and-managing-repositories/repository-limits
 - GitHub CLI — manual: https://cli.github.com/manual/
 - GitHub CLI — `gh repo create`: https://cli.github.com/manual/gh_repo_create
+- GitHub — excluir um repositório: https://docs.github.com/pt/repositories/creating-and-managing-repositories/deleting-a-repository
+- GitHub CLI — `gh repo delete`: https://cli.github.com/manual/gh_repo_delete
 - GitHub CLI — `gh auth status`: https://cli.github.com/manual/gh_auth_status
 - GitHub CLI — `gh auth login`: https://cli.github.com/manual/gh_auth_login
 - GitHub CLI — `gh repo view`: https://cli.github.com/manual/gh_repo_view
@@ -6511,6 +8003,42 @@ aprofundar sem depender de “receita”
 
 <a id="changelog"></a>
 # Apêndice — Changelog
+
+## v2.1.10
+
+- reorganiza **0.1 — Escolha seu caminho** em uma sequência cronológica de uso: começar → criar/conectar → restaurar/clonar → sincronizar alterações → mover com segurança → aprofundar → colaborar → diagnosticar → consultar;
+- adiciona rota explícita para **editar/substituir arquivo no PC e publicar no GitHub**, apontando para **11.1 — GIT-001**;
+- adiciona rota explícita para **perder/apagar a pasta local e restaurar o repositório do GitHub no PC**, apontando para **4.3 — Clonar um repositório existente**;
+- adiciona rota explícita para **alterar/substituir arquivo no GitHub e trazer a mudança para o PC**, apontando para **11.6 — GIT-006**;
+- adiciona rota explícita para **mover/trocar a pasta local do repositório com segurança**, apontando para **4.9**;
+- preserva **79 cenários operacionais**, **5 LABs** e todo o conteúdo técnico existente; a mudança é de roteamento/onboarding, sem criação de novos IDs `GIT-xxx`;
+- compatibilidade de interface atualizada para **index v1.0.19**.
+
+## v2.1.9
+
+- corrige a navegação do `index.html` para que o painel lateral esquerdo acompanhe automaticamente o capítulo ativo quando um link **Entenda os comandos** salta para o dicionário;
+- aplica o mesmo princípio de autoacompanhamento ao índice lateral direito, mantendo o item ativo visível sem transformar o cabeçalho do painel em área sticky;
+- adiciona **4.10 — Remover a cópia local sem apagar o GitHub**, com auditoria de commits/arquivos locais antes da remoção física da pasta;
+- adiciona **4.11 — Excluir local + remoto conscientemente**, separando claramente a exclusão do repositório no GitHub da exclusão da pasta no PC;
+- documenta `gh repo delete`, `gh auth refresh -s delete_repo`, `Remove-Item -LiteralPath ... -Recurse -Force` e `Test-Path` com foco em efeito e risco;
+- mantém a confirmação interativa na exclusão via GitHub CLI e não usa `--yes` no fluxo recomendado;
+- adiciona referências oficiais do GitHub para exclusão de repositório e do manual `gh repo delete`;
+- preserva **79 cenários operacionais** e **5 LABs**; não cria novo ID `GIT-xxx`;
+- reaplica **CONTENT FREEZE — APROVADO** após sincronização do README canônico com index v1.0.16.
+- compatibilidade de interface atualizada para **index v1.0.18**, preservando a troca claro/escuro instantânea e removendo apenas CSS, atributos auxiliares e nós ocultos comprovadamente sem uso.
+
+## v2.1.8
+
+- valida em uso real o onboarding de **4.2.1 Caso B** e corrige lacunas encontradas durante a publicação do próprio `Guia_Git`;
+- explica explicitamente que o argumento final de `git clone URL DESTINO` é uma **pasta local de destino**, incluindo o efeito visual esperado na árvore de diretórios;
+- diferencia três estados da pasta final: **não existe**, **existe e está vazia**, **existe e já contém arquivos locais**;
+- documenta `git clone URL .` como clone na pasta atual e deixa explícita a exigência de destino vazio;
+- adiciona **4.9 — Mover/realocar um repositório com segurança**, incluindo o runbook PowerShell usado para promover um clone de uma subpasta para um pai vazio sem perder `.git`;
+- torna o **fluxo auditável pré-push** parte explícita do onboarding: `status` → stage consciente → `diff --staged` → commit → `diff origin/main..HEAD` → `push --dry-run` → push real → validação final;
+- adiciona **19.7 — Dicionário de comandos, argumentos e referências**, cobrindo Git, GitHub CLI, PowerShell, placeholders, `HEAD`, `origin/main`, `.` e pipe;
+- adiciona links **Entenda os comandos** aos blocos executáveis, evitando repetir definições longas sem reduzir a compreensão;
+- preserva **79 cenários operacionais** e **5 LABs**; não cria novo ID `GIT-xxx`;
+- reaplica **CONTENT FREEZE — APROVADO** após sincronização do README canônico com index v1.0.15.
 
 ## v2.1.7
 
@@ -6660,8 +8188,8 @@ aprofundar sem depender de “receita”
 |---|---|
 | Documento | Git + GitHub — Guia Prático e Manual Operacional para Situações Reais |
 | Papel no repositório | **`README.md` — único documento Markdown oficial e fonte canônica do conteúdo** |
-| Versão do conteúdo | **2.1.7** |
-| Status | **CONTENT FREEZE — APROVADO** · v2.1.7 completa as rotas de onboarding sem ampliar os 79 cenários |
+| Versão do conteúdo | **2.1.10** |
+| Status | **CONTENT FREEZE — APROVADO** · v2.1.10 melhora o roteamento inicial para operações já cobertas, sem ampliar os 79 cenários |
 | Público | **Principal:** pessoas sem experiência prévia com Git · **Secundário:** estudantes, usuários ocasionais e profissionais que precisam consultar situações operacionais |
 | Escopo | Git local + GitHub; CLI como referência canônica, PowerShell/Bash, mapeamento conceitual para VS Code Source Control e fluxos GitHub Web |
 | Arquitetura | **PARTE 0 — Comece aqui** + **PARTE I — Como funciona** + **PARTE II — Trabalhando no dia a dia** + **PARTE III — Resolvendo problemas** + **PARTE IV — Consulta rápida** |
@@ -6672,12 +8200,12 @@ aprofundar sem depender de “receita”
 | Idioma | `pt-BR` |
 | Repositório | [https://github.com/Diego-Ch4m4X/Guia_Git](https://github.com/Diego-Ch4m4X/Guia_Git) |
 | Index interativo | [https://diego-ch4m4x.github.io/Guia_Git/](https://diego-ch4m4x.github.io/Guia_Git/) |
-| Interface compatível nesta revisão | **index v1.0.14** |
+| Interface compatível nesta revisão | **index v1.0.19** |
 | Licença do conteúdo autoral | **CC BY 4.0** — consulte [`LICENSE`](./LICENSE) |
 | Licença do código autoral | **MIT** — consulte [`LICENSE`](./LICENSE) |
 | Materiais de terceiros | permanecem sujeitos às próprias licenças e políticas de marca |
 | Logomarca Git | Jason Long · CC BY 3.0; uso nominativo em projeto educacional independente |
-| Revisão editorial | **2026-09-07** — onboarding completado com 4.2.2 (arquivos locais + GitHub inexistente), GitHub CLI documentado e sincronizado com index v1.0.14; conteúdo técnico e 79 cenários preservados |
+| Revisão editorial | **2026-09-07** — conteúdo v2.1.10 reorganiza a matriz “Escolha seu caminho” e adiciona rotas diretas para sincronização PC↔GitHub, restauração/clonagem e movimentação segura de pasta; index v1.0.19; 79 cenários preservados |
 | Snapshot | **2026-09-07** |
 
 </details>
