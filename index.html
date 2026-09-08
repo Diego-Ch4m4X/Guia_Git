@@ -1571,14 +1571,14 @@ pre code.hljs{display:block;overflow:visible;padding:0!important;background:tran
 <main class="article" id="main">
 <header class="article-head">
 <div class="hero-logo-row"><span class="hero-git-logo"><img alt="Logomarca do Git" decoding="async" height="64" referrerpolicy="no-referrer" src="https://git-scm.com/images/logos/downloads/Git-Icon-1788C.svg" width="64"/></span><span class="independent-note">Material educacional independente · uso nominativo da marca Git</span></div>
-<div class="eyebrow"><span class="badge brand">GUIA + MANUAL</span><span class="badge">v2.1.11</span></div>
+<div class="eyebrow"><span class="badge brand">GUIA + MANUAL</span><span class="badge">v2.1.12</span></div>
 <h1>Git e GitHub — Guia Prático, Comandos e Situações Reais</h1>
 <p class="lead">Aprenda Git e GitHub na prática: entenda o que cada comando faz, publique alterações com segurança, sincronize PC e GitHub, resolva conflitos e recupere erros com procedimentos auditáveis.</p>
 <div class="meta-row"><span class="meta-item">79 cenários operacionais</span><span class="meta-item">5 laboratórios</span><span class="meta-item">Revisado em 7 set. 2026</span><span class="meta-item">CLI canônica · PowerShell/Bash · VS Code/GitHub Web</span></div>
 <div class="mobile-context-bar"><button class="mobile-context-btn" id="openGuideDrawer" type="button">Manual Git</button><button class="mobile-context-btn" id="openTocDrawer" type="button">Nesta página</button></div>
 </header>
 <section class="quick-answer git-start" id="visao-geral"><div class="quick-kicker"><span aria-hidden="true" class="quick-symbol"></span>Comece por aqui</div><p><strong>Nunca usou Git?</strong> Faça apenas o <a href="#capitulo-0">Capítulo 0</a> primeiro. O restante existe para quando você precisar entender, colaborar, diagnosticar ou recuperar uma situação real.</p></section>
-<div class="stat-grid"><div class="stat-card"><strong>79</strong><span>Cenários</span></div><div class="stat-card"><strong>5</strong><span>LABs</span></div><div class="stat-card"><strong>2.1.8</strong><span>Fonte canônica</span></div></div>
+<div class="stat-grid"><div class="stat-card"><strong>79</strong><span>Cenários</span></div><div class="stat-card"><strong>5</strong><span>LABs</span></div><div class="stat-card"><strong>2.1.12</strong><span>Fonte canônica</span></div></div>
 <div class="info-grid"><section class="info-card"><h2>Filosofia operacional</h2><ul><li>Inspecionar</li><li>Entender</li><li>Preservar</li><li>Agir</li><li>Validar</li></ul></section><section class="info-card"><h2>Escopo</h2><ul><li>Git local + GitHub</li><li>Do zero ao intermediário</li><li>Fluxo pessoal e colaborativo</li><li>Troubleshooting e recuperação</li></ul></section></div>
 <section aria-labelledby="entry-title" class="entry-tabs">
 <h2 id="entry-title" style="font-size:12px;letter-spacing:.13em;text-transform:uppercase;color:var(--fil-color-brand);margin:0 0 6px">Escolha seu caminho</h2>
@@ -3237,36 +3237,38 @@ editei de novo → working tree vira versão C
 </code></pre></div>
 <div class="code-footer"><button class="expand-btn" type="button"></button></div>
 </div><p class="command-understand"><strong>Entenda os comandos: </strong><a href="#cmd-git-add"><code>git add</code></a></p>
-<h2 id="capitulo-5-12">5.12 <code>git add .</code> versus <code>git add -A</code><a aria-label="Link para 5.12 git add . versus git add -A" class="anchor-link" href="#capitulo-5-12">#</a></h2>
-<div class="code-block" data-code="" data-language="bash">
-<div class="code-head"><span class="code-lang">terminal</span>
-<button aria-label="Quebrar linha" class="code-action wrap-btn" title="Quebrar linha" type="button"><svg viewbox="0 0 24 24"><path d="M4 6h12a4 4 0 0 1 0 8H9"></path><path d="m12 11-3 3 3 3"></path><path d="M4 18h4"></path></svg></button>
-<button aria-label="Copiar código" class="code-action copy-btn" title="Copiar código" type="button"><svg viewbox="0 0 24 24"><rect height="11" rx="2" width="11" x="8" y="8"></rect><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path></svg></button></div>
-<div class="code-viewport"><pre><code>git add .
-</code></pre></div>
-<div class="code-footer"><button class="expand-btn" type="button"></button></div>
-</div><p class="command-understand"><strong>Entenda os comandos: </strong><a href="#cmd-git-add"><code>git add</code></a></p>
-<p>atua sobre o diretório atual e seus descendentes.</p>
-<div class="code-block" data-code="" data-language="bash">
-<div class="code-head"><span class="code-lang">terminal</span>
-<button aria-label="Quebrar linha" class="code-action wrap-btn" title="Quebrar linha" type="button"><svg viewbox="0 0 24 24"><path d="M4 6h12a4 4 0 0 1 0 8H9"></path><path d="m12 11-3 3 3 3"></path><path d="M4 18h4"></path></svg></button>
-<button aria-label="Copiar código" class="code-action copy-btn" title="Copiar código" type="button"><svg viewbox="0 0 24 24"><rect height="11" rx="2" width="11" x="8" y="8"></rect><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path></svg></button></div>
-<div class="code-viewport"><pre><code>git add -A
-</code></pre></div>
-<div class="code-footer"><button class="expand-btn" type="button"></button></div>
-</div><p class="command-understand"><strong>Entenda os comandos: </strong><a href="#cmd-git-add"><code>git add</code></a></p>
-<p>considera o repositório inteiro.</p>
-<p>Em Git moderno, ambos podem registrar arquivos novos, modificados e removidos dentro de seu respectivo escopo. Porém, <strong>nenhum deles deve substituir a decisão sobre o que pertence ao commit</strong>.</p>
-<p>Para aprender e para commits pequenos, prefira seleção explícita:</p>
-<div class="code-block" data-code="" data-language="bash">
-<div class="code-head"><span class="code-lang">terminal</span>
-<button aria-label="Quebrar linha" class="code-action wrap-btn" title="Quebrar linha" type="button"><svg viewbox="0 0 24 24"><path d="M4 6h12a4 4 0 0 1 0 8H9"></path><path d="m12 11-3 3 3 3"></path><path d="M4 18h4"></path></svg></button>
-<button aria-label="Copiar código" class="code-action copy-btn" title="Copiar código" type="button"><svg viewbox="0 0 24 24"><rect height="11" rx="2" width="11" x="8" y="8"></rect><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path></svg></button></div>
-<div class="code-viewport"><pre><code>git add README.md
-</code></pre></div>
-<div class="code-footer"><button class="expand-btn" type="button"></button></div>
-</div><p class="command-understand"><strong>Entenda os comandos: </strong><a href="#cmd-git-add"><code>git add</code></a></p>
-<p>Use <code>git add -A</code> quando você revisou <code>git status</code> e <strong>todas</strong> as mudanças fazem parte da mesma intenção lógica.</p>
+<h2 id="capitulo-5-12">5.12 Escolher o escopo do <code>git add</code>: arquivos, pasta, <code>.</code>, <code>-A</code> e <code>-p</code><a aria-label="Link para 5.12 Escolher o escopo do git add" class="anchor-link" href="#capitulo-5-12">#</a></h2>
+<blockquote><p><strong>Tenho 30, 100 ou 1000 arquivos. Preciso digitar o nome de todos?</strong> <strong>Não.</strong> Seleção consciente não significa selecionar cada caminho manualmente; significa escolher o <strong>menor escopo lógico</strong> que representa exatamente o que deve entrar no próximo commit e depois auditar o stage.</p></blockquote>
+<div class="table-wrap"><table><thead><tr><th>Forma</th><th>Escopo</th><th>Quando faz sentido</th></tr></thead><tbody>
+<tr><td><code>git add arquivo1 arquivo2</code></td><td>somente os arquivos informados</td><td>poucas mudanças conhecidas; maior controle explícito</td></tr>
+<tr><td><code>git add pasta/</code></td><td>a pasta indicada e seus descendentes</td><td>muitos arquivos relacionados concentrados em uma mesma pasta</td></tr>
+<tr><td><code>git add .</code></td><td>diretório atual e seus descendentes</td><td>tudo abaixo da pasta em que você está pertence à mesma mudança</td></tr>
+<tr><td><code>git add -A</code></td><td>todas as alterações do repositório</td><td><strong>tudo</strong> que <code>git status</code> mostra pertence conscientemente ao mesmo commit</td></tr>
+<tr><td><code>git add -p &lt;arquivo&gt;</code></td><td>trechos (<em>hunks</em>) escolhidos interativamente</td><td>apenas partes de uma alteração devem entrar agora</td></tr>
+</tbody></table></div>
+<p class="command-understand"><strong>Entenda os comandos: </strong><a href="#cmd-git-add"><code>git add</code></a></p>
+<h3>Exemplo real — centenas de arquivos em uma única pasta</h3>
+<p>Imagine que uma atualização substituiu <strong>800 arquivos dentro de <code>assets/</code></strong> e todos fazem parte da mesma entrega. Não é necessário digitar 800 nomes:</p>
+<div class="code-block" data-code="" data-language="bash"><div class="code-head"><span class="code-lang">terminal</span><button aria-label="Quebrar linha" class="code-action wrap-btn" title="Quebrar linha" type="button"><svg viewbox="0 0 24 24"><path d="M4 6h12a4 4 0 0 1 0 8H9"></path><path d="m12 11-3 3 3 3"></path><path d="M4 18h4"></path></svg></button><button aria-label="Copiar código" class="code-action copy-btn" title="Copiar código" type="button"><svg viewbox="0 0 24 24"><rect height="11" rx="2" width="11" x="8" y="8"></rect><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0 2 2v8a2 2 0 0 0 2 2h2"></path></svg></button></div><div class="code-viewport"><pre><code>git status -sb
+git add assets/
+git diff --staged --name-status
+</code></pre></div><div class="code-footer"><button class="expand-btn" type="button"></button></div></div>
+<p>A primeira linha mostra o estado; <code>git add assets/</code> seleciona o grupo lógico; a última confirma <strong>o que realmente entrou no stage</strong>.</p>
+<h3>Exemplo real — mil alterações e todas pertencem à mesma atualização</h3>
+<p>Se você confirmou em <code>git status</code> que as <strong>1000 alterações do repositório inteiro</strong> pertencem à mesma intenção lógica:</p>
+<div class="code-block" data-code="" data-language="bash"><div class="code-head"><span class="code-lang">terminal</span><button aria-label="Quebrar linha" class="code-action wrap-btn" title="Quebrar linha" type="button"><svg viewbox="0 0 24 24"><path d="M4 6h12a4 4 0 0 1 0 8H9"></path><path d="m12 11-3 3 3 3"></path><path d="M4 18h4"></path></svg></button><button aria-label="Copiar código" class="code-action copy-btn" title="Copiar código" type="button"><svg viewbox="0 0 24 24"><rect height="11" rx="2" width="11" x="8" y="8"></rect><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0 2 2v8a2 2 0 0 0 2 2h2"></path></svg></button></div><div class="code-viewport"><pre><code>git status -sb
+git add -A
+git diff --staged --name-status
+</code></pre></div><div class="code-footer"><button class="expand-btn" type="button"></button></div></div>
+<p>Se aparecer qualquer arquivo inesperado na auditoria, <strong>pare antes do commit</strong>. Retire o que não pertence ao stage ou refaça a seleção com um escopo menor.</p>
+<h3>Como decidir rapidamente</h3>
+<div class="code-block" data-code="" data-language="text"><div class="code-head"><span class="code-lang">saída / texto</span><button aria-label="Quebrar linha" class="code-action wrap-btn" title="Quebrar linha" type="button"><svg viewbox="0 0 24 24"><path d="M4 6h12a4 4 0 0 1 0 8H9"></path><path d="m12 11-3 3 3 3"></path><path d="M4 18h4"></path></svg></button><button aria-label="Copiar código" class="code-action copy-btn" title="Copiar código" type="button"><svg viewbox="0 0 24 24"><rect height="11" rx="2" width="11" x="8" y="8"></rect><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0 2 2v8a2 2 0 0 0 2 2h2"></path></svg></button></div><div class="code-viewport"><pre><code>poucos arquivos conhecidos        → git add arquivo1 arquivo2
+muitos arquivos de uma pasta      → git add pasta/
+tudo abaixo da pasta atual        → git add .
+todo o repositório                → git add -A
+apenas partes de um arquivo       → git add -p &lt;arquivo&gt;
+</code></pre></div><div class="code-footer"><button class="expand-btn" type="button"></button></div></div>
+<p><code>git add .</code> e <code>git add -A</code> podem preparar arquivos novos, modificados e removidos dentro de seus respectivos escopos. A diferença operacional mais importante aqui é <strong>o alcance</strong>. Não trate nenhum deles como botão automático de “salvar tudo”.</p>
 <h2 id="capitulo-5-13">5.13 Mini-glossário para seguir sem travar<a aria-label="Link para 5.13 Mini-glossário para seguir sem travar" class="anchor-link" href="#capitulo-5-13">#</a></h2>
 <div class="table-wrap"><table>
 <thead>
@@ -3987,25 +3989,18 @@ git status -sb
 <li class="task-item"><label class="task-label"><input class="interactive-check" data-check-key="capitulo-7-13-17" type="checkbox"/><span>sei se a working tree terminou limpa ou por que permaneceu modificada;</span></label></li>
 <li class="task-item"><label class="task-label"><input class="interactive-check" data-check-key="capitulo-7-13-18" type="checkbox"/><span>executei o exercício apenas em repositório descartável ou conscientemente seguro.</span></label></li>
 </ul></div></section><p class="back-to-index"><a href="#indice">↑ Voltar ao índice</a></p><hr/><h1 class="chapter-title" id="capitulo-8">8. Arquivos e versionamento: selecionar, restaurar, remover, ignorar e proteger<a aria-label="Link para 8. Arquivos e versionamento: selecionar, restaurar, remover, ignorar e proteger" class="anchor-link" href="#capitulo-8">#</a></h1>
-<h2 id="capitulo-8-1">8.1 Adicionar arquivo específico ao stage<a aria-label="Link para 8.1 Adicionar arquivo específico ao stage" class="anchor-link" href="#capitulo-8-1">#</a></h2>
-<p>Prefira começar pela intenção explícita:</p>
-<div class="code-block" data-code="" data-language="bash">
-<div class="code-head"><span class="code-lang">terminal</span>
-<button aria-label="Quebrar linha" class="code-action wrap-btn" title="Quebrar linha" type="button"><svg viewbox="0 0 24 24"><path d="M4 6h12a4 4 0 0 1 0 8H9"></path><path d="m12 11-3 3 3 3"></path><path d="M4 18h4"></path></svg></button>
-<button aria-label="Copiar código" class="code-action copy-btn" title="Copiar código" type="button"><svg viewbox="0 0 24 24"><rect height="11" rx="2" width="11" x="8" y="8"></rect><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path></svg></button></div>
-<div class="code-viewport"><pre><code>git add README.md
-</code></pre></div>
-<div class="code-footer"><button class="expand-btn" type="button"></button></div>
-</div><p class="command-understand"><strong>Entenda os comandos: </strong><a href="#cmd-git-add"><code>git add</code></a></p>
-<p>Vários arquivos relacionados:</p>
-<div class="code-block" data-code="" data-language="bash">
-<div class="code-head"><span class="code-lang">terminal</span>
-<button aria-label="Quebrar linha" class="code-action wrap-btn" title="Quebrar linha" type="button"><svg viewbox="0 0 24 24"><path d="M4 6h12a4 4 0 0 1 0 8H9"></path><path d="m12 11-3 3 3 3"></path><path d="M4 18h4"></path></svg></button>
-<button aria-label="Copiar código" class="code-action copy-btn" title="Copiar código" type="button"><svg viewbox="0 0 24 24"><rect height="11" rx="2" width="11" x="8" y="8"></rect><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path></svg></button></div>
-<div class="code-viewport"><pre><code>git add README.md index.html sitemap.xml
-</code></pre></div>
-<div class="code-footer"><button class="expand-btn" type="button"></button></div>
-</div><p class="command-understand"><strong>Entenda os comandos: </strong><a href="#cmd-git-add"><code>git add</code></a></p>
+<h2 id="capitulo-8-1">8.1 Adicionar arquivos e pastas ao stage<a aria-label="Link para 8.1 Adicionar arquivos e pastas ao stage" class="anchor-link" href="#capitulo-8-1">#</a></h2>
+<p>Prefira começar pela intenção explícita quando o conjunto é pequeno:</p>
+<div class="code-block" data-code="" data-language="bash"><div class="code-head"><span class="code-lang">terminal</span><button aria-label="Quebrar linha" class="code-action wrap-btn" title="Quebrar linha" type="button"><svg viewbox="0 0 24 24"><path d="M4 6h12a4 4 0 0 1 0 8H9"></path><path d="m12 11-3 3 3 3"></path><path d="M4 18h4"></path></svg></button><button aria-label="Copiar código" class="code-action copy-btn" title="Copiar código" type="button"><svg viewbox="0 0 24 24"><rect height="11" rx="2" width="11" x="8" y="8"></rect><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0 2 2v8a2 2 0 0 0 2 2h2"></path></svg></button></div><div class="code-viewport"><pre><code>git add README.md
+</code></pre></div><div class="code-footer"><button class="expand-btn" type="button"></button></div></div>
+<p>Vários arquivos relacionados podem ser informados juntos:</p>
+<div class="code-block" data-code="" data-language="bash"><div class="code-head"><span class="code-lang">terminal</span><button aria-label="Quebrar linha" class="code-action wrap-btn" title="Quebrar linha" type="button"><svg viewbox="0 0 24 24"><path d="M4 6h12a4 4 0 0 1 0 8H9"></path><path d="m12 11-3 3 3 3"></path><path d="M4 18h4"></path></svg></button><button aria-label="Copiar código" class="code-action copy-btn" title="Copiar código" type="button"><svg viewbox="0 0 24 24"><rect height="11" rx="2" width="11" x="8" y="8"></rect><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0 2 2v8a2 2 0 0 0 2 2h2"></path></svg></button></div><div class="code-viewport"><pre><code>git add README.md index.html sitemap.xml
+</code></pre></div><div class="code-footer"><button class="expand-btn" type="button"></button></div></div>
+<p>E, quando dezenas ou centenas de arquivos relacionados estão concentrados em uma pasta, selecione a pasta inteira:</p>
+<div class="code-block" data-code="" data-language="bash"><div class="code-head"><span class="code-lang">terminal</span><button aria-label="Quebrar linha" class="code-action wrap-btn" title="Quebrar linha" type="button"><svg viewbox="0 0 24 24"><path d="M4 6h12a4 4 0 0 1 0 8H9"></path><path d="m12 11-3 3 3 3"></path><path d="M4 18h4"></path></svg></button><button aria-label="Copiar código" class="code-action copy-btn" title="Copiar código" type="button"><svg viewbox="0 0 24 24"><rect height="11" rx="2" width="11" x="8" y="8"></rect><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0 2 2v8a2 2 0 0 0 2 2h2"></path></svg></button></div><div class="code-viewport"><pre><code>git add assets/
+</code></pre></div><div class="code-footer"><button class="expand-btn" type="button"></button></div></div>
+<p class="command-understand"><strong>Entenda os comandos: </strong><a href="#cmd-git-add"><code>git add</code></a></p>
+<blockquote><p>Você <strong>não precisa digitar centenas de nomes</strong>. Escolha o escopo lógico adequado e audite em seguida. Para comparar <code>arquivo1 arquivo2</code>, <code>pasta/</code>, <code>.</code>, <code>-A</code> e <code>-p</code>, consulte <a href="#capitulo-5-12">5.12 — Escolher o escopo do <code>git add</code></a>.</p></blockquote>
 <h2 id="capitulo-8-2">8.2 Auditar o que está preparado<a aria-label="Link para 8.2 Auditar o que está preparado" class="anchor-link" href="#capitulo-8-2">#</a></h2>
 <div class="code-block" data-code="" data-language="bash">
 <div class="code-head"><span class="code-lang">terminal</span>
@@ -4938,13 +4933,28 @@ git remote -v
 </table></div><p>Foi exatamente por isso que, em um estado como:</p><div class="code-block" data-code="" data-language="text"><div class="code-head"><span class="code-lang">texto</span><button aria-label="Quebrar linha" class="code-action wrap-btn" title="Quebrar linha" type="button"><svg viewbox="0 0 24 24"><path d="M4 6h12a4 4 0 0 1 0 8H9"></path><path d="m12 11-3 3 3 3"></path><path d="M4 18h4"></path></svg></button><button aria-label="Copiar código" class="code-action copy-btn" title="Copiar código" type="button"><svg viewbox="0 0 24 24"><rect height="11" rx="2" width="11" x="8" y="8"></rect><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path></svg></button></div><div class="code-viewport"><pre><code>Changes to be committed:
         modified:   README.md
         modified:   index.html
-</code></pre></div><div class="code-footer"><button class="expand-btn" type="button"></button></div></div><p>você pode seguir para a revisão/commit sem repetir <code>git add</code>: esses arquivos já foram preparados anteriormente.</p><h3>Se ainda precisa preparar os arquivos</h3><p>Prefira seleção explícita:</p><div class="code-block" data-code="" data-language="bash"><div class="code-head"><span class="code-lang">terminal</span><button aria-label="Quebrar linha" class="code-action wrap-btn" title="Quebrar linha" type="button"><svg viewbox="0 0 24 24"><path d="M4 6h12a4 4 0 0 1 0 8H9"></path><path d="m12 11-3 3 3 3"></path><path d="M4 18h4"></path></svg></button><button aria-label="Copiar código" class="code-action copy-btn" title="Copiar código" type="button"><svg viewbox="0 0 24 24"><rect height="11" rx="2" width="11" x="8" y="8"></rect><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path></svg></button></div><div class="code-viewport"><pre><code>git add README.md index.html
-</code></pre></div><div class="code-footer"><button class="expand-btn" type="button"></button></div></div><p>Alternativas — <strong>não execute as três em sequência</strong>:</p><div class="code-block" data-code="" data-language="bash"><div class="code-head"><span class="code-lang">terminal</span><button aria-label="Quebrar linha" class="code-action wrap-btn" title="Quebrar linha" type="button"><svg viewbox="0 0 24 24"><path d="M4 6h12a4 4 0 0 1 0 8H9"></path><path d="m12 11-3 3 3 3"></path><path d="M4 18h4"></path></svg></button><button aria-label="Copiar código" class="code-action copy-btn" title="Copiar código" type="button"><svg viewbox="0 0 24 24"><rect height="11" rx="2" width="11" x="8" y="8"></rect><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path></svg></button></div><div class="code-viewport"><pre><code># prepara alterações sob a pasta atual e seus descendentes
-git add .
-
-# prepara todas as alterações relevantes do repositório
+</code></pre></div><div class="code-footer"><button class="expand-btn" type="button"></button></div></div><p>você pode seguir para a revisão/commit sem repetir <code>git add</code>: esses arquivos já foram preparados anteriormente.</p><h3>Se ainda precisa preparar os arquivos</h3>
+<p>Escolha o <strong>menor escopo que represente toda a mudança</strong>. As opções abaixo são alternativas; <strong>não execute todas em sequência</strong>.</p>
+<div class="table-wrap"><table><thead><tr><th>Situação</th><th>Exemplo</th></tr></thead><tbody>
+<tr><td>poucos arquivos específicos</td><td><code>git add README.md index.html</code></td></tr>
+<tr><td>muitos arquivos relacionados em uma pasta</td><td><code>git add assets/</code></td></tr>
+<tr><td>tudo abaixo da pasta atual</td><td><code>git add .</code></td></tr>
+<tr><td>todas as alterações do repositório</td><td><code>git add -A</code></td></tr>
+<tr><td>somente alguns trechos de um arquivo</td><td><code>git add -p index.html</code></td></tr>
+</tbody></table></div>
+<p class="command-understand"><strong>Entenda os comandos: </strong><a href="#cmd-git-add"><code>git add</code></a></p>
+<p>Exemplo real: se <strong>800 arquivos de <code>assets/</code></strong> foram substituídos pela mesma atualização:</p>
+<div class="code-block" data-code="" data-language="bash"><div class="code-head"><span class="code-lang">terminal</span><button aria-label="Quebrar linha" class="code-action wrap-btn" title="Quebrar linha" type="button"><svg viewbox="0 0 24 24"><path d="M4 6h12a4 4 0 0 1 0 8H9"></path><path d="m12 11-3 3 3 3"></path><path d="M4 18h4"></path></svg></button><button aria-label="Copiar código" class="code-action copy-btn" title="Copiar código" type="button"><svg viewbox="0 0 24 24"><rect height="11" rx="2" width="11" x="8" y="8"></rect><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0 2 2v8a2 2 0 0 0 2 2h2"></path></svg></button></div><div class="code-viewport"><pre><code>git status -sb
+git add assets/
+git diff --staged --name-status
+</code></pre></div><div class="code-footer"><button class="expand-btn" type="button"></button></div></div>
+<p>Se, em vez disso, você verificou que <strong>1000 alterações espalhadas pelo repositório inteiro</strong> pertencem à mesma atualização:</p>
+<div class="code-block" data-code="" data-language="bash"><div class="code-head"><span class="code-lang">terminal</span><button aria-label="Quebrar linha" class="code-action wrap-btn" title="Quebrar linha" type="button"><svg viewbox="0 0 24 24"><path d="M4 6h12a4 4 0 0 1 0 8H9"></path><path d="m12 11-3 3 3 3"></path><path d="M4 18h4"></path></svg></button><button aria-label="Copiar código" class="code-action copy-btn" title="Copiar código" type="button"><svg viewbox="0 0 24 24"><rect height="11" rx="2" width="11" x="8" y="8"></rect><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0 2 2v8a2 2 0 0 0 2 2h2"></path></svg></button></div><div class="code-viewport"><pre><code>git status -sb
 git add -A
-</code></pre></div><div class="code-footer"><button class="expand-btn" type="button"></button></div></div><p class="command-understand"><strong>Entenda os comandos:</strong> <a href="#cmd-git-add"><code>git add</code></a></p><p>Use <code>git add .</code> ou <code>git add -A</code> somente depois de <code>git status</code> e quando o escopo realmente corresponder ao commit que você pretende criar.</p><h3>Fluxo essencial — projeto pessoal simples</h3><p>Revise o que está no stage:</p><div class="code-block" data-code="" data-language="bash"><div class="code-head"><span class="code-lang">terminal</span><button aria-label="Quebrar linha" class="code-action wrap-btn" title="Quebrar linha" type="button"><svg viewbox="0 0 24 24"><path d="M4 6h12a4 4 0 0 1 0 8H9"></path><path d="m12 11-3 3 3 3"></path><path d="M4 18h4"></path></svg></button><button aria-label="Copiar código" class="code-action copy-btn" title="Copiar código" type="button"><svg viewbox="0 0 24 24"><rect height="11" rx="2" width="11" x="8" y="8"></rect><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path></svg></button></div><div class="code-viewport"><pre><code>git diff --staged --name-status
+git diff --staged --name-status
+</code></pre></div><div class="code-footer"><button class="expand-btn" type="button"></button></div></div>
+<p>A regra não é “digitar todos os nomes”; é <strong>selecionar conscientemente o escopo e auditar o resultado antes do commit</strong>. Veja também <a href="#capitulo-5-12">5.12 — Escolher o escopo do <code>git add</code></a>.</p>
+<h3>Fluxo essencial — projeto pessoal simples</h3><p>Revise o que está no stage:</p><div class="code-block" data-code="" data-language="bash"><div class="code-head"><span class="code-lang">terminal</span><button aria-label="Quebrar linha" class="code-action wrap-btn" title="Quebrar linha" type="button"><svg viewbox="0 0 24 24"><path d="M4 6h12a4 4 0 0 1 0 8H9"></path><path d="m12 11-3 3 3 3"></path><path d="M4 18h4"></path></svg></button><button aria-label="Copiar código" class="code-action copy-btn" title="Copiar código" type="button"><svg viewbox="0 0 24 24"><rect height="11" rx="2" width="11" x="8" y="8"></rect><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path></svg></button></div><div class="code-viewport"><pre><code>git diff --staged --name-status
 git diff --staged
 </code></pre></div><div class="code-footer"><button class="expand-btn" type="button"></button></div></div><p>Depois registre, publique e valide:</p><div class="code-block" data-code="" data-language="bash"><div class="code-head"><span class="code-lang">terminal</span><button aria-label="Quebrar linha" class="code-action wrap-btn" title="Quebrar linha" type="button"><svg viewbox="0 0 24 24"><path d="M4 6h12a4 4 0 0 1 0 8H9"></path><path d="m12 11-3 3 3 3"></path><path d="M4 18h4"></path></svg></button><button aria-label="Copiar código" class="code-action copy-btn" title="Copiar código" type="button"><svg viewbox="0 0 24 24"><rect height="11" rx="2" width="11" x="8" y="8"></rect><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path></svg></button></div><div class="code-viewport"><pre><code>git commit -m "Atualiza interface e documentação"
 git push
@@ -7914,7 +7924,7 @@ git push --dry-run origin main
 <p><a aria-hidden="true" class="command-anchor" id="cmd-git-status"></a>
 <strong><code>git status</code></strong> — descreve o estado da working tree e do stage. <code>-s</code> usa formato curto; <code>-b</code> acrescenta informação de branch; <code>-sb</code> combina ambos.</p>
 <p><a aria-hidden="true" class="command-anchor" id="cmd-git-add"></a>
-<strong><code>git add</code></strong> — copia a versão escolhida dos caminhos para o stage. <code>git add arquivo</code> seleciona explicitamente; <code>git add -A</code> atualiza o stage considerando adições, modificações e remoções em todo o escopo aplicável.</p>
+<strong><code>git add</code></strong> — copia para o stage a versão escolhida dos caminhos dentro do escopo informado. <code>git add arquivo1 arquivo2</code> seleciona arquivos específicos; <code>git add pasta/</code> seleciona a pasta e descendentes; <code>git add .</code> usa o diretório atual e descendentes; <code>git add -A</code> considera todas as alterações do repositório; <code>git add -p &lt;arquivo&gt;</code> permite escolher interativamente trechos (<em>hunks</em>). Seleção consciente significa escolher o escopo correto e auditar o stage — não digitar cada arquivo individualmente.</p>
 <p><a aria-hidden="true" class="command-anchor" id="cmd-git-diff"></a>
 <strong><code>git diff</code></strong> — compara conteúdos. Sem opção, normalmente compara working tree com stage; <code>--staged</code>/<code>--cached</code> compara stage com <code>HEAD</code>; <code>--name-status</code> resume por nome e tipo de alteração.</p>
 <p>Anatomia de uma auditoria pré-push:</p>
@@ -8202,9 +8212,16 @@ aprofundar sem depender de “receita”
 <details class="changelog-details">
 <summary class="changelog-summary">
 <h1 class="chapter-title" id="changelog">Apêndice — Changelog</h1>
-<span class="changelog-summary-meta">Histórico do conteúdo canônico · v2.0.0 → v2.1.11</span>
+<span class="changelog-summary-meta">Histórico do conteúdo canônico · v2.0.0 → v2.1.12</span>
 </summary>
-<div class="changelog-body"><h2>v2.1.11</h2><ul>
+<div class="changelog-body"><h2>v2.1.12</h2><ul>
+<li>fecha a lacuna de escala no <code>git add</code>: seleção consciente passa a distinguir explicitamente arquivos específicos, pasta inteira, diretório atual (<code>.</code>), repositório inteiro (<code>-A</code>) e seleção interativa por trechos (<code>-p</code>);</li>
+<li>esclarece que <strong>30, 100 ou 1000 arquivos não precisam ser digitados um a um</strong> quando existe um escopo lógico adequado;</li>
+<li>adiciona exemplos operacionais reais para <strong>800 arquivos dentro de <code>assets/</code></strong> e <strong>1000 alterações distribuídas pelo repositório</strong>, sempre com <code>status -sb</code> antes e <code>diff --staged --name-status</code> depois;</li>
+<li>amplia 5.12, 8.1, <code>GIT-001</code> e o Dicionário de comandos para manter a mesma regra em conceito, procedimento e consulta rápida;</li>
+<li>preserva os <strong>79 cenários</strong> e <strong>5 LABs</strong> e reaplica <strong>CONTENT FREEZE — APROVADO</strong> após a correção pedagógica;</li>
+<li>compatibilidade de interface atualizada para <strong>index v1.0.22</strong>, mantendo a revisão SEO da v1.0.21.</li>
+</ul><h2>v2.1.11</h2><ul>
 <li>torna <code>GIT-001</code> <strong>autocontido</strong>, explicando quando <code>git add</code> é necessário, quando o arquivo já está em <code>Changes to be committed</code> e como diferenciar <code>git add &lt;arquivos&gt;</code>, <code>git add .</code> e <code>git add -A</code>;</li>
 <li>harmoniza o fluxo seguro/auditável em 4.2.1, 7.2, Combo A+ e cheat sheet: <code>status -sb</code> antes e depois de <code>fetch</code>, stage auditado, <code>status -sb</code> pós-commit, <code>log</code> + <code>diff</code> pré-push, <code>push --dry-run</code>, push real e validação final;</li>
 <li>completa cenários que terminavam cedo demais (<code>GIT-002</code>, <code>003</code>, <code>004</code>, <code>005</code>, <code>007</code>, <code>008</code>, <code>009</code>, <code>011</code>, <code>012</code>, <code>013</code>, <code>033</code>, <code>034</code>, <code>041</code>, <code>064</code>, <code>078</code>) com validações/etapas finais coerentes;</li>
@@ -8359,8 +8376,8 @@ aprofundar sem depender de “receita”
 <dl class="edition-meta-grid">
 <div><dt>Documento</dt><dd>Git + GitHub — Guia Prático e Manual Operacional para Situações Reais</dd></div>
 <div><dt>Fonte canônica</dt><dd><code>README.md</code></dd></div>
-<div><dt>Conteúdo</dt><dd><strong>v2.1.11</strong> · CONTENT FREEZE — APROVADO</dd></div>
-<div><dt>Interface</dt><dd><strong>index v1.0.21</strong></dd></div>
+<div><dt>Conteúdo</dt><dd><strong>v2.1.12</strong> · CONTENT FREEZE — APROVADO</dd></div>
+<div><dt>Interface</dt><dd><strong>index v1.0.22</strong></dd></div>
 <div><dt>Escopo</dt><dd>Git local + GitHub · CLI canônica · PowerShell/Bash · VS Code/GitHub Web</dd></div>
 <div><dt>Inventário</dt><dd>79 cenários operacionais · 5 laboratórios guiados</dd></div>
 <div><dt>Idioma</dt><dd>pt-BR</dd></div>
@@ -8384,7 +8401,7 @@ aprofundar sem depender de “receita”
 <div class="git-footer-copy">
 <a href="#indice">Sobre este guia</a><br/>
 <span>Correções, sugestões e erratas são bem-vindas.</span>
-<span class="git-footer-source-note">Fonte canônica: <strong>README.md</strong> · interface <strong>index v1.0.21</strong>.</span>
+<span class="git-footer-source-note">Fonte canônica: <strong>README.md</strong> · interface <strong>index v1.0.22</strong>.</span>
 </div>
 </div>
 <div class="git-footer-right">

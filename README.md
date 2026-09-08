@@ -12,7 +12,7 @@
 
 <p align="center">
   <a href="#idioma-e-convencoes"><img alt="Idioma: pt-BR" src="https://img.shields.io/badge/idioma-pt--BR-4e443c"></a>
-  <a href="#metadados-do-documento"><img alt="Conteúdo: v2.1.11" src="https://img.shields.io/badge/conte%C3%BAdo-v2.1.11-f14e32"></a>
+  <a href="#metadados-do-documento"><img alt="Conteúdo: v2.1.12" src="https://img.shields.io/badge/conte%C3%BAdo-v2.1.12-f14e32"></a>
   <a href="#metadados-do-documento"><img alt="Estado: content freeze" src="https://img.shields.io/badge/estado-content_freeze-d7834f"></a>
   <a href="#capitulo-11"><img alt="Cenários: 79" src="https://img.shields.io/badge/cen%C3%A1rios-79-4e443c"></a>
   <a href="#capitulo-5-14"><img alt="Laboratórios: 5" src="https://img.shields.io/badge/LABs-5-f14e32"></a>
@@ -196,7 +196,7 @@
    - [5.9 Upstream: qual branch remota minha branch acompanha?](#capitulo-5-9)
    - [5.10 Um arquivo pode existir em estados diferentes](#capitulo-5-10)
    - [5.11 Matriz — onde está minha mudança?](#capitulo-5-11)
-   - [5.12 `git add .` versus `git add -A`](#capitulo-5-12)
+   - [5.12 Escolher o escopo do `git add`: arquivos, pasta, `.`, `-A` e `-p`](#capitulo-5-12)
    - [5.13 Mini-glossário para seguir sem travar](#capitulo-5-13)
    - [5.14 LAB-01 — Três versões do mesmo arquivo: HEAD, stage e working tree](#capitulo-5-14)
 - [6. Ler o estado: status, diff, log, fetch e inspeção](#capitulo-6)
@@ -227,7 +227,7 @@
    - [7.12 CLI ↔ VS Code Source Control — equivalência conceitual](#capitulo-7-12)
    - [7.13 LAB-02 — Simule `behind 1` de forma controlada](#capitulo-7-13)
 - [8. Arquivos e versionamento: selecionar, restaurar, remover, ignorar e proteger](#capitulo-8)
-   - [8.1 Adicionar arquivo específico ao stage](#capitulo-8-1)
+   - [8.1 Adicionar arquivos e pastas ao stage](#capitulo-8-1)
    - [8.2 Auditar o que está preparado](#capitulo-8-2)
    - [8.3 Adicionar todo o repositório ao stage](#capitulo-8-3)
    - [8.4 Selecionar apenas partes de uma alteração](#capitulo-8-4)
@@ -2476,35 +2476,55 @@ git add <arquivo>
 **Entenda os comandos:** [`git add`](#cmd-git-add)
 
 <a id="capitulo-5-12"></a>
-## 5.12 `git add .` versus `git add -A`
+## 5.12 Escolher o escopo do `git add`: arquivos, pasta, `.`, `-A` e `-p`
 
-```bash
-git add .
-```
+> **Tenho 30, 100 ou 1000 arquivos. Preciso digitar o nome de todos?** **Não.** Seleção consciente não significa selecionar cada caminho manualmente; significa escolher o **menor escopo lógico** que representa exatamente o que deve entrar no próximo commit e depois auditar o stage.
+
+| Forma | Escopo | Quando faz sentido |
+|---|---|---|
+| `git add arquivo1 arquivo2` | somente os arquivos informados | poucas mudanças conhecidas; maior controle explícito |
+| `git add pasta/` | a pasta indicada e seus descendentes | muitos arquivos relacionados concentrados em uma mesma pasta |
+| `git add .` | diretório atual e seus descendentes | tudo abaixo da pasta em que você está pertence à mesma mudança |
+| `git add -A` | todas as alterações do repositório | **tudo** que `git status` mostra pertence conscientemente ao mesmo commit |
+| `git add -p <arquivo>` | trechos (*hunks*) escolhidos interativamente | apenas partes de uma alteração devem entrar agora |
 
 **Entenda os comandos:** [`git add`](#cmd-git-add)
 
-atua sobre o diretório atual e seus descendentes.
+### Exemplo real — centenas de arquivos em uma única pasta
+
+Imagine que uma atualização substituiu **800 arquivos dentro de `assets/`** e todos fazem parte da mesma entrega. Não é necessário digitar 800 nomes:
 
 ```bash
+git status -sb
+git add assets/
+git diff --staged --name-status
+```
+
+A primeira linha mostra o estado; `git add assets/` seleciona o grupo lógico; a última confirma **o que realmente entrou no stage**.
+
+### Exemplo real — mil alterações e todas pertencem à mesma atualização
+
+Se você confirmou em `git status` que as **1000 alterações do repositório inteiro** pertencem à mesma intenção lógica:
+
+```bash
+git status -sb
 git add -A
+git diff --staged --name-status
 ```
 
-**Entenda os comandos:** [`git add`](#cmd-git-add)
+Se aparecer qualquer arquivo inesperado na auditoria, **pare antes do commit**. Retire o que não pertence ao stage ou refaça a seleção com um escopo menor.
 
-considera o repositório inteiro.
+### Como decidir rapidamente
 
-Em Git moderno, ambos podem registrar arquivos novos, modificados e removidos dentro de seu respectivo escopo. Porém, **nenhum deles deve substituir a decisão sobre o que pertence ao commit**.
-
-Para aprender e para commits pequenos, prefira seleção explícita:
-
-```bash
-git add README.md
+```text
+poucos arquivos conhecidos        → git add arquivo1 arquivo2
+muitos arquivos de uma pasta      → git add pasta/
+tudo abaixo da pasta atual        → git add .
+todo o repositório                → git add -A
+apenas partes de um arquivo       → git add -p <arquivo>
 ```
 
-**Entenda os comandos:** [`git add`](#cmd-git-add)
-
-Use `git add -A` quando você revisou `git status` e **todas** as mudanças fazem parte da mesma intenção lógica.
+`git add .` e `git add -A` podem preparar arquivos novos, modificados e removidos dentro de seus respectivos escopos. A diferença operacional mais importante aqui é **o alcance**. Não trate nenhum deles como botão automático de “salvar tudo”.
 
 <a id="capitulo-5-13"></a>
 ## 5.13 Mini-glossário para seguir sem travar
@@ -3245,23 +3265,29 @@ git status -sb
 # 8. Arquivos e versionamento: selecionar, restaurar, remover, ignorar e proteger
 
 <a id="capitulo-8-1"></a>
-## 8.1 Adicionar arquivo específico ao stage
+## 8.1 Adicionar arquivos e pastas ao stage
 
-Prefira começar pela intenção explícita:
+Prefira começar pela intenção explícita quando o conjunto é pequeno:
 
 ```bash
 git add README.md
 ```
 
-**Entenda os comandos:** [`git add`](#cmd-git-add)
-
-Vários arquivos relacionados:
+Vários arquivos relacionados podem ser informados juntos:
 
 ```bash
 git add README.md index.html sitemap.xml
 ```
 
+E, quando dezenas ou centenas de arquivos relacionados estão concentrados em uma pasta, selecione a pasta inteira:
+
+```bash
+git add assets/
+```
+
 **Entenda os comandos:** [`git add`](#cmd-git-add)
+
+> Você **não precisa digitar centenas de nomes**. Escolha o escopo lógico adequado e audite em seguida. Para comparar `arquivo1 arquivo2`, `pasta/`, `.`, `-A` e `-p`, consulte [5.12 — Escolher o escopo do `git add`](#capitulo-5-12).
 
 <a id="capitulo-8-2"></a>
 ## 8.2 Auditar o que está preparado
@@ -4203,25 +4229,35 @@ você pode seguir para a revisão/commit sem repetir `git add`: esses arquivos j
 
 ### Se ainda precisa preparar os arquivos
 
-Prefira seleção explícita:
+Escolha o **menor escopo que represente toda a mudança**. As opções abaixo são alternativas; **não execute todas em sequência**.
 
-```bash
-git add README.md index.html
-```
-
-Alternativas — **não execute as três em sequência**:
-
-```bash
-# prepara alterações sob a pasta atual e seus descendentes
-git add .
-
-# prepara todas as alterações relevantes do repositório
-git add -A
-```
+| Situação | Exemplo |
+|---|---|
+| poucos arquivos específicos | `git add README.md index.html` |
+| muitos arquivos relacionados em uma pasta | `git add assets/` |
+| tudo abaixo da pasta atual | `git add .` |
+| todas as alterações do repositório | `git add -A` |
+| somente alguns trechos de um arquivo | `git add -p index.html` |
 
 **Entenda os comandos:** [`git add`](#cmd-git-add)
 
-Use `git add .` ou `git add -A` somente depois de `git status` e quando o escopo realmente corresponder ao commit que você pretende criar.
+Exemplo real: se **800 arquivos de `assets/`** foram substituídos pela mesma atualização:
+
+```bash
+git status -sb
+git add assets/
+git diff --staged --name-status
+```
+
+Se, em vez disso, você verificou que **1000 alterações espalhadas pelo repositório inteiro** pertencem à mesma atualização:
+
+```bash
+git status -sb
+git add -A
+git diff --staged --name-status
+```
+
+A regra não é “digitar todos os nomes”; é **selecionar conscientemente o escopo e auditar o resultado antes do commit**. Veja também [5.12 — Escolher o escopo do `git add`](#capitulo-5-12).
 
 ### Fluxo essencial — projeto pessoal simples
 
@@ -7785,7 +7821,7 @@ Significa: **clone essa URL para uma pasta local chamada `Guia_Git-git`**. Se `D
 **`git status`** — descreve o estado da working tree e do stage. `-s` usa formato curto; `-b` acrescenta informação de branch; `-sb` combina ambos.
 
 <a id="cmd-git-add"></a>
-**`git add`** — copia a versão escolhida dos caminhos para o stage. `git add arquivo` seleciona explicitamente; `git add -A` atualiza o stage considerando adições, modificações e remoções em todo o escopo aplicável.
+**`git add`** — copia para o stage a versão escolhida dos caminhos dentro do escopo informado. `git add arquivo1 arquivo2` seleciona arquivos específicos; `git add pasta/` seleciona a pasta e descendentes; `git add .` usa o diretório atual e descendentes; `git add -A` considera todas as alterações do repositório; `git add -p <arquivo>` permite escolher interativamente trechos (*hunks*). Seleção consciente significa escolher o escopo correto e auditar o stage — não digitar cada arquivo individualmente.
 
 <a id="cmd-git-diff"></a>
 **`git diff`** — compara conteúdos. Sem opção, normalmente compara working tree com stage; `--staged`/`--cached` compara stage com `HEAD`; `--name-status` resume por nome e tipo de alteração.
@@ -8261,6 +8297,15 @@ aprofundar sem depender de “receita”
 <a id="changelog"></a>
 # Apêndice — Changelog
 
+## v2.1.12
+
+- fecha a lacuna de escala no `git add`: seleção consciente passa a distinguir explicitamente arquivos específicos, pasta inteira, diretório atual (`.`), repositório inteiro (`-A`) e seleção interativa por trechos (`-p`);
+- esclarece que **30, 100 ou 1000 arquivos não precisam ser digitados um a um** quando existe um escopo lógico adequado;
+- adiciona exemplos operacionais reais para **800 arquivos dentro de `assets/`** e **1000 alterações distribuídas pelo repositório**, sempre com `status -sb` antes e `diff --staged --name-status` depois;
+- amplia 5.12, 8.1, `GIT-001` e o Dicionário de comandos para manter a mesma regra em conceito, procedimento e consulta rápida;
+- preserva os **79 cenários** e **5 LABs** e reaplica **CONTENT FREEZE — APROVADO** após a correção pedagógica;
+- compatibilidade de interface atualizada para **index v1.0.22**, mantendo a revisão SEO da v1.0.21.
+
 ## v2.1.11
 
 - torna `GIT-001` **autocontido**, explicando quando `git add` é necessário, quando o arquivo já está em `Changes to be committed` e como diferenciar `git add <arquivos>`, `git add .` e `git add -A`;
@@ -8455,8 +8500,8 @@ aprofundar sem depender de “receita”
 |---|---|
 | Documento | Git + GitHub — Guia Prático e Manual Operacional para Situações Reais |
 | Papel no repositório | **`README.md` — único documento Markdown oficial e fonte canônica do conteúdo** |
-| Versão do conteúdo | **2.1.11** |
-| Status | **CONTENT FREEZE — APROVADO** · v2.1.11 endurece os fluxos operacionais e validações pré/pós-push, sem ampliar os 79 cenários |
+| Versão do conteúdo | **2.1.12** |
+| Status | **CONTENT FREEZE — APROVADO** · v2.1.12 fecha a lacuna de escala/escopo do `git add`, sem ampliar os 79 cenários |
 | Público | **Principal:** pessoas sem experiência prévia com Git · **Secundário:** estudantes, usuários ocasionais e profissionais que precisam consultar situações operacionais |
 | Escopo | Git local + GitHub; CLI como referência canônica, PowerShell/Bash, mapeamento conceitual para VS Code Source Control e fluxos GitHub Web |
 | Arquitetura | **PARTE 0 — Comece aqui** + **PARTE I — Como funciona** + **PARTE II — Trabalhando no dia a dia** + **PARTE III — Resolvendo problemas** + **PARTE IV — Consulta rápida** |
@@ -8467,12 +8512,12 @@ aprofundar sem depender de “receita”
 | Idioma | `pt-BR` |
 | Repositório | [https://github.com/Diego-Ch4m4X/Guia_Git](https://github.com/Diego-Ch4m4X/Guia_Git) |
 | Index interativo | [https://diego-ch4m4x.github.io/Guia_Git/](https://diego-ch4m4x.github.io/Guia_Git/) |
-| Interface compatível nesta revisão | **index v1.0.21** |
+| Interface compatível nesta revisão | **index v1.0.22** |
 | Licença do conteúdo autoral | **CC BY 4.0** — consulte [`LICENSE`](./LICENSE) |
 | Licença do código autoral | **MIT** — consulte [`LICENSE`](./LICENSE) |
 | Materiais de terceiros | permanecem sujeitos às próprias licenças e políticas de marca |
 | Logomarca Git | Jason Long · CC BY 3.0; uso nominativo em projeto educacional independente |
-| Revisão editorial | **2026-09-07** — conteúdo v2.1.11 preservado; index v1.0.21 recebe revisão SEO técnica/copywriting alinhada ao Google Search Central, sem alterar os 79 cenários |
+| Revisão editorial | **2026-09-07** — conteúdo v2.1.12 explicita escala e escopo do `git add`; index v1.0.22 espelha a correção preservando a revisão SEO da v1.0.21 |
 | Snapshot | **2026-09-07** |
 
 </details>
