@@ -12,7 +12,7 @@
 
 <p align="center">
   <a href="#idioma-e-convencoes"><img alt="Idioma: pt-BR" src="https://img.shields.io/badge/idioma-pt--BR-4e443c"></a>
-  <a href="#metadados-do-documento"><img alt="Conteúdo: v2.1.10" src="https://img.shields.io/badge/conte%C3%BAdo-v2.1.10-f14e32"></a>
+  <a href="#metadados-do-documento"><img alt="Conteúdo: v2.1.11" src="https://img.shields.io/badge/conte%C3%BAdo-v2.1.11-f14e32"></a>
   <a href="#metadados-do-documento"><img alt="Estado: content freeze" src="https://img.shields.io/badge/estado-content_freeze-d7834f"></a>
   <a href="#capitulo-11"><img alt="Cenários: 79" src="https://img.shields.io/badge/cen%C3%A1rios-79-4e443c"></a>
   <a href="#capitulo-5-14"><img alt="Laboratórios: 5" src="https://img.shields.io/badge/LABs-5-f14e32"></a>
@@ -707,9 +707,16 @@ Se sua working tree estiver limpa e a relação for linear:
 
 ```bash
 git pull --ff-only
+git status -sb
 ```
 
-**Entenda os comandos:** [`git pull`](#cmd-git-pull)
+**Entenda os comandos:** [`git pull`](#cmd-git-pull) · [`git status`](#cmd-git-status)
+
+Estado típico após a atualização:
+
+```text
+## main...origin/main
+```
 
 **fast-forward (avanço linear)** significa que sua branch pode apenas avançar até o commit remoto, sem precisar conciliar duas linhas de histórico. `--ff-only` manda o Git **parar** se isso não for possível.
 
@@ -1533,13 +1540,17 @@ Se você criou por engano uma subpasta extra com `git clone URL DESTINO`, consul
 
 #### Depois de integrar os arquivos: use o fluxo auditável antes do push
 
-Primeiro confira o que o Git detectou:
+Primeiro registre o estado atual, atualize sua visão do remoto e confirme novamente:
 
 ```bash
 git status -sb
+git fetch origin
+git status -sb
 ```
 
-**Entenda os comandos:** [`git status`](#cmd-git-status)
+**Entenda os comandos:** [`git status`](#cmd-git-status) · [`git fetch`](#cmd-git-fetch)
+
+> **PARE antes do stage/commit** se o segundo `status -sb` mostrar `[behind N]`, `[ahead N, behind M]` ou outra divergência que exija integração.
 
 Prepare explicitamente apenas os arquivos relacionados e audite o stage:
 
@@ -1567,13 +1578,14 @@ Se aparecer algo como:
 ## main...origin/main [ahead 1]
 ```
 
-há um commit local ainda não publicado. Antes de enviar, audite a diferença final:
+há um commit local ainda não publicado. Antes de enviar, audite **commits** e **conteúdo final**:
 
 ```bash
+git log --oneline origin/main..HEAD
 git diff --name-status origin/main..HEAD
 ```
 
-**Entenda os comandos:** [`git diff`](#cmd-git-diff)
+**Entenda os comandos:** [`git log`](#cmd-git-log) · [`git diff`](#cmd-git-diff)
 
 Simule o push:
 
@@ -1885,47 +1897,72 @@ No PowerShell, `Get-Location` pode ser usado no lugar de `pwd`.
 <a id="capitulo-4-4"></a>
 ## 4.4 Conectar repositório local a um remoto
 
-Quando o repositório local foi criado conscientemente com `git init`:
+Quando o repositório local foi criado conscientemente com `git init`, confirme primeiro a branch atual e se já existe algum remoto:
+
+```bash
+git branch --show-current
+git remote -v
+git status -sb
+```
+
+Se `origin` ainda não existir, adicione-o:
 
 ```bash
 git remote add origin https://github.com/USUARIO/REPOSITORIO.git
+git remote -v
 ```
 
-**Entenda os comandos:** [`git remote`](#cmd-git-remote)
+Antes do primeiro push, confirme que o nome da branch local é realmente o que você pretende publicar. Se for `main`:
 
-Confira:
+```bash
+git push -u origin main
+git branch -vv
+git status -sb
+```
+
+**Entenda os comandos:** [`git branch`](#cmd-git-branch) · [`git remote`](#cmd-git-remote) · [`git status`](#cmd-git-status) · [`git push`](#cmd-git-push)
+
+> Se o GitHub já possui commits próprios (`README.md`, `LICENSE`, `.gitignore` etc.), não trate este primeiro push como um caso de remoto vazio. Volte para 4.2.1 — Caso B.
+
+<a id="capitulo-4-5"></a>
+## 4.5 Alterar a URL de `origin`
+
+Confira o valor atual antes de trocar:
 
 ```bash
 git remote -v
 ```
 
-**Entenda os comandos:** [`git remote`](#cmd-git-remote)
-
-Primeiro push da `main`:
-
-```bash
-git push -u origin main
-```
-
-**Entenda os comandos:** [`git push`](#cmd-git-push)
-
-<a id="capitulo-4-5"></a>
-## 4.5 Alterar a URL de `origin`
+Depois altere e valide:
 
 ```bash
 git remote set-url origin https://github.com/USUARIO/OUTRO-REPOSITORIO.git
+git remote -v
 ```
 
 **Entenda os comandos:** [`git remote`](#cmd-git-remote)
+
+Não presuma que trocar a URL concede permissão no novo destino; autenticação/permissão continuam sendo questões separadas.
 
 <a id="capitulo-4-6"></a>
 ## 4.6 Remover `origin`
 
+Confira antes:
+
+```bash
+git remote -v
+```
+
+Remova e confirme o resultado:
+
 ```bash
 git remote remove origin
+git remote -v
 ```
 
 **Entenda os comandos:** [`git remote`](#cmd-git-remote)
+
+Isso remove a **configuração local do remoto**; não apaga o repositório hospedado no GitHub.
 
 <a id="capitulo-4-7"></a>
 ## 4.7 Descobrir a raiz real do repositório
@@ -2804,40 +2841,64 @@ A ideia é simples: **ver → selecionar → revisar → registrar → publicar 
 <a id="capitulo-7-2"></a>
 ## 7.2 Fluxo seguro/auditável — colaboração ou mudança relevante
 
-Quando o repositório é compartilhado, a alteração é grande ou você quer máxima rastreabilidade:
+Quando o repositório é compartilhado, a alteração é grande, o histórico remoto pode ter avançado ou você quer máxima rastreabilidade, use este fluxo.
+
+> **Por que aparecem dois `status -sb`?** O primeiro registra o estado conhecido **antes** de consultar o remoto. `git fetch origin` atualiza as referências remotas locais; o segundo `status -sb` mostra a relação local/remoto com essa visão atualizada.
 
 ```bash
-# 1. Atualizar a visão do remoto
-git fetch origin
-
-# 2. Entender relação local/remoto
+# 1. Registrar o estado atual antes de consultar o remoto
 git status -sb
 
-# 3. Selecionar conscientemente o que pertence ao commit
-git add README.md index.html
+# 2. Atualizar a visão do remoto sem integrar
+git fetch origin
 
-# 4. Auditar o stage
-git diff --cached --name-status
-
-# 5. Criar o commit
-git commit -m "Atualiza interface e documentação"
-
-# 6. Auditar conteúdo final contra o remoto
-git diff --name-status origin/main..HEAD
-
-# 7. Simular o envio
-git push --dry-run origin main
-
-# 8. Enviar
-git push origin main
-
-# 9. Validar
+# 3. Reavaliar a relação local/remoto
 git status -sb
 ```
 
-**Entenda os comandos:** [`git fetch`](#cmd-git-fetch) · [`git status`](#cmd-git-status) · [`git add`](#cmd-git-add) · [`git diff`](#cmd-git-diff) · [`git commit`](#cmd-git-commit) · [`git push`](#cmd-git-push)
+**PARE** antes de preparar/publicar se aparecer apenas `[behind N]`, `[ahead N, behind M]`, conflito ou outro estado que exija integração. Consulte `GIT-012`, `GIT-013` ou `GIT-014`.
 
-`git add -A` pode substituir a seleção explícita **somente quando todas as mudanças listadas realmente pertencem ao mesmo commit**.
+Se o estado permitir continuar:
+
+```bash
+# 4. Selecionar conscientemente o que pertence ao commit
+git add README.md index.html
+
+# 5. Auditar o stage
+git diff --staged --name-status
+
+# opcional: revisar o conteúdo linha a linha
+git diff --staged
+
+# 6. Criar o commit
+git commit -m "Atualiza interface e documentação"
+
+# 7. Confirmar que o novo commit está apenas local
+git status -sb
+```
+
+Quando o resultado for algo como `## main...origin/main [ahead 1]`, faça a auditoria pré-push:
+
+```bash
+# 8. Ver quais commits existem somente localmente
+git log --oneline origin/main..HEAD
+
+# 9. Comparar o conteúdo final local com o remoto conhecido
+git diff --name-status origin/main..HEAD
+
+# 10. Validar o envio sem atualizar intencionalmente a branch remota
+git push --dry-run origin main
+
+# 11. Publicar
+git push origin main
+
+# 12. Validar o estado final
+git status -sb
+```
+
+**Entenda os comandos:** [`git fetch`](#cmd-git-fetch) · [`git status`](#cmd-git-status) · [`git add`](#cmd-git-add) · [`git diff`](#cmd-git-diff) · [`git commit`](#cmd-git-commit) · [`git log`](#cmd-git-log) · [`git push`](#cmd-git-push)
+
+`git add -A` pode substituir a seleção explícita **somente quando todas as mudanças listadas realmente pertencem ao mesmo commit**. `git add .` também é uma alternativa contextual: ele prepara alterações dentro da pasta atual e descendentes; não deve ser tratado como “salvar tudo” automaticamente.
 
 <a id="capitulo-7-3"></a>
 ## 7.3 Qual fluxo usar?
@@ -2874,11 +2935,21 @@ Isso ajuda a detectar push para outro remoto/branch ou upstream configurado inco
 <a id="capitulo-7-5"></a>
 ## 7.5 O que fazer quando aparece apenas `ahead`
 
+Exemplo observado:
+
 ```text
 ## main...origin/main [ahead 1]
 ```
 
-Você possui commit local ainda não publicado. Revise:
+Antes de publicar, atualize a visão do remoto e confirme que continua sendo apenas `ahead`:
+
+```bash
+git status -sb
+git fetch origin
+git status -sb
+```
+
+Se continuar apenas `ahead`, revise commits e conteúdo:
 
 ```bash
 git log --oneline origin/main..HEAD
@@ -2886,38 +2957,45 @@ git diff --name-status origin/main..HEAD
 git push --dry-run origin main
 ```
 
-**Entenda os comandos:** [`git log`](#cmd-git-log) · [`git diff`](#cmd-git-diff) · [`git push`](#cmd-git-push)
-
 Se estiver correto:
 
 ```bash
 git push origin main
+git status -sb
 ```
 
-**Entenda os comandos:** [`git push`](#cmd-git-push)
+**Entenda os comandos:** [`git status`](#cmd-git-status) · [`git fetch`](#cmd-git-fetch) · [`git log`](#cmd-git-log) · [`git diff`](#cmd-git-diff) · [`git push`](#cmd-git-push)
+
+Se o segundo `status -sb` virar `ahead + behind`, pare e vá para 7.7 / `GIT-013`.
 
 <a id="capitulo-7-6"></a>
 ## 7.6 O que fazer quando aparece `behind`
+
+Exemplo observado:
 
 ```text
 ## main...origin/main [behind 3]
 ```
 
-Não faça push automaticamente. Inspecione:
+Atualize a visão do remoto e confirme o estado antes de integrar:
 
 ```bash
+git status -sb
+git fetch origin
+git status -sb
 git log --oneline HEAD..origin/main
 ```
 
-**Entenda os comandos:** [`git log`](#cmd-git-log)
-
-Se sua working tree estiver limpa, não houver commit local divergente e for apenas avanço linear:
+Se sua working tree estiver limpa, não houver commit local divergente e continuar sendo apenas avanço linear:
 
 ```bash
 git pull --ff-only
+git status -sb
 ```
 
-**Entenda os comandos:** [`git pull`](#cmd-git-pull)
+**Entenda os comandos:** [`git status`](#cmd-git-status) · [`git fetch`](#cmd-git-fetch) · [`git log`](#cmd-git-log) · [`git pull`](#cmd-git-pull)
+
+Se `--ff-only` falhar ou o segundo `status -sb` mostrar `ahead + behind`, pare e trate como divergência; não remova a proteção por reflexo.
 
 <a id="capitulo-7-7"></a>
 ## 7.7 O que fazer quando aparece `ahead + behind`
@@ -2993,6 +3071,7 @@ git status
 git switch main
 
 # atualizar a visão do remoto
+git status -sb
 git fetch origin
 git status -sb
 
@@ -3009,9 +3088,11 @@ git diff --staged
 
 # registrar
 git commit -m "Adiciona minha alteração"
+git status -sb
 
 # publicar a branch e configurar upstream
 git push -u origin feature/minha-alteracao
+git status -sb
 ```
 
 **Entenda os comandos:** [`git status`](#cmd-git-status) · [`git switch`](#cmd-git-switch) · [`git fetch`](#cmd-git-fetch) · [`git pull`](#cmd-git-pull) · [`git add`](#cmd-git-add) · [`git diff`](#cmd-git-diff) · [`git commit`](#cmd-git-commit) · [`git push`](#cmd-git-push)
@@ -3050,27 +3131,27 @@ git remote add upstream https://github.com/PROJETO-ORIGINAL/REPOSITORIO.git
 git remote -v
 ```
 
-**Entenda os comandos:** [`git remote`](#cmd-git-remote)
-
-Atualizar a visão do original:
+Atualize a visão do original e confirme o estado local:
 
 ```bash
+git status -sb
 git fetch upstream
+git status -sb
 ```
 
-**Entenda os comandos:** [`git fetch`](#cmd-git-fetch)
-
-Sincronizar sua `main` quando for um avanço linear simples:
+Sincronize sua `main` somente quando for um avanço linear simples:
 
 ```bash
 git switch main
 git merge --ff-only upstream/main
+git status -sb
 git push origin main
+git status -sb
 ```
 
-**Entenda os comandos:** [`git switch`](#cmd-git-switch) · [`git merge`](#cmd-git-merge) · [`git push`](#cmd-git-push)
+**Entenda os comandos:** [`git remote`](#cmd-git-remote) · [`git status`](#cmd-git-status) · [`git fetch`](#cmd-git-fetch) · [`git switch`](#cmd-git-switch) · [`git merge`](#cmd-git-merge) · [`git push`](#cmd-git-push)
 
-Depois crie sua branch, faça commit, push para o fork (`origin`) e abra o Pull Request para o repositório original.
+Se `--ff-only` falhar, pare e analise a divergência. Depois crie sua branch, faça commit, push para o fork (`origin`) e abra o Pull Request para o repositório original.
 
 <a id="capitulo-7-12"></a>
 ## 7.12 CLI ↔ VS Code Source Control — equivalência conceitual
@@ -3619,9 +3700,23 @@ git stash pop
 <a id="capitulo-9-9"></a>
 ## 9.9 Tags
 
+Crie a tag anotada e confira localmente:
+
 ```bash
 git tag -a v1.0.0 -m "Versão 1.0.0"
+git tag --list v1.0.0
+```
+
+Publique apenas a tag desejada:
+
+```bash
 git push origin v1.0.0
+```
+
+Se quiser confirmar no remoto pelo terminal:
+
+```bash
+git ls-remote --tags origin refs/tags/v1.0.0
 ```
 
 **Entenda os comandos:** [`git tag`](#cmd-git-tag) · [`git push`](#cmd-git-push)
@@ -3633,12 +3728,15 @@ Se ainda não publicou:
 
 ```bash
 git add <arquivos>
+git diff --staged
 git commit --amend --no-edit
+git status -sb
+git log -1 --oneline
 ```
 
-**Entenda os comandos:** [`git add`](#cmd-git-add) · [`git commit`](#cmd-git-commit)
+**Entenda os comandos:** [`git add`](#cmd-git-add) · [`git diff`](#cmd-git-diff) · [`git commit`](#cmd-git-commit) · [`git status`](#cmd-git-status) · [`git log`](#cmd-git-log)
 
-`amend` recria o commit e muda seu hash.
+`amend` recria o commit e muda seu hash. Se já publicou, não reescreva uma branch compartilhada por reflexo.
 
 <a id="capitulo-9-11"></a>
 ## 9.11 Corrigir a mensagem do último commit
@@ -3647,20 +3745,39 @@ Se ainda não publicou:
 
 ```bash
 git commit --amend -m "Mensagem correta"
+git status -sb
+git log -1 --oneline
 ```
 
-**Entenda os comandos:** [`git commit`](#cmd-git-commit)
+**Entenda os comandos:** [`git commit`](#cmd-git-commit) · [`git status`](#cmd-git-status) · [`git log`](#cmd-git-log)
+
+Se o commit já foi publicado, mudar a mensagem reescreve esse commit; coordene antes em histórico compartilhado.
 
 <a id="capitulo-9-12"></a>
 ## 9.12 Desfazer commit já publicado sem reescrever histórico
+
+Primeiro confirme o hash:
+
+```bash
+git log --oneline -5
+```
 
 Prefira criar um novo commit reversor:
 
 ```bash
 git revert <hash>
+git status -sb
+git log -1 --oneline
 ```
 
-**Entenda os comandos:** [`git revert`](#cmd-git-revert)
+Como o commit original já estava remoto, publique também a reversão:
+
+```bash
+git push
+git status -sb
+```
+
+**Entenda os comandos:** [`git log`](#cmd-git-log) · [`git revert`](#cmd-git-revert) · [`git status`](#cmd-git-status) · [`git push`](#cmd-git-push)
 
 Isso é normalmente mais apropriado para histórico já compartilhado.
 
@@ -4050,9 +4167,7 @@ Você **editou o conteúdo de arquivos já existentes** ou **substituiu fisicame
 
 > Para o Git, editar e substituir podem produzir o mesmo estado final: **Modified (`M`)**. Ele compara estados versionados; não mantém um diário de cliques do Explorer.
 
-### Fluxo essencial
-
-Primeiro confirme o estado:
+### Primeiro: descubra se o arquivo já está no stage
 
 ```bash
 git status
@@ -4060,41 +4175,133 @@ git status
 
 **Entenda os comandos:** [`git status`](#cmd-git-status)
 
-Selecione **apenas os arquivos que pertencem a essa mudança**:
+Leia a saída antes de digitar `git add`:
+
+| Se `git status` mostrar | Significa | Próxima ação |
+|---|---|---|
+| `Changes not staged for commit` | o arquivo mudou, mas ainda não está preparado | escolha o `git add` adequado |
+| `Changes to be committed` | o arquivo **já está no stage** | não é obrigatório executar `git add` novamente; revise com `git diff --staged` |
+| o mesmo arquivo em staged **e** unstaged | existe uma versão no stage e outra edição posterior na working tree | revise `git diff --staged` e `git diff` antes de decidir o que atualizar no stage |
+
+Foi exatamente por isso que, em um estado como:
+
+```text
+Changes to be committed:
+        modified:   README.md
+        modified:   index.html
+```
+
+você pode seguir para a revisão/commit sem repetir `git add`: esses arquivos já foram preparados anteriormente.
+
+### Se ainda precisa preparar os arquivos
+
+Prefira seleção explícita:
 
 ```bash
 git add README.md index.html
 ```
 
-**Entenda os comandos:** [`git add`](#cmd-git-add)
-
-Revise:
+Alternativas — **não execute as três em sequência**:
 
 ```bash
+# prepara alterações sob a pasta atual e seus descendentes
+git add .
+
+# prepara todas as alterações relevantes do repositório
+git add -A
+```
+
+**Entenda os comandos:** [`git add`](#cmd-git-add)
+
+Use `git add .` ou `git add -A` somente depois de `git status` e quando o escopo realmente corresponder ao commit que você pretende criar.
+
+### Fluxo essencial — projeto pessoal simples
+
+Revise o que está no stage:
+
+```bash
+git diff --staged --name-status
 git diff --staged
 ```
 
-**Entenda os comandos:** [`git diff`](#cmd-git-diff)
-
-Registre e publique:
+Depois registre, publique e valide:
 
 ```bash
 git commit -m "Atualiza interface e documentação"
 git push
-git status
+git status -sb
 ```
 
-**Entenda os comandos:** [`git commit`](#cmd-git-commit) · [`git push`](#cmd-git-push) · [`git status`](#cmd-git-status)
+**Entenda os comandos:** [`git diff`](#cmd-git-diff) · [`git commit`](#cmd-git-commit) · [`git push`](#cmd-git-push) · [`git status`](#cmd-git-status)
 
-### Quer auditoria adicional?
+Use este caminho somente quando o repositório é seu, você conhece as mudanças e não há sinal de divergência.
 
-Se o repositório é compartilhado, a mudança é relevante ou você suspeita que o remoto avançou, use o fluxo seguro do capítulo 7.2 antes do push (`fetch`, `status -sb`, comparação com remoto e, quando fizer sentido, `push --dry-run`).
+### Fluxo seguro/auditável — completo e autocontido
+
+Para repositório compartilhado, alteração relevante ou quando você quer verificar **o que será publicado antes do push**:
+
+```bash
+# estado conhecido antes de consultar o remoto
+git status -sb
+
+# atualizar referências remotas locais
+git fetch origin
+
+# reavaliar local x remoto
+git status -sb
+```
+
+**PARE** se aparecer `[behind N]`, `[ahead N, behind M]`, conflito ou outro estado que exija integração.
+
+Se estiver adequado para continuar e os arquivos ainda não estiverem no stage:
+
+```bash
+git add README.md index.html
+```
+
+Audite:
+
+```bash
+git diff --staged --name-status
+git diff --staged
+```
+
+Crie o commit e confirme que ele ficou apenas local:
+
+```bash
+git commit -m "Atualiza interface e documentação"
+git status -sb
+```
+
+Esperado antes do push, por exemplo:
+
+```text
+## main...origin/main [ahead 1]
+```
+
+Agora responda duas perguntas diferentes:
+
+```bash
+# quais commits existem somente localmente?
+git log --oneline origin/main..HEAD
+
+# qual é a diferença de conteúdo final?
+git diff --name-status origin/main..HEAD
+```
+
+Valide o envio e só depois publique:
+
+```bash
+git push --dry-run origin main
+git push origin main
+git status -sb
+```
+
+**Entenda os comandos:** [`git status`](#cmd-git-status) · [`git fetch`](#cmd-git-fetch) · [`git add`](#cmd-git-add) · [`git diff`](#cmd-git-diff) · [`git commit`](#cmd-git-commit) · [`git log`](#cmd-git-log) · [`git push`](#cmd-git-push)
 
 ### Pare se...
 
-Após atualizar a visão do remoto aparecer `behind`, `ahead + behind`, conflito ou `non-fast-forward`. Nesses casos, não reaja com `--force`; vá a `GIT-012`, `GIT-013` ou `GIT-014`.
-
----
+Após `fetch`, aparecer `behind`, `ahead + behind`, conflito ou `non-fast-forward`. Nesses casos, não reaja com `--force`; vá a `GIT-012`, `GIT-013` ou `GIT-014`.
 
 <a id="git-002"></a>
 ## 11.2 GIT-002 — Criei arquivos novos no PC
@@ -4119,18 +4326,18 @@ Exemplo:
 
 ```bash
 git add docs/novo-guia.md
+git diff --staged --name-status
 git diff --staged
 git commit -m "Adiciona novo guia"
 git push
+git status -sb
 ```
 
-**Entenda os comandos:** [`git add`](#cmd-git-add) · [`git diff`](#cmd-git-diff) · [`git commit`](#cmd-git-commit) · [`git push`](#cmd-git-push)
+**Entenda os comandos:** [`git add`](#cmd-git-add) · [`git diff`](#cmd-git-diff) · [`git commit`](#cmd-git-commit) · [`git push`](#cmd-git-push) · [`git status`](#cmd-git-status)
 
 `??` vira conteúdo rastreado quando você o seleciona para o stage e registra o commit.
 
-> Para vários arquivos que pertencem à **mesma intenção lógica**, você pode adicioná-los explicitamente juntos. Use `git add -A` somente depois de revisar `git status` e confirmar que tudo pertence ao mesmo commit.
-
----
+> Para vários arquivos que pertencem à **mesma intenção lógica**, você pode adicioná-los explicitamente juntos. Use `git add .`/`git add -A` somente depois de revisar `git status` e confirmar que o escopo inteiro pertence ao mesmo commit. Para colaboração/mudança relevante, use o fluxo auditável de 7.2.
 
 <a id="git-003"></a>
 ## 11.3 GIT-003 — Apaguei um arquivo fisicamente no PC
@@ -4143,18 +4350,14 @@ Se o arquivo já era rastreado:
 git status
 ```
 
-**Entenda os comandos:** [`git status`](#cmd-git-status)
-
 deve indicar exclusão.
 
-Prepare **essa exclusão**:
+Prepare **essa exclusão** e confirme o stage:
 
 ```bash
 git add caminho/arquivo.txt
 git diff --staged --name-status
 ```
-
-**Entenda os comandos:** [`git add`](#cmd-git-add) · [`git diff`](#cmd-git-diff)
 
 Esperado:
 
@@ -4167,9 +4370,10 @@ Depois:
 ```bash
 git commit -m "Remove arquivo obsoleto"
 git push
+git status -sb
 ```
 
-**Entenda os comandos:** [`git commit`](#cmd-git-commit) · [`git push`](#cmd-git-push)
+**Entenda os comandos:** [`git status`](#cmd-git-status) · [`git add`](#cmd-git-add) · [`git diff`](#cmd-git-diff) · [`git commit`](#cmd-git-commit) · [`git push`](#cmd-git-push)
 
 ### Alternativa explícita
 
@@ -4177,13 +4381,12 @@ Se o arquivo ainda existe e você quer removê-lo do PC **e** registrar a remoç
 
 ```bash
 git rm caminho/arquivo.txt
+git diff --staged --name-status
 ```
 
-**Entenda os comandos:** [`git rm`](#cmd-git-rm)
+**Entenda os comandos:** [`git rm`](#cmd-git-rm) · [`git diff`](#cmd-git-diff)
 
 > Se a intenção é remover do versionamento **mas manter no PC**, use `GIT-033`, não `git rm` simples.
-
----
 
 <a id="git-004"></a>
 ## 11.4 GIT-004 — Renomeei ou movi um arquivo
@@ -4196,8 +4399,6 @@ Se ainda não renomeou:
 git mv antigo.html novo.html
 ```
 
-**Entenda os comandos:** [`git mv`](#cmd-git-mv)
-
 Se renomeou pelo Explorer/VS Code, **inspecione primeiro** e prepare apenas os caminhos envolvidos:
 
 ```bash
@@ -4206,13 +4407,7 @@ git add -A -- antigo.html novo.html
 git diff --staged --name-status
 ```
 
-**Entenda os comandos:** [`git status`](#cmd-git-status) · [`git add`](#cmd-git-add) · [`git diff`](#cmd-git-diff)
-
 O `-A` aqui está limitado pelo `-- antigo.html novo.html`: ele atualiza o stage para esses caminhos sem preparar alterações não relacionadas em outros arquivos.
-
-O Git pode apresentar a mudança como rename com base na similaridade entre o caminho removido e o novo caminho.
-
-Se você não souber mais o caminho antigo, use `git status` para identificá-lo antes de preparar a mudança. Só use `git add -A` no repositório inteiro se tiver confirmado conscientemente que **todas** as alterações listadas pertencem ao mesmo trabalho.
 
 Pode aparecer:
 
@@ -4220,33 +4415,54 @@ Pode aparecer:
 R100    antigo.html    novo.html
 ```
 
----
+Quando a mudança staged estiver correta, conclua:
+
+```bash
+git commit -m "Renomeia arquivo"
+git push
+git status -sb
+```
+
+**Entenda os comandos:** [`git mv`](#cmd-git-mv) · [`git status`](#cmd-git-status) · [`git add`](#cmd-git-add) · [`git diff`](#cmd-git-diff) · [`git commit`](#cmd-git-commit) · [`git push`](#cmd-git-push)
+
+Se você não souber mais o caminho antigo, use `git status` para identificá-lo antes de preparar a mudança. Só use `git add -A` no repositório inteiro se tiver confirmado conscientemente que **todas** as alterações listadas pertencem ao mesmo trabalho.
 
 <a id="git-005"></a>
 ## 11.5 GIT-005 — Editei ou substituí muitos arquivos e quero publicar tudo
 
 > **Perfil do cenário:** Conhecimento: Inicial · Ocorrência: Comum · Impacto potencial: Médio pelo volume de mudanças · Recuperabilidade: Alta antes do push
 
+Como o volume é grande, use a rota auditável:
+
 ```bash
+git status -sb
 git fetch origin
 git status -sb
-git add -A
-git diff --cached --name-status
-git diff --cached --stat
 ```
 
-**Entenda os comandos:** [`git fetch`](#cmd-git-fetch) · [`git status`](#cmd-git-status) · [`git add`](#cmd-git-add) · [`git diff`](#cmd-git-diff)
+**PARE** se o segundo `status -sb` mostrar `behind`, `ahead + behind` ou outro estado que exija integração.
+
+Se estiver adequado para continuar e **todas** as mudanças listadas pertencem conscientemente ao mesmo commit:
+
+```bash
+git add -A
+git diff --staged --name-status
+git diff --staged --stat
+```
 
 Se o volume fizer sentido:
 
 ```bash
 git commit -m "Atualiza aplicação"
+git status -sb
+git log --oneline origin/main..HEAD
 git diff --name-status origin/main..HEAD
 git push --dry-run origin main
 git push origin main
+git status -sb
 ```
 
-**Entenda os comandos:** [`git commit`](#cmd-git-commit) · [`git diff`](#cmd-git-diff) · [`git push`](#cmd-git-push)
+**Entenda os comandos:** [`git fetch`](#cmd-git-fetch) · [`git status`](#cmd-git-status) · [`git add`](#cmd-git-add) · [`git diff`](#cmd-git-diff) · [`git commit`](#cmd-git-commit) · [`git log`](#cmd-git-log) · [`git push`](#cmd-git-push)
 
 ### Pare se...
 
@@ -4259,8 +4475,6 @@ Possíveis causas:
 - bibliotecas minificadas substituídas;
 - reformatação automática;
 - arquivo binário adicionado sem querer.
-
----
 
 <a id="git-006"></a>
 ## 11.6 GIT-006 — Alterei apenas pelo GitHub e quero trazer para o PC
@@ -4323,12 +4537,19 @@ Esperado:
 
 > **Perfil do cenário:** Conhecimento: Inicial · Ocorrência: Comum · Impacto potencial: Baixo · Recuperabilidade: Alta
 
-Se você não possui mudanças locais:
+Primeiro confirme que a working tree local está limpa:
+
+```bash
+git status -sb
+```
+
+Se não há mudanças locais:
 
 ```bash
 git fetch origin
 git status -sb
 git pull --ff-only
+git status -sb
 ```
 
 **Entenda os comandos:** [`git fetch`](#cmd-git-fetch) · [`git status`](#cmd-git-status) · [`git pull`](#cmd-git-pull)
@@ -4337,9 +4558,7 @@ O arquivo será removido localmente quando a atualização for aplicada.
 
 ### Pare se...
 
-Você tiver alterações locais no mesmo arquivo.
-
----
+Você tiver alterações locais no mesmo arquivo ou `--ff-only` falhar.
 
 <a id="git-008"></a>
 ## 11.8 GIT-008 — Alterei um arquivo no GitHub e outro arquivo diferente no PC
@@ -4355,18 +4574,14 @@ git diff --staged
 git commit -m "Preserva alteração local antes da integração"
 ```
 
-**Entenda os comandos:** [`git status`](#cmd-git-status) · [`git add`](#cmd-git-add) · [`git diff`](#cmd-git-diff) · [`git commit`](#cmd-git-commit)
-
 > Use `git add -A` apenas se, depois de revisar `git status`, **todas** as mudanças listadas realmente fizerem parte do trabalho que você quer preservar.
 
-Depois:
+Depois atualize a visão do remoto:
 
 ```bash
 git fetch origin
 git status -sb
 ```
-
-**Entenda os comandos:** [`git fetch`](#cmd-git-fetch) · [`git status`](#cmd-git-status)
 
 Se houver divergência, crie segurança:
 
@@ -4374,28 +4589,26 @@ Se houver divergência, crie segurança:
 git branch backup-antes-da-integracao
 ```
 
-**Entenda os comandos:** [`git branch`](#cmd-git-branch)
-
 Para commits locais ainda não publicados, uma opção é:
 
 ```bash
 git rebase origin/main
 ```
 
-**Entenda os comandos:** [`git rebase`](#cmd-git-rebase)
+Se arquivos independentes mudaram, o rebase tende a concluir sem conflito. Se houver conflito, pare e siga `GIT-046`.
 
-Se arquivos independentes mudaram, o rebase tende a concluir sem conflito.
-
-Depois:
+Depois de uma integração bem-sucedida, audite e publique:
 
 ```bash
+git status -sb
+git log --oneline origin/main..HEAD
+git diff --name-status origin/main..HEAD
 git push --dry-run origin main
 git push origin main
+git status -sb
 ```
 
-**Entenda os comandos:** [`git push`](#cmd-git-push)
-
----
+**Entenda os comandos:** [`git status`](#cmd-git-status) · [`git add`](#cmd-git-add) · [`git diff`](#cmd-git-diff) · [`git commit`](#cmd-git-commit) · [`git fetch`](#cmd-git-fetch) · [`git branch`](#cmd-git-branch) · [`git rebase`](#cmd-git-rebase) · [`git log`](#cmd-git-log) · [`git push`](#cmd-git-push)
 
 <a id="git-009"></a>
 ## 11.9 GIT-009 — Alterei o mesmo arquivo no GitHub e no PC
@@ -4408,8 +4621,6 @@ Antes de integrar, preserve a versão local em commit e confirme que está traba
 
 Isso pode gerar conflito.
 
-Primeiro selecione e revise apenas a mudança local relacionada:
-
 ```bash
 git status
 git add <arquivos-relacionados>
@@ -4421,8 +4632,6 @@ git branch backup-antes-da-integracao
 git rebase origin/main
 ```
 
-**Entenda os comandos:** [`git status`](#cmd-git-status) · [`git add`](#cmd-git-add) · [`git diff`](#cmd-git-diff) · [`git commit`](#cmd-git-commit) · [`git fetch`](#cmd-git-fetch) · [`git branch`](#cmd-git-branch) · [`git rebase`](#cmd-git-rebase)
-
 > Use `git add -A` somente quando tiver confirmado que não há mudanças independentes entrando nesse commit.
 
 Se houver conflito:
@@ -4431,16 +4640,13 @@ Se houver conflito:
 git status
 ```
 
-**Entenda os comandos:** [`git status`](#cmd-git-status)
-
 Resolva o arquivo conscientemente, depois:
 
 ```bash
 git add <arquivo>
+git diff --staged -- <arquivo>
 git rebase --continue
 ```
-
-**Entenda os comandos:** [`git add`](#cmd-git-add) · [`git rebase`](#cmd-git-rebase)
 
 Ou desista da operação:
 
@@ -4448,9 +4654,18 @@ Ou desista da operação:
 git rebase --abort
 ```
 
-**Entenda os comandos:** [`git rebase`](#cmd-git-rebase)
+Quando o rebase terminar com sucesso, **não pare no `--continue`**. Confirme o estado final e publique conscientemente:
 
----
+```bash
+git status -sb
+git log --oneline origin/main..HEAD
+git diff --name-status origin/main..HEAD
+git push --dry-run origin main
+git push origin main
+git status -sb
+```
+
+**Entenda os comandos:** [`git status`](#cmd-git-status) · [`git add`](#cmd-git-add) · [`git diff`](#cmd-git-diff) · [`git commit`](#cmd-git-commit) · [`git fetch`](#cmd-git-fetch) · [`git branch`](#cmd-git-branch) · [`git rebase`](#cmd-git-rebase) · [`git log`](#cmd-git-log) · [`git push`](#cmd-git-push)
 
 <a id="git-010"></a>
 ## 11.10 GIT-010 — Mudei a pasta física do repositório no computador
@@ -4504,25 +4719,22 @@ Exemplo:
 
 Você possui commits locais ainda não enviados.
 
-Confira:
+Confira os commits e o conteúdo final:
 
 ```bash
 git log --oneline origin/main..HEAD
 git diff --name-status origin/main..HEAD
 ```
 
-**Entenda os comandos:** [`git log`](#cmd-git-log) · [`git diff`](#cmd-git-diff)
-
 Depois:
 
 ```bash
 git push --dry-run origin main
 git push origin main
+git status -sb
 ```
 
-**Entenda os comandos:** [`git push`](#cmd-git-push)
-
----
+**Entenda os comandos:** [`git log`](#cmd-git-log) · [`git diff`](#cmd-git-diff) · [`git push`](#cmd-git-push) · [`git status`](#cmd-git-status)
 
 <a id="git-012"></a>
 ## 11.12 GIT-012 — `status` mostra apenas `[behind N]`
@@ -4537,19 +4749,26 @@ Exemplo:
 
 O remoto possui commits que sua branch ainda não incorporou.
 
-Se a working tree estiver limpa e você não possuir commits locais divergentes:
+Antes de agir, atualize a visão do remoto e confirme novamente:
+
+```bash
+git status -sb
+git fetch origin
+git status -sb
+```
+
+Se a working tree estiver limpa e continuar aparecendo **somente** `[behind N]`:
 
 ```bash
 git pull --ff-only
+git status -sb
 ```
 
-**Entenda os comandos:** [`git pull`](#cmd-git-pull)
+**Entenda os comandos:** [`git status`](#cmd-git-status) · [`git fetch`](#cmd-git-fetch) · [`git pull`](#cmd-git-pull)
 
 ### Pare se...
 
-`--ff-only` falhar. Isso indica que não é um simples avanço linear.
-
----
+`--ff-only` falhar ou o segundo `status -sb` mostrar `ahead + behind`. Isso indica que não é um simples avanço linear.
 
 <a id="git-013"></a>
 ## 11.13 GIT-013 — `status` mostra `[ahead N, behind M]`
@@ -4558,15 +4777,18 @@ git pull --ff-only
 
 ### Pré-condições
 
-Antes de escolher merge/rebase, crie uma referência de segurança para seus commits locais e leia os commits exclusivos dos dois lados.
+Antes de escolher merge/rebase, atualize a visão do remoto, crie uma referência de segurança para seus commits locais e leia os commits exclusivos dos dois lados.
+
+```bash
+git fetch origin
+git status -sb
+```
 
 Exemplo:
 
 ```text
 ## main...origin/main [ahead 1, behind 15]
 ```
-
-Há commits exclusivos dos dois lados.
 
 ### Diagnóstico
 
@@ -4575,15 +4797,11 @@ git log --oneline HEAD..origin/main
 git log --oneline origin/main..HEAD
 ```
 
-**Entenda os comandos:** [`git log`](#cmd-git-log)
-
 ### Segurança
 
 ```bash
 git branch backup-antes-da-sincronizacao
 ```
-
-**Entenda os comandos:** [`git branch`](#cmd-git-branch)
 
 ### Opção A — rebase
 
@@ -4593,8 +4811,6 @@ Adequado quando seus commits locais ainda não foram publicados e você quer rea
 git rebase origin/main
 ```
 
-**Entenda os comandos:** [`git rebase`](#cmd-git-rebase)
-
 ### Opção B — merge
 
 Adequado quando preservar explicitamente as duas linhas de histórico é desejável:
@@ -4603,7 +4819,16 @@ Adequado quando preservar explicitamente as duas linhas de histórico é desejá
 git merge origin/main
 ```
 
-**Entenda os comandos:** [`git merge`](#cmd-git-merge)
+Se a integração escolhida terminar sem conflitos pendentes, **valide antes de publicar**:
+
+```bash
+git status -sb
+git log --oneline origin/main..HEAD
+git diff --name-status origin/main..HEAD
+git push --dry-run origin main
+git push origin main
+git status -sb
+```
 
 ### Não faça
 
@@ -4611,11 +4836,9 @@ git merge origin/main
 git push --force
 ```
 
-**Entenda os comandos:** [`git push`](#cmd-git-push)
-
 como primeira reação.
 
----
+**Entenda os comandos:** [`git fetch`](#cmd-git-fetch) · [`git status`](#cmd-git-status) · [`git log`](#cmd-git-log) · [`git branch`](#cmd-git-branch) · [`git rebase`](#cmd-git-rebase) · [`git merge`](#cmd-git-merge) · [`git diff`](#cmd-git-diff) · [`git push`](#cmd-git-push)
 
 <a id="git-014"></a>
 ## 11.14 GIT-014 — Push recusado: `non-fast-forward`
@@ -4684,60 +4907,48 @@ git status -sb
 
 ### Pré-condições
 
-Preserve ou guarde qualquer trabalho local que ainda não esteja seguro antes de tentar integrar alterações remotas.
-
-Não force o pull.
-
-Primeiro:
+Preserve ou guarde qualquer trabalho local que ainda não esteja seguro antes de tentar integrar alterações remotas. Não force o pull.
 
 ```bash
 git status
 ```
 
-**Entenda os comandos:** [`git status`](#cmd-git-status)
+Escolha **um** dos caminhos abaixo.
 
-Escolha:
-
-### Salvar em commit
+### Caminho A — preservar em commit
 
 ```bash
-git status
 git add <arquivos-relacionados>
 git diff --staged
 git commit -m "Preserva trabalho local antes da sincronização"
+git fetch origin
+git status -sb
 ```
 
-**Entenda os comandos:** [`git status`](#cmd-git-status) · [`git add`](#cmd-git-add) · [`git diff`](#cmd-git-diff) · [`git commit`](#cmd-git-commit)
+> Se o remoto também avançou, o commit local pode transformar o estado em `[ahead N, behind M]`. Nesse caso, **não execute `git pull --ff-only` esperando que ele resolva a divergência**; siga `GIT-013` e escolha merge/rebase conscientemente.
 
-> Use `git add -A` somente se, depois de revisar `git status`, **todas** as mudanças listadas realmente pertencerem ao trabalho que será preservado.
+### Caminho B — guardar temporariamente com stash
 
-### Ou guardar temporariamente
+Antes, confirme se existem arquivos não rastreados importantes. O stash padrão não inclui untracked automaticamente.
 
 ```bash
+git status
 git stash push -m "antes da sincronização"
+git fetch origin
+git status -sb
 ```
 
-**Entenda os comandos:** [`git stash`](#cmd-git-stash)
-
-Depois:
+Se a branch puder apenas avançar e a working tree estiver limpa:
 
 ```bash
 git pull --ff-only
-```
-
-**Entenda os comandos:** [`git pull`](#cmd-git-pull)
-
-Se usou stash:
-
-```bash
 git stash pop
+git status
 ```
 
-**Entenda os comandos:** [`git stash`](#cmd-git-stash)
+**Entenda os comandos:** [`git status`](#cmd-git-status) · [`git add`](#cmd-git-add) · [`git diff`](#cmd-git-diff) · [`git commit`](#cmd-git-commit) · [`git fetch`](#cmd-git-fetch) · [`git stash`](#cmd-git-stash) · [`git pull`](#cmd-git-pull)
 
-Conflitos ainda podem ocorrer ao reaplicar o stash. Se havia arquivos não rastreados importantes, não presuma que o stash padrão os preservou; revise `git status` e consulte `GIT-040`.
-
----
+Conflitos ainda podem ocorrer ao reaplicar o stash. Se havia arquivos não rastreados importantes, não presuma que o stash padrão os preservou; consulte `GIT-040`.
 
 <a id="git-017"></a>
 ## 11.17 GIT-017 — `git pull` falha com `refusing to merge unrelated histories`
@@ -4952,14 +5163,15 @@ Se ainda não fez push:
 
 ```bash
 git add <arquivo>
+git diff --staged -- <arquivo>
 git commit --amend --no-edit
+git status -sb
+git log -1 --oneline
 ```
 
-**Entenda os comandos:** [`git add`](#cmd-git-add) · [`git commit`](#cmd-git-commit)
+**Entenda os comandos:** [`git add`](#cmd-git-add) · [`git diff`](#cmd-git-diff) · [`git commit`](#cmd-git-commit) · [`git status`](#cmd-git-status) · [`git log`](#cmd-git-log)
 
-Isso recria o último commit com o arquivo incluído.
-
----
+Isso recria o último commit com o arquivo incluído. Se o commit já foi publicado, não use `amend` por reflexo; avalie um novo commit ou a política da equipe.
 
 <a id="git-025"></a>
 ## 12.7 GIT-025 — Mensagem do último commit está errada
@@ -4970,11 +5182,13 @@ Se ainda não publicou:
 
 ```bash
 git commit --amend -m "Mensagem correta"
+git status -sb
+git log -1 --oneline
 ```
 
-**Entenda os comandos:** [`git commit`](#cmd-git-commit)
+**Entenda os comandos:** [`git commit`](#cmd-git-commit) · [`git status`](#cmd-git-status) · [`git log`](#cmd-git-log)
 
----
+Se já publicou, corrigir a mensagem reescreve o commit. Em branch compartilhada, prefira não reescrever sem coordenação.
 
 <a id="git-026"></a>
 ## 12.8 GIT-026 — O último commit ficou com nome/e-mail errados
@@ -4988,21 +5202,19 @@ git config user.name "Nome correto"
 git config user.email "email-correto@example.com"
 ```
 
-**Entenda os comandos:** [`git config`](#cmd-git-config)
-
 Depois, se o commit ainda não foi publicado:
 
 ```bash
 git commit --amend --reset-author --no-edit
+git status -sb
+git log -1 --format=fuller
 ```
 
-**Entenda os comandos:** [`git commit`](#cmd-git-commit)
+**Entenda os comandos:** [`git config`](#cmd-git-config) · [`git commit`](#cmd-git-commit) · [`git status`](#cmd-git-status) · [`git log`](#cmd-git-log)
 
 ### Importante
 
-Identidade do commit não é a mesma coisa que autenticação da conta GitHub.
-
----
+Identidade do commit não é a mesma coisa que autenticação da conta GitHub. Se já publicou, não reescreva histórico compartilhado sem avaliar impacto/coordenação.
 
 <a id="git-027"></a>
 ## 12.9 GIT-027 — Quero desfazer o último commit local, mas manter os arquivos alterados
@@ -5036,19 +5248,32 @@ Use isso preferencialmente em commits ainda não publicados.
 
 > **Perfil do cenário:** Conhecimento: Inicial–Intermediário · Ocorrência: Comum · Impacto potencial: Baixo/Médio · Recuperabilidade: Alta com `revert`
 
-Prefira:
+Primeiro confirme o commit que será revertido:
+
+```bash
+git log --oneline -5
+```
+
+Depois:
 
 ```bash
 git revert <hash-do-commit>
+git status -sb
+git log -1 --oneline
 ```
 
-**Entenda os comandos:** [`git revert`](#cmd-git-revert)
+`git revert` cria um novo commit que aplica a inversão da mudança. Se ele abrir um editor de mensagem, isso é esperado; consulte `GIT-079` se necessário.
 
-Isso cria um novo commit que aplica a inversão da mudança.
+Como o commit ruim já estava no remoto, publique também o commit de reversão:
 
-É normalmente mais adequado para commits já compartilhados.
+```bash
+git push
+git status -sb
+```
 
----
+**Entenda os comandos:** [`git log`](#cmd-git-log) · [`git revert`](#cmd-git-revert) · [`git status`](#cmd-git-status) · [`git push`](#cmd-git-push)
+
+Isso é normalmente mais adequado para commits já compartilhados do que reescrever o histórico.
 
 <a id="git-029"></a>
 ## 12.11 GIT-029 — Fiz commit na branch errada e ainda não publiquei
@@ -5243,29 +5468,34 @@ git rm -r --cached caminho/pasta/
 
 > **Perfil do cenário:** Conhecimento: Inicial–Intermediário · Ocorrência: Comum · Impacto potencial: Médio · Recuperabilidade: Alta
 
+Remova apenas do versionamento:
+
 ```bash
 git rm --cached caminho/arquivo
 ```
 
-**Entenda os comandos:** [`git rm`](#cmd-git-rm)
-
-Adicione ao `.gitignore`:
+Adicione ao `.gitignore` se ele não deve voltar a ser rastreado:
 
 ```gitignore
 caminho/arquivo
 ```
 
-Depois:
+Depois prepare e audite:
 
 ```bash
 git add .gitignore
-git commit -m "Remove arquivo do versionamento"
-git push
+git diff --staged --name-status
 ```
 
-**Entenda os comandos:** [`git add`](#cmd-git-add) · [`git commit`](#cmd-git-commit) · [`git push`](#cmd-git-push)
+Confirme que o arquivo ainda existe no PC antes de prosseguir. **Isso remove o arquivo do snapshot atual remoto após o push, mas não apaga cópias existentes em commits antigos. Para segredo/credencial, use `GIT-068`.** Então:
 
----
+```bash
+git commit -m "Remove arquivo do versionamento"
+git push
+git status -sb
+```
+
+**Entenda os comandos:** [`git rm`](#cmd-git-rm) · [`git add`](#cmd-git-add) · [`git diff`](#cmd-git-diff) · [`git commit`](#cmd-git-commit) · [`git push`](#cmd-git-push) · [`git status`](#cmd-git-status)
 
 <a id="git-034"></a>
 ## 13.3 GIT-034 — Deletei localmente, mas o arquivo continua no GitHub
@@ -5279,15 +5509,15 @@ git status
 git add caminho/arquivo
 git diff --staged --name-status
 git commit -m "Remove arquivo"
+git status -sb
 git push --dry-run origin main
 git push origin main
+git status -sb
 ```
 
 **Entenda os comandos:** [`git status`](#cmd-git-status) · [`git add`](#cmd-git-add) · [`git diff`](#cmd-git-diff) · [`git commit`](#cmd-git-commit) · [`git push`](#cmd-git-push)
 
 > Se você apagou vários arquivos e quer registrar todos conscientemente no mesmo commit, revise `git status` antes de considerar `git add -A`.
-
----
 
 <a id="git-035"></a>
 ## 13.4 GIT-035 — Arquivo apagado reaparece depois de pull/rebase
@@ -5305,8 +5535,6 @@ git ls-tree -r --name-only HEAD
 git ls-tree -r --name-only origin/main
 ```
 
-**Entenda os comandos:** [`git ls-tree`](#cmd-git-ls-tree)
-
 PowerShell:
 
 ```powershell
@@ -5314,20 +5542,33 @@ git ls-tree -r --name-only HEAD | Select-String "arquivo.zip"
 git ls-tree -r --name-only origin/main | Select-String "arquivo.zip"
 ```
 
-**Entenda os comandos:** [`git ls-tree`](#cmd-git-ls-tree) · [`Select-String`](#cmd-powershell-select-string) · [`|`](#cmd-shell-pipe)
-
-Se precisa removê-lo do estado final:
+Se precisa removê-lo do estado final, primeiro prepare a exclusão e audite:
 
 ```bash
 git rm caminho/arquivo.zip
-git commit --amend --no-edit
+git diff --staged --name-status
 ```
 
-**Entenda os comandos:** [`git rm`](#cmd-git-rm) · [`git commit`](#cmd-git-commit)
+Agora escolha conforme o contexto:
 
-ou crie um novo commit de remoção, conforme o contexto.
+```bash
+# SOMENTE se você está corrigindo seu último commit local ainda não publicado
+git commit --amend --no-edit
 
----
+# caso contrário, prefira registrar uma nova remoção
+git commit -m "Remove arquivo obsoleto"
+```
+
+**Não execute os dois commits em sequência.** `amend` não é o padrão seguro se `HEAD` veio do remoto ou já foi compartilhado.
+
+Depois valide:
+
+```bash
+git status -sb
+git log -1 --oneline
+```
+
+**Entenda os comandos:** [`git ls-tree`](#cmd-git-ls-tree) · [`git rm`](#cmd-git-rm) · [`git diff`](#cmd-git-diff) · [`git commit`](#cmd-git-commit) · [`git status`](#cmd-git-status) · [`git log`](#cmd-git-log)
 
 <a id="git-036"></a>
 ## 13.5 GIT-036 — Renomeei apenas maiúsculas/minúsculas no Windows e Git não percebe direito
@@ -5500,15 +5741,24 @@ Sintoma em `git push`:
 The current branch ... has no upstream branch
 ```
 
-Configure:
+Antes de publicar, confirme a branch atual e o remoto:
+
+```bash
+git branch --show-current
+git remote -v
+```
+
+Configure/publice usando o nome real da branch:
 
 ```bash
 git push -u origin <branch>
+git branch -vv
+git status -sb
 ```
 
-**Entenda os comandos:** [`git push`](#cmd-git-push)
+**Entenda os comandos:** [`git branch`](#cmd-git-branch) · [`git remote`](#cmd-git-remote) · [`git push`](#cmd-git-push) · [`git status`](#cmd-git-status)
 
----
+`-u` cria a associação de upstream; depois disso, `git push`/`git pull` podem usar essa relação sem repetir remoto/branch em situações normais.
 
 <a id="git-042"></a>
 ## 13.11 GIT-042 — Branch remota foi apagada, mas ainda aparece localmente
@@ -6025,28 +6275,29 @@ Se você pretende usar HTTPS, ajuste a URL. Se pretende SSH, valide sua chave/co
 
 Não tente burlar a proteção.
 
-Escolha um nome de branch local que **ainda não exista**. Se tiver dúvida:
+Confirme onde está e escolha um nome de branch local que **ainda não exista**:
 
 ```bash
+git status -sb
+git branch --show-current
 git branch --list minha-alteracao
 ```
 
-**Entenda os comandos:** [`git branch`](#cmd-git-branch)
-
-Se não houver saída, crie e publique a nova branch a partir do commit atual:
+Se não houver saída para o último comando, crie e publique a nova branch a partir do commit atual:
 
 ```bash
 git switch -c minha-alteracao
 git push -u origin minha-alteracao
+git status -sb
 ```
 
-**Entenda os comandos:** [`git switch`](#cmd-git-switch) · [`git push`](#cmd-git-push)
+**Entenda os comandos:** [`git status`](#cmd-git-status) · [`git branch`](#cmd-git-branch) · [`git switch`](#cmd-git-switch) · [`git push`](#cmd-git-push)
 
-Se o nome já existir, escolha outro nome ou inspecione conscientemente a branch existente antes de reutilizá-la.
+Se o nome já existir, escolha outro ou inspecione conscientemente a branch existente antes de reutilizá-la.
 
 Depois abra um Pull Request conforme as regras do repositório.
 
----
+> **Atenção ao `main` local:** criar `minha-alteracao` no mesmo commit **não apaga esse commit do ponteiro local de `main`**. Depois do PR/merge, ao voltar para `main`, execute `git fetch origin` + `git status -sb` e trate o estado observado; não use `reset --hard` por reflexo.
 
 <a id="git-076"></a>
 ## 14.9 GIT-076 — HTTPS pede senha, mas a senha normal da conta GitHub não funciona
@@ -6118,15 +6369,13 @@ Se houver erro 403 após autenticar, consulte `GIT-058`.
 <a id="git-078"></a>
 ## 14.11 GIT-078 — Meu fork está desatualizado em relação ao repositório original
 
-> **Perfil do cenário:** Conhecimento: Intermediário · Ocorrência: Comum em fluxo com fork · Impacto potencial: Médio · Recuperabilidade: Alta
+> **Perfil do cenário:** Conhecimento: Intermediário · Ocorrência: Comum em colaboração open source · Impacto potencial: Médio · Recuperabilidade: Alta
 
-Verifique os remotos:
+Confirme os remotos:
 
 ```bash
 git remote -v
 ```
-
-**Entenda os comandos:** [`git remote`](#cmd-git-remote)
 
 Um modelo comum:
 
@@ -6139,38 +6388,31 @@ Se `upstream` ainda não existe:
 
 ```bash
 git remote add upstream https://github.com/PROJETO-ORIGINAL/REPOSITORIO.git
+git remote -v
 ```
 
-**Entenda os comandos:** [`git remote`](#cmd-git-remote)
-
-Atualize a visão do original:
+Atualize a visão do original e confirme a branch local:
 
 ```bash
 git fetch upstream
+git switch main
+git status -sb
 ```
-
-**Entenda os comandos:** [`git fetch`](#cmd-git-fetch)
 
 Se sua `main` puder avançar linearmente:
 
 ```bash
-git switch main
 git merge --ff-only upstream/main
+git status -sb
 git push origin main
+git status -sb
 ```
 
-**Entenda os comandos:** [`git switch`](#cmd-git-switch) · [`git merge`](#cmd-git-merge) · [`git push`](#cmd-git-push)
+**Entenda os comandos:** [`git remote`](#cmd-git-remote) · [`git fetch`](#cmd-git-fetch) · [`git switch`](#cmd-git-switch) · [`git status`](#cmd-git-status) · [`git merge`](#cmd-git-merge) · [`git push`](#cmd-git-push)
 
 ### Pare se...
 
 `--ff-only` falhar ou sua branch local tiver commits próprios. Nesse caso há divergência e a integração precisa ser analisada antes de continuar.
-
----
-
-[↑ Voltar ao índice](#indice)
-
-
----
 
 <a id="capitulo-15"></a>
 # 15. Casos reais — recuperação, arquivos grandes e integridade
@@ -6256,16 +6498,14 @@ git branch recuperacao <hash>
 <a id="git-064"></a>
 ## 15.4 GIT-064 — Apaguei branch remota por engano
 
-> **Perfil do cenário:** Conhecimento: Intermediário · Ocorrência: Raro · Impacto potencial: Médio · Recuperabilidade: Alta se existir referência/commit local
+> **Perfil do cenário:** Conhecimento: Intermediário · Ocorrência: Ocasional · Impacto potencial: Médio · Recuperabilidade: Alta se o commit ainda existir localmente
 
-Comece verificando se a branch ou o commit ainda estão alcançáveis neste clone:
+Primeiro procure referências atuais:
 
 ```bash
 git branch -a
 git log --oneline --all --decorate
 ```
-
-**Entenda os comandos:** [`git branch`](#cmd-git-branch) · [`git log`](#cmd-git-log)
 
 ### Caminho A — a branch local ainda existe
 
@@ -6276,15 +6516,13 @@ git switch <branch>
 git log -1 --oneline
 ```
 
-**Entenda os comandos:** [`git switch`](#cmd-git-switch) · [`git log`](#cmd-git-log)
-
 Se for realmente o commit correto:
 
 ```bash
 git push -u origin <branch>
+git branch -vv
+git status -sb
 ```
-
-**Entenda os comandos:** [`git push`](#cmd-git-push)
 
 ### Caminho B — a branch sumiu, mas você encontrou o hash correto
 
@@ -6296,15 +6534,13 @@ git switch <branch-recuperada>
 git log -1 --oneline
 ```
 
-**Entenda os comandos:** [`git branch`](#cmd-git-branch) · [`git switch`](#cmd-git-switch) · [`git log`](#cmd-git-log)
-
 Depois publique somente após validar a ponta:
 
 ```bash
 git push -u origin <branch-recuperada>
+git branch -vv
+git status -sb
 ```
-
-**Entenda os comandos:** [`git push`](#cmd-git-push)
 
 ### Caminho C — o commit não aparece nas referências atuais
 
@@ -6314,19 +6550,15 @@ Procure nos **reflogs locais**:
 git reflog --all
 ```
 
-**Entenda os comandos:** [`git reflog`](#cmd-git-reflog)
-
 Se você souber o nome antigo da remote-tracking branch e esse reflog ainda existir:
 
 ```bash
 git reflog show refs/remotes/origin/<branch>
 ```
 
-**Entenda os comandos:** [`git reflog`](#cmd-git-reflog)
+> Reflog é local. Ele não é um histórico de exclusões mantido pelo GitHub. Valide cuidadosamente qualquer hash recuperado antes de recriar/publicar uma branch.
 
-> **Limitação importante:** reflog é informação **local**. Ele não consulta o reflog interno do GitHub. Se este clone nunca recebeu o commit, ou se nenhum objeto/referência local ainda permitir encontrá-lo, o Git local pode não conseguir recuperá-lo. Pare antes de recriar a branch a partir de um hash que você não validou.
-
----
+**Entenda os comandos:** [`git branch`](#cmd-git-branch) · [`git log`](#cmd-git-log) · [`git switch`](#cmd-git-switch) · [`git push`](#cmd-git-push) · [`git status`](#cmd-git-status) · [`git reflog`](#cmd-git-reflog)
 
 <a id="git-065"></a>
 ## 15.5 GIT-065 — `git stash pop` gerou conflito
@@ -6408,34 +6640,39 @@ Nunca apague lock enquanto outra operação Git legítima estiver ativa.
 
 GitHub bloqueia **arquivos individuais maiores que 100 MiB** em pushes normais para repositórios Git. Para arquivos maiores que precisam ser versionados, avalie Git LFS.
 
-Se o arquivo entrou apenas no último commit ainda não publicado:
+Se o arquivo entrou **apenas no último commit local ainda não publicado**:
 
 ```bash
 git rm --cached caminho/arquivo-grande
 ```
 
-**Entenda os comandos:** [`git rm`](#cmd-git-rm)
-
-Adicione ao `.gitignore` se necessário:
+Adicione ao `.gitignore` se ele não deve ser versionado:
 
 ```gitignore
 caminho/arquivo-grande
 ```
 
-Depois:
+Audite antes de reescrever o commit:
 
 ```bash
 git add .gitignore
+git diff --staged --name-status
 git commit --amend --no-edit
+git status -sb
+git log -1 --oneline
 ```
 
-**Entenda os comandos:** [`git add`](#cmd-git-add) · [`git commit`](#cmd-git-commit)
+Confirme também que o caminho não faz mais parte do snapshot atual:
 
-Se o arquivo precisa ser versionado, avalie Git LFS.
+```bash
+git ls-tree -r --name-only HEAD -- caminho/arquivo-grande
+```
 
-Se ele está em commits anteriores do histórico que você tenta enviar, apenas removê-lo do último snapshot pode não bastar: será necessário remover o objeto do histórico relevante.
+Sem saída significa que esse caminho não está no `HEAD` atual.
 
----
+> Se o arquivo estiver em **commits anteriores** do histórico que você tenta enviar, apenas removê-lo do último snapshot não basta. Pare: será necessário remover o objeto do histórico relevante ou adotar Git LFS conforme o caso. Não repita `push` às cegas até entender em quais commits o arquivo existe.
+
+**Entenda os comandos:** [`git rm`](#cmd-git-rm) · [`git add`](#cmd-git-add) · [`git diff`](#cmd-git-diff) · [`git commit`](#cmd-git-commit) · [`git status`](#cmd-git-status) · [`git log`](#cmd-git-log) · [`git ls-tree`](#cmd-git-ls-tree)
 
 <a id="git-068"></a>
 ## 15.8 GIT-068 — Commitei senha, token ou credencial
@@ -6699,6 +6936,8 @@ Não aceite um diff enorme apenas porque `git add -A` funcionou.
 <a id="capitulo-16"></a>
 # 16. Estudo de caso completo — pasta movida, behind 15, ZIP reaparecendo e rebase
 
+> **Importante:** este capítulo reproduz um caso real, inclusive decisões que geraram achados intermediários e depois foram corrigidas. Ele serve para entender diagnóstico/recuperação; para uma publicação nova, prefira o fluxo canônico de 7.2.
+
 Este cenário combina vários mecanismos que confundem iniciantes.
 
 <a id="capitulo-16-1"></a>
@@ -6769,7 +7008,10 @@ Interpretação:
 <a id="capitulo-16-4"></a>
 ## 16.4 Preparar alterações locais
 
+Na execução real foi usado `git add -A` porque a intenção declarada era preparar **todas** as alterações locais; a auditoria imediatamente posterior era obrigatória justamente por esse escopo amplo:
+
 ```bash
+git status
 git add -A
 git diff --cached --name-status
 ```
@@ -6812,14 +7054,17 @@ O Git recusou avançar o remoto ignorando os 15 commits que já existiam.
 <a id="capitulo-16-6"></a>
 ## 16.6 Corrigir o commit antes da integração
 
-O ZIP foi removido fisicamente e o commit foi corrigido:
+O ZIP foi removido fisicamente e a correção foi preparada de forma explícita antes do `amend`:
 
 ```bash
-git add -A
+git status
+git add libs/libs.zip
+git diff --staged --name-status
 git commit --amend --no-edit
+git status -sb
 ```
 
-**Entenda os comandos:** [`git add`](#cmd-git-add) · [`git commit`](#cmd-git-commit)
+**Entenda os comandos:** [`git status`](#cmd-git-status) · [`git add`](#cmd-git-add) · [`git diff`](#cmd-git-diff) · [`git commit`](#cmd-git-commit)
 
 Antes de integrar:
 
@@ -7103,21 +7348,24 @@ git add <arquivos-relacionados>
 git diff --staged
 git commit -m "Descrição"
 git push
-git status
+git status -sb
 ```
-
-**Entenda os comandos:** [`git status`](#cmd-git-status) · [`git add`](#cmd-git-add) · [`git diff`](#cmd-git-diff) · [`git commit`](#cmd-git-commit) · [`git push`](#cmd-git-push)
 
 ### Combo A+ — seguro/auditável
 
 Use em colaboração, alteração relevante, histórico recém-integrado ou quando você quer confirmar cuidadosamente estado e destino:
 
 ```bash
+git status -sb
 git fetch origin
 git status -sb
+# PARE aqui se houver behind/divergência que exija integração
+
 git add <arquivos-relacionados>
-git diff --cached --name-status
+git diff --staged --name-status
 git commit -m "Descrição"
+git status -sb
+
 git log --oneline origin/main..HEAD
 git diff --name-status origin/main..HEAD
 git push --dry-run origin main
@@ -7125,11 +7373,9 @@ git push origin main
 git status -sb
 ```
 
-**Entenda os comandos:** [`git fetch`](#cmd-git-fetch) · [`git status`](#cmd-git-status) · [`git add`](#cmd-git-add) · [`git diff`](#cmd-git-diff) · [`git commit`](#cmd-git-commit) · [`git log`](#cmd-git-log) · [`git push`](#cmd-git-push)
+**Entenda os comandos:** [`git status`](#cmd-git-status) · [`git fetch`](#cmd-git-fetch) · [`git add`](#cmd-git-add) · [`git diff`](#cmd-git-diff) · [`git commit`](#cmd-git-commit) · [`git log`](#cmd-git-log) · [`git push`](#cmd-git-push)
 
 > No A+, `git log ...` responde **quais commits existem só localmente**; `git diff ...` responde **como os conteúdos finais diferem**. Não são a mesma pergunta.
-
----
 
 <a id="capitulo-18-2"></a>
 ## 18.2 Combo B — Alterei somente no GitHub e quero atualizar o PC
@@ -7159,11 +7405,8 @@ git add caminho/arquivo
 git diff --staged --name-status
 git commit -m "Remove arquivo"
 git push
+git status -sb
 ```
-
-**Entenda os comandos:** [`git status`](#cmd-git-status) · [`git add`](#cmd-git-add) · [`git diff`](#cmd-git-diff) · [`git commit`](#cmd-git-commit) · [`git push`](#cmd-git-push)
-
-> Use o fluxo A+ do Combo A quando quiser auditoria remota adicional antes do envio.
 
 Ou, se o arquivo ainda existe:
 
@@ -7173,11 +7416,12 @@ git rm caminho/arquivo
 git diff --staged --name-status
 git commit -m "Remove arquivo"
 git push
+git status -sb
 ```
 
-**Entenda os comandos:** [`git status`](#cmd-git-status) · [`git rm`](#cmd-git-rm) · [`git diff`](#cmd-git-diff) · [`git commit`](#cmd-git-commit) · [`git push`](#cmd-git-push)
+**Entenda os comandos:** [`git status`](#cmd-git-status) · [`git add`](#cmd-git-add) · [`git rm`](#cmd-git-rm) · [`git diff`](#cmd-git-diff) · [`git commit`](#cmd-git-commit) · [`git push`](#cmd-git-push)
 
----
+> Use o fluxo A+ quando quiser auditoria remota adicional antes do envio.
 
 <a id="capitulo-18-4"></a>
 ## 18.4 Combo D — Quero remover do GitHub mas manter no PC
@@ -7190,13 +7434,12 @@ git add .gitignore
 git diff --staged --name-status
 git commit -m "Remove arquivo do versionamento"
 git push
+git status -sb
 ```
 
 **Entenda os comandos:** [`git status`](#cmd-git-status) · [`git rm`](#cmd-git-rm) · [`git add`](#cmd-git-add) · [`git diff`](#cmd-git-diff) · [`git commit`](#cmd-git-commit) · [`git push`](#cmd-git-push)
 
-Confirme depois que o arquivo continua no disco e que a regra de `.gitignore` corresponde ao caminho desejado.
-
----
+Antes do commit, confirme fisicamente que o arquivo que deve permanecer local ainda existe.
 
 <a id="capitulo-18-5"></a>
 ## 18.5 Combo E — Estou `behind`
@@ -7342,12 +7585,17 @@ git switch main
 git fetch origin
 git status -sb
 git pull --ff-only
+# PARE se o fast-forward falhar
+
 git switch -c feature/minha-alteracao
 # editar
+git status
 git add <arquivos-relacionados>
 git diff --staged
 git commit -m "Adiciona minha alteração"
+git status -sb
 git push -u origin feature/minha-alteracao
+git status -sb
 ```
 
 **Entenda os comandos:** [`git status`](#cmd-git-status) · [`git switch`](#cmd-git-switch) · [`git fetch`](#cmd-git-fetch) · [`git pull`](#cmd-git-pull) · [`git add`](#cmd-git-add) · [`git diff`](#cmd-git-diff) · [`git commit`](#cmd-git-commit) · [`git push`](#cmd-git-push)
@@ -7356,28 +7604,23 @@ Continue somente se a working tree estiver preservada e `git pull --ff-only` pud
 
 Depois: abrir Pull Request → revisar/checks → merge → atualizar `main` local.
 
----
-
 <a id="capitulo-18-13"></a>
 ## 18.13 Combo M — Atualizar fork a partir de `upstream`
 
 ```bash
+git remote -v
 git fetch upstream
 git switch main
+git status -sb
 git merge --ff-only upstream/main
+git status -sb
 git push origin main
+git status -sb
 ```
 
-**Entenda os comandos:** [`git fetch`](#cmd-git-fetch) · [`git switch`](#cmd-git-switch) · [`git merge`](#cmd-git-merge) · [`git push`](#cmd-git-push)
+**Entenda os comandos:** [`git remote`](#cmd-git-remote) · [`git fetch`](#cmd-git-fetch) · [`git switch`](#cmd-git-switch) · [`git status`](#cmd-git-status) · [`git merge`](#cmd-git-merge) · [`git push`](#cmd-git-push)
 
 Se o fast-forward falhar, pare e trate como divergência.
-
----
-
-[↑ Voltar ao índice](#indice)
-
-
----
 
 <a id="capitulo-19"></a>
 # 19. Comandos por efeito e nível de risco
@@ -7787,18 +8030,24 @@ git status
 ## 20.4 Cheat sheet — fluxo seguro/auditável
 
 ```bash
+git status -sb
 git fetch origin
 git status -sb
-git add <arquivos>
-git diff --cached --name-status
+# PARE se houver behind/divergência que exija integração
+
+git add <arquivos-relacionados>
+git diff --staged --name-status
 git commit -m "Descrição"
+git status -sb
+
+git log --oneline origin/main..HEAD
 git diff --name-status origin/main..HEAD
 git push --dry-run origin main
 git push origin main
 git status -sb
 ```
 
-**Entenda os comandos:** [`git fetch`](#cmd-git-fetch) · [`git status`](#cmd-git-status) · [`git add`](#cmd-git-add) · [`git diff`](#cmd-git-diff) · [`git commit`](#cmd-git-commit) · [`git push`](#cmd-git-push)
+**Entenda os comandos:** [`git status`](#cmd-git-status) · [`git fetch`](#cmd-git-fetch) · [`git add`](#cmd-git-add) · [`git diff`](#cmd-git-diff) · [`git commit`](#cmd-git-commit) · [`git log`](#cmd-git-log) · [`git push`](#cmd-git-push)
 
 <a id="capitulo-20-5"></a>
 ## 20.5 Cheat sheet — identificar onde estou
@@ -8004,6 +8253,16 @@ aprofundar sem depender de “receita”
 <a id="changelog"></a>
 # Apêndice — Changelog
 
+## v2.1.11
+
+- torna `GIT-001` **autocontido**, explicando quando `git add` é necessário, quando o arquivo já está em `Changes to be committed` e como diferenciar `git add <arquivos>`, `git add .` e `git add -A`;
+- harmoniza o fluxo seguro/auditável em 4.2.1, 7.2, Combo A+ e cheat sheet: `status -sb` antes e depois de `fetch`, stage auditado, `status -sb` pós-commit, `log` + `diff` pré-push, `push --dry-run`, push real e validação final;
+- completa cenários que terminavam cedo demais (`GIT-002`, `003`, `004`, `005`, `007`, `008`, `009`, `011`, `012`, `013`, `033`, `034`, `041`, `064`, `078`) com validações/etapas finais coerentes;
+- corrige uma brecha técnica em `GIT-016`: após preservar trabalho em **commit**, `pull --ff-only` não é tratado como solução automática se o estado virar `ahead + behind`; o caminho de commit passa a encaminhar para integração consciente, enquanto o caminho de stash mantém o fast-forward quando aplicável;
+- reforça `GIT-024`, `025`, `026` e `028` com validação após reescrita/reversão e publicação do commit de `revert` quando o commit ruim já estava remoto;
+- reforça branch protegida (`GIT-060`) explicando que criar uma feature branch no HEAD não remove automaticamente o mesmo commit do ponteiro local de `main`;
+- revisa Combos C/D/L/M e fluxos 7.10/7.11 para incluir auditoria/validação final; reforça 4.4–4.6, `GIT-035`, `GIT-067` e o estudo de caso 16 contra decisões contextuais tratadas como receita universal; mantém **79 cenários / 5 LABs** sem expansão artificial de escopo.
+
 ## v2.1.10
 
 - reorganiza **0.1 — Escolha seu caminho** em uma sequência cronológica de uso: começar → criar/conectar → restaurar/clonar → sincronizar alterações → mover com segurança → aprofundar → colaborar → diagnosticar → consultar;
@@ -8188,8 +8447,8 @@ aprofundar sem depender de “receita”
 |---|---|
 | Documento | Git + GitHub — Guia Prático e Manual Operacional para Situações Reais |
 | Papel no repositório | **`README.md` — único documento Markdown oficial e fonte canônica do conteúdo** |
-| Versão do conteúdo | **2.1.10** |
-| Status | **CONTENT FREEZE — APROVADO** · v2.1.10 melhora o roteamento inicial para operações já cobertas, sem ampliar os 79 cenários |
+| Versão do conteúdo | **2.1.11** |
+| Status | **CONTENT FREEZE — APROVADO** · v2.1.11 endurece os fluxos operacionais e validações pré/pós-push, sem ampliar os 79 cenários |
 | Público | **Principal:** pessoas sem experiência prévia com Git · **Secundário:** estudantes, usuários ocasionais e profissionais que precisam consultar situações operacionais |
 | Escopo | Git local + GitHub; CLI como referência canônica, PowerShell/Bash, mapeamento conceitual para VS Code Source Control e fluxos GitHub Web |
 | Arquitetura | **PARTE 0 — Comece aqui** + **PARTE I — Como funciona** + **PARTE II — Trabalhando no dia a dia** + **PARTE III — Resolvendo problemas** + **PARTE IV — Consulta rápida** |
@@ -8200,12 +8459,12 @@ aprofundar sem depender de “receita”
 | Idioma | `pt-BR` |
 | Repositório | [https://github.com/Diego-Ch4m4X/Guia_Git](https://github.com/Diego-Ch4m4X/Guia_Git) |
 | Index interativo | [https://diego-ch4m4x.github.io/Guia_Git/](https://diego-ch4m4x.github.io/Guia_Git/) |
-| Interface compatível nesta revisão | **index v1.0.19** |
+| Interface compatível nesta revisão | **index v1.0.20** |
 | Licença do conteúdo autoral | **CC BY 4.0** — consulte [`LICENSE`](./LICENSE) |
 | Licença do código autoral | **MIT** — consulte [`LICENSE`](./LICENSE) |
 | Materiais de terceiros | permanecem sujeitos às próprias licenças e políticas de marca |
 | Logomarca Git | Jason Long · CC BY 3.0; uso nominativo em projeto educacional independente |
-| Revisão editorial | **2026-09-07** — conteúdo v2.1.10 reorganiza a matriz “Escolha seu caminho” e adiciona rotas diretas para sincronização PC↔GitHub, restauração/clonagem e movimentação segura de pasta; index v1.0.19; 79 cenários preservados |
+| Revisão editorial | **2026-09-07** — conteúdo v2.1.11 harmoniza exemplos operacionais, torna GIT-001 autocontido e reforça auditoria/validação pré e pós-push; index v1.0.20; 79 cenários preservados |
 | Snapshot | **2026-09-07** |
 
 </details>
