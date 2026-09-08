@@ -29,6 +29,14 @@
   </a>
 </p>
 
+<p align="center">
+  <img src="./assets/img.png" alt="Ilustração educacional do projeto independente Git + GitHub — guia prático para situações reais" width="1200">
+</p>
+
+<p align="center">
+  <sub>Ilustração de um projeto independente e material educacional. Sem afiliação, patrocínio ou endosso do Git Project ou do GitHub.</sub>
+</p>
+
 > [!IMPORTANT]
 > **Nunca usou Git?** Vá direto para o [Capítulo 0](#capitulo-0) e faça apenas esse laboratório primeiro. O restante do manual existe para quando você precisar entender, colaborar, diagnosticar ou recuperar uma situação real.
 
