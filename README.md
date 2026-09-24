@@ -1,11 +1,5 @@
 <a id="top"></a>
 
-<p align="center">
-  <a href="https://diego-ch4m4x.github.io/Guia_Git/" title="Abrir o guia interativo">
-    <img src="https://git-scm.com/images/logos/downloads/Git-Icon-1788C.svg" alt="Logomarca Git" width="88">
-  </a>
-</p>
-
 # Git + GitHub — Guia Prático e Manual Operacional para Situações Reais
 
 > **Da primeira instalação ao troubleshooting: entender o estado, executar com segurança e validar o resultado.**
