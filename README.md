@@ -6,7 +6,7 @@
 
 <p align="center">
   <a href="#idioma-e-convencoes"><img alt="Idioma: pt-BR" src="https://img.shields.io/badge/idioma-pt--BR-4e443c"></a>
-  <a href="#metadados-do-documento"><img alt="Conteúdo: v2.1.12" src="https://img.shields.io/badge/conte%C3%BAdo-v2.1.12-f14e32"></a>
+  <a href="#metadados-do-documento"><img alt="Conteúdo: v2.1.13" src="https://img.shields.io/badge/conte%C3%BAdo-v2.1.13-f14e32"></a>
   <a href="#metadados-do-documento"><img alt="Estado: content freeze" src="https://img.shields.io/badge/estado-content_freeze-d7834f"></a>
   <a href="#capitulo-11"><img alt="Cenários: 79" src="https://img.shields.io/badge/cen%C3%A1rios-79-4e443c"></a>
   <a href="#capitulo-5-14"><img alt="Laboratórios: 5" src="https://img.shields.io/badge/LABs-5-f14e32"></a>
@@ -4895,7 +4895,11 @@ Mensagem típica:
 
 Isso normalmente significa que o remoto possui commits que seu push substituiria ou ignoraria.
 
-### Faça
+### Caso comum — `status` dizia apenas `ahead`, mas o push foi recusado
+
+`git status -sb` compara sua branch com a referência remota **localmente conhecida**. Se essa referência estiver desatualizada, o status pode mostrar apenas `[ahead N]` mesmo que o GitHub já tenha commits novos.
+
+Atualize a visão do remoto e reavalie:
 
 ```bash
 git fetch origin
@@ -4906,7 +4910,59 @@ git log --oneline origin/main..HEAD
 
 **Entenda os comandos:** [`git fetch`](#cmd-git-fetch) · [`git status`](#cmd-git-status) · [`git log`](#cmd-git-log)
 
-Depois escolha conscientemente merge ou rebase.
+Se o segundo `status -sb` revelar `[ahead N, behind M]`, sua branch divergiu. Vá para [`GIT-013`](#git-013) para escolher conscientemente entre merge e rebase.
+
+### Fluxo seguro com rebase para commits locais ainda não publicados
+
+Quando seus commits locais ainda não foram publicados e o rebase for a estratégia escolhida, crie primeiro uma referência de segurança:
+
+```bash
+git branch backup-antes-do-rebase
+```
+
+Se esse nome já existir, **não apague nem mova a branch por reflexo**. Confira para qual commit ela aponta e compare com `HEAD`:
+
+```bash
+git log -1 --oneline backup-antes-do-rebase
+git log -1 --oneline HEAD
+```
+
+Se apontarem para commits diferentes e você precisar de uma nova referência, use outro nome, por exemplo:
+
+```bash
+git branch backup-antes-do-rebase-2
+```
+
+Depois:
+
+```bash
+git rebase origin/main
+```
+
+Se houver conflito, pare e siga [`GIT-046`](#git-046). Se o rebase terminar sem conflito, é normal que o hash do commit local mude: o commit foi recriado sobre outro pai.
+
+### Validação depois do rebase e antes do push
+
+```bash
+git status -sb
+git log -2 --oneline --decorate
+git diff --stat origin/main..HEAD
+git diff --check origin/main..HEAD
+git diff --name-status origin/main..HEAD
+git push --dry-run origin main
+git push origin main
+git status -sb
+```
+
+Interpretação rápida:
+
+- `git log -2 --oneline --decorate` confirma a ordem do novo commit sobre `origin/main`;
+- `git diff --stat ...` resume o volume da alteração por arquivo;
+- `git diff --check ...` procura erros de whitespace no diff; **nenhuma saída** significa que o Git não detectou esses erros;
+- `git diff --name-status ...` confirma exatamente quais arquivos e tipos de alteração serão publicados;
+- o `status -sb` final deve voltar ao estado sincronizado esperado.
+
+**Entenda os comandos:** [`git branch`](#cmd-git-branch) · [`git rebase`](#cmd-git-rebase) · [`git status`](#cmd-git-status) · [`git log`](#cmd-git-log) · [`git diff`](#cmd-git-diff) · [`git push`](#cmd-git-push)
 
 ### Não faça automaticamente
 
@@ -7818,7 +7874,7 @@ Significa: **clone essa URL para uma pasta local chamada `Guia_Git-git`**. Se `D
 **`git add`** — copia para o stage a versão escolhida dos caminhos dentro do escopo informado. `git add arquivo1 arquivo2` seleciona arquivos específicos; `git add pasta/` seleciona a pasta e descendentes; `git add .` usa o diretório atual e descendentes; `git add -A` considera todas as alterações do repositório; `git add -p <arquivo>` permite escolher interativamente trechos (*hunks*). Seleção consciente significa escolher o escopo correto e auditar o stage — não digitar cada arquivo individualmente.
 
 <a id="cmd-git-diff"></a>
-**`git diff`** — compara conteúdos. Sem opção, normalmente compara working tree com stage; `--staged`/`--cached` compara stage com `HEAD`; `--name-status` resume por nome e tipo de alteração.
+**`git diff`** — compara conteúdos. Sem opção, normalmente compara working tree com stage; `--staged`/`--cached` compara stage com `HEAD`; `--name-status` resume por nome e tipo de alteração; `--stat` resume o volume por arquivo; `--check` procura erros de whitespace introduzidos pelo diff e normalmente não produz saída quando não encontra nenhum.
 
 Anatomia de uma auditoria pré-push:
 
@@ -8120,14 +8176,24 @@ git diff --name-status origin/main..HEAD
 git branch backup-antes-do-rebase
 git rebase origin/main
 git status
-# resolver arquivos
+# se houver conflito: resolver arquivos
 git add <arquivos>
 git rebase --continue
-# ou cancelar
+# ou cancelar o rebase em andamento
 git rebase --abort
+
+# depois que o rebase terminar com sucesso
+git status -sb
+git log -2 --oneline --decorate
+git diff --stat origin/main..HEAD
+git diff --check origin/main..HEAD
+git diff --name-status origin/main..HEAD
+git push --dry-run origin main
+git push origin main
+git status -sb
 ```
 
-**Entenda os comandos:** [`git branch`](#cmd-git-branch) · [`git rebase`](#cmd-git-rebase) · [`git status`](#cmd-git-status) · [`git add`](#cmd-git-add)
+**Entenda os comandos:** [`git branch`](#cmd-git-branch) · [`git rebase`](#cmd-git-rebase) · [`git status`](#cmd-git-status) · [`git add`](#cmd-git-add) · [`git log`](#cmd-git-log) · [`git diff`](#cmd-git-diff) · [`git push`](#cmd-git-push)
 
 <a id="capitulo-20-8"></a>
 ## 20.8 Cheat sheet — arquivos
@@ -8290,6 +8356,15 @@ aprofundar sem depender de “receita”
 
 <a id="changelog"></a>
 # Apêndice — Changelog
+
+## v2.1.13
+
+- documenta no `GIT-014` o caso real em que `status` mostra apenas `ahead`, mas o push é recusado porque a referência `origin/main` local estava desatualizada;
+- conecta explicitamente `fetch` → reavaliação `ahead + behind` → referência de segurança → rebase consciente → auditoria → push normal, sem recomendar `--force` como atalho;
+- adiciona verificação segura quando a branch de backup já existe, evitando apagá-la ou movê-la sem confirmar para qual commit aponta;
+- incorpora `git log -2 --oneline --decorate`, `git diff --stat origin/main..HEAD` e `git diff --check origin/main..HEAD` ao pós-rebase, explicando o objetivo de cada validação;
+- amplia o Dicionário de `git diff` e o cheat sheet de rebase sem criar novo cenário: permanecem **79 cenários operacionais** e **5 LABs**;
+- atualiza a compatibilidade da interface para **index v1.0.26**: mantém a cascata sem flags de prioridade forçada, elimina no código as causas apontadas no relatório fornecido do Nu Html Checker e alinha o botão animado de tema e a navegação hierárquica do painel esquerdo ao padrão do Guia Lógica, sem alterar o conteúdo canônico.
 
 ## v2.1.12
 
@@ -8494,8 +8569,8 @@ aprofundar sem depender de “receita”
 |---|---|
 | Documento | Git + GitHub — Guia Prático e Manual Operacional para Situações Reais |
 | Papel no repositório | **`README.md` — único documento Markdown oficial e fonte canônica do conteúdo** |
-| Versão do conteúdo | **2.1.12** |
-| Status | **CONTENT FREEZE — APROVADO** · v2.1.12 fecha a lacuna de escala/escopo do `git add`, sem ampliar os 79 cenários |
+| Versão do conteúdo | **2.1.13** |
+| Status | **CONTENT FREEZE — APROVADO** · v2.1.13 reforça o diagnóstico e a validação pós-rebase de `non-fast-forward`, sem ampliar os 79 cenários |
 | Público | **Principal:** pessoas sem experiência prévia com Git · **Secundário:** estudantes, usuários ocasionais e profissionais que precisam consultar situações operacionais |
 | Escopo | Git local + GitHub; CLI como referência canônica, PowerShell/Bash, mapeamento conceitual para VS Code Source Control e fluxos GitHub Web |
 | Arquitetura | **PARTE 0 — Comece aqui** + **PARTE I — Como funciona** + **PARTE II — Trabalhando no dia a dia** + **PARTE III — Resolvendo problemas** + **PARTE IV — Consulta rápida** |
@@ -8506,13 +8581,13 @@ aprofundar sem depender de “receita”
 | Idioma | `pt-BR` |
 | Repositório | [https://github.com/Diego-Ch4m4X/Guia_Git](https://github.com/Diego-Ch4m4X/Guia_Git) |
 | Index interativo | [https://diego-ch4m4x.github.io/Guia_Git/](https://diego-ch4m4x.github.io/Guia_Git/) |
-| Interface compatível nesta revisão | **index v1.0.22** |
+| Interface compatível nesta revisão | **index v1.0.26** |
 | Licença do conteúdo autoral | **CC BY 4.0** — consulte [`LICENSE`](./LICENSE) |
 | Licença do código autoral | **MIT** — consulte [`LICENSE`](./LICENSE) |
 | Materiais de terceiros | permanecem sujeitos às próprias licenças e políticas de marca |
 | Logomarca Git | Jason Long · CC BY 3.0; uso nominativo em projeto educacional independente |
-| Revisão editorial | **2026-09-07** — conteúdo v2.1.12 explicita escala e escopo do `git add`; index v1.0.22 espelha a correção preservando a revisão SEO da v1.0.21 |
-| Snapshot | **2026-09-07** |
+| Revisão editorial | **2026-09-27** — conteúdo v2.1.13 consolida o caso real de `non-fast-forward` e a auditoria pós-rebase; index v1.0.26 permanece sincronizado com o README canônico após a limpeza estrutural/semântica e os ajustes de tema e navegação |
+| Snapshot | **2026-09-27** |
 
 </details>
 
